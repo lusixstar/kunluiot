@@ -4,6 +4,9 @@ import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainBinding
 import com.example.kiotsdk.ui.user.UserInfoActivity
+import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.net.request.UserApi
+import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -18,8 +21,18 @@ class MainActivity : BaseActivity() {
         setContentView(mBinding.root)
 
         mBinding.userInfo.setOnClickListener { startActivity<UserInfoActivity>() }
+        mBinding.logout.setOnClickListener { logout() }
 
         mBinding.homeManagerValue.text = "当前家庭：11890"
+    }
+
+    private fun logout() {
+        // logout
+        toast("logout")
+        SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, "")
+        KunLuHomeSdk.instance.webSocketDisConnect()
+        startActivity<SplashActivity>()
+        finish()
     }
 
     private var cacheMills: Long = 0L

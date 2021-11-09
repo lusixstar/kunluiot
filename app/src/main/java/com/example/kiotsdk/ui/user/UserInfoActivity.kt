@@ -45,7 +45,7 @@ class UserInfoActivity : BaseActivity() {
     private fun updateAvatar(filePath: String) {
         KunLuHomeSdk.userImpl.uploadHeader(File(filePath), object : IAvatarCallback {
             override fun onSuccess(avatar: AvatarBean) {
-                toast("update success ${avatar}" )
+                toast("update success $avatar" )
             }
 
             override fun onError(code: String, error: String) {

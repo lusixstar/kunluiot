@@ -1,32 +1,3 @@
-package com.kunluiot.sdk.bean.common;
+package com.kunluiot.sdk.bean.common
 
-public class BaseRespBean<T> {
-
-    private int status;
-    private String message;
-    private T data;
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-}
+data class BaseRespBean<T>(var status: Int = 0, var message: String = "", var data: T) {}

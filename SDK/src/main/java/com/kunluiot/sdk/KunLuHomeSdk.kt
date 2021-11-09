@@ -8,6 +8,7 @@ import com.kunluiot.sdk.net.request.ReqApi
 import com.kunluiot.sdk.net.request.UserApi
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
+import com.kunluiot.sdk.ws.WebsocketUtil
 
 class KunLuHomeSdk {
 
@@ -41,6 +42,10 @@ class KunLuHomeSdk {
     fun getMsgId(): Int {
         msgId++
         return msgId
+    }
+
+    fun webSocketDisConnect() {
+        WebsocketUtil.webSocketDisConnect(ReqApi.KHA_WEB_SOCKET_URL)
     }
 
     companion object {

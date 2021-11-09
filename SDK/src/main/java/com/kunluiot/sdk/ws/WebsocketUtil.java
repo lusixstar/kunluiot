@@ -9,7 +9,6 @@ import com.kunluiot.sdk.ws.websocket.WebSocketHandler;
 import com.kunluiot.sdk.ws.websocket.WebSocketManager;
 import com.kunluiot.sdk.ws.websocket.WebSocketSetting;
 import com.kunluiot.sdk.ws.websocket.response.ErrorResponse;
-import com.kunluiot.sdk.ws.websocket.util.LogUtil;
 
 import org.java_websocket.framing.Framedata;
 
@@ -127,5 +126,14 @@ public class WebsocketUtil {
             }
         }
 
+    }
+
+    public static void webSocketDisConnect(String url) {
+        if (managerMap.get(url) != null) {
+            WebSocketManager cloudManager = managerMap.get(url);
+            if (cloudManager != null && cloudManager.isConnect()) {
+                cloudManager.disConnect();
+            }
+        }
     }
 }

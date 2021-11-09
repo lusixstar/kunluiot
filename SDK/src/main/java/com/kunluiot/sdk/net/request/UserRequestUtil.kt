@@ -30,14 +30,14 @@ object UserRequestUtil {
         params["pid"] = BuildConfig.PID
         params["areaCode"] = countryCode
         try {
-            KunluRequest().setUrl(UserApi.KHA_API_LOGIN).setMethod("POST").appendUrlParams(params).setCallback(object : ReqCallback<BaseRespBean<SessionBean?>?> {
-                override fun success(result: BaseRespBean<SessionBean?>?) {
-                    if (result?.data != null && result.data!!.user != null) {
+            KunluRequest().setUrl(UserApi.KHA_API_LOGIN).setMethod("POST").appendUrlParams(params).setCallback(object : ReqCallback<BaseRespBean<SessionBean>> {
+                override fun success(result: BaseRespBean<SessionBean>) {
+                    if (result.data.user.isNotEmpty()) {
                         SPUtil.apply(instance.getApp(), UserApi.KHA_API_LOGIN, result.data)
                         val user = User()
                         user.uid = result.data!!.user
                         callback.onSuccess(user)
-                        WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL);
+                        WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
                     } else {
                         callback.onError("-1", "user is null")
                     }
@@ -62,9 +62,9 @@ object UserRequestUtil {
         params["pid"] = BuildConfig.PID
         params["areaCode"] = areaCode
         try {
-            KunluRequest().setUrl(UserApi.KHA_API_GET_VERIFY_CODE).appendUrlParams(params).setCallback(object : ReqCallback<BaseRespBean<VerifyCodeBean?>?> {
-                override fun success(result: BaseRespBean<VerifyCodeBean?>?) {
-                    callback.onError(result?.data?.code.toString(), result?.data?.desc.toString())
+            KunluRequest().setUrl(UserApi.KHA_API_GET_VERIFY_CODE).appendUrlParams(params).setCallback(object : ReqCallback<BaseRespBean<VerifyCodeBean>> {
+                override fun success(result: BaseRespBean<VerifyCodeBean>) {
+                    callback.onError(result.data.code.toString(), result.data.desc)
                 }
 
                 override fun error(code: String, msg: String) {
@@ -83,8 +83,8 @@ object UserRequestUtil {
         try {
             val params: MutableMap<String, Any> = HashMap()
             params["lastName"] = nick
-            KunluRequest().setParams(params).setUrl(UserApi.KHA_API_GETUSERINFO).setMethod("PUT").setCallback(object : ReqCallback<BaseRespBean<Any?>?> {
-                override fun success(result: BaseRespBean<Any?>?) {
+            KunluRequest().setParams(params).setUrl(UserApi.KHA_API_GETUSERINFO).setMethod("PUT").setCallback(object : ReqCallback<BaseRespBean<Any>> {
+                override fun success(result: BaseRespBean<Any>) {
                     callback.onSuccess()
                 }
 
@@ -102,13 +102,13 @@ object UserRequestUtil {
      */
     fun getUserInfo(callback: IUserCallback) {
         try {
-            KunluRequest().setUrl(UserApi.KHA_API_GETUSERINFO).setCallback(object : ReqCallback<BaseRespBean<User?>?> {
+            KunluRequest().setUrl(UserApi.KHA_API_GETUSERINFO).setCallback(object : ReqCallback<BaseRespBean<User>> {
                 override fun error(code: String, msg: String) {
                     callback.onError(code, msg)
                 }
 
-                override fun success(result: BaseRespBean<User?>?) {
-                    result?.data?.let { callback.onSuccess(it) }
+                override fun success(result: BaseRespBean<User>) {
+                    result.data.let { callback.onSuccess(it) }
                 }
             }).request()
         } catch (e: Exception) {
@@ -121,13 +121,13 @@ object UserRequestUtil {
      */
     fun uploadHeader(file: File, callback: IAvatarCallback) {
         try {
-            KunluRequest().setCallback(object : ReqCallback<BaseRespBean<AvatarBean?>?> {
+            KunluRequest().setCallback(object : ReqCallback<BaseRespBean<AvatarBean>> {
                 override fun error(code: String, msg: String) {
                     callback.onError(code, msg)
                 }
 
-                override fun success(result: BaseRespBean<AvatarBean?>?) {
-                    result?.data?.let { callback.onSuccess(it) }
+                override fun success(result: BaseRespBean<AvatarBean>) {
+                    result.data.let { callback.onSuccess(it) }
                 }
             }).setFile(file).request()
         } catch (e: java.lang.Exception) {
