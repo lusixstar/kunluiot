@@ -180,6 +180,7 @@ public class KunluRequest implements Runnable {
 
     public interface ReqCallback<T> {
         void success(T result);
+
         void error(String code, String msg);
     }
 
@@ -196,10 +197,10 @@ public class KunluRequest implements Runnable {
                 KunLuLog.e("type error " + e.getMessage());
             }
             String result = (String) msg.obj;
-            if (!TextUtils.isEmpty(result)&& BuildConfig.DEBUG) {
+            if (!TextUtils.isEmpty(result) && BuildConfig.DEBUG) {
                 KunLuLog.d("REQUEST RESULT", result);
             }
-            if (result != null && (!result.contains("status")||result.startsWith("["))) {
+            if (result != null && (!result.contains("status") || result.startsWith("["))) {
                 try {
                     if ("".equals(result)) {
                         result = JsonUtils.toJson(new Object());
@@ -207,18 +208,17 @@ public class KunluRequest implements Runnable {
                     Object ob = new Object();
                     if (result.startsWith("{")) {
                         ob = new Gson().fromJson(result, Map.class);
-                    } else if(result.startsWith("[")){
+                    } else if (result.startsWith("[")) {
 
-                        ob = JsonUtils.fromJson(result, new TypeToken<List<Map>>() {
-                        });
+                        ob = JsonUtils.fromJson(result, new TypeToken<List<Map>>() {});
                     }
-                    BaseRespBean<Object> resp = new BaseRespBean<>();
+                    BaseRespBean<Object> resp = new BaseRespBean<>(0, "", null);
                     resp.setStatus(200);
                     resp.setMessage("success");
                     resp.setData(ob);
                     result = new Gson().toJson(resp);
                 } catch (Exception e) {
-//                    e.printStackTrace();
+                    //                    e.printStackTrace();
                     KunLuLog.e("JSON format error json is " + result);
                 }
             }
