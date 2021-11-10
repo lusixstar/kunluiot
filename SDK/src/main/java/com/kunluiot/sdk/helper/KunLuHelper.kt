@@ -1,5 +1,6 @@
 package com.kunluiot.sdk.helper
 
+import android.text.TextUtils
 import com.kunluiot.sdk.kalle.Headers
 import com.kunluiot.sdk.util.HMACSHA256
 import java.util.*
@@ -37,5 +38,13 @@ object KunLuHelper {
     private fun getUuid(): String {
         val uuid: String = UUID.randomUUID().toString()
         return uuid.replace("-".toRegex(), "")
+    }
+
+    fun isEmail(str: String): Boolean {
+        return if (TextUtils.isEmpty(str)) {
+            false
+        } else {
+            str.contains("@") && str.contains(".")
+        }
     }
 }

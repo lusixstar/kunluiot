@@ -6,10 +6,9 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityLoginBinding
 import com.example.kiotsdk.ui.MainActivity
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.user.SessionBean
 import com.kunluiot.sdk.bean.user.User
 import com.kunluiot.sdk.callback.user.ILoginCallback
-import com.kunluiot.sdk.util.ValidatorUtil
+import com.kunluiot.sdk.helper.KunLuHelper
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -45,7 +44,7 @@ class LoginActivity : BaseActivity() {
             toast("password is empty")
             return
         }
-        if (ValidatorUtil.isEmail(account)) {
+        if (KunLuHelper.isEmail(account)) {
 
         } else {
             KunLuHomeSdk.userImpl.loginWithPhonePassword(country, account, password, loginCallback)
