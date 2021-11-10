@@ -4,7 +4,7 @@ import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.user.IAvatarCallback
 import com.kunluiot.sdk.callback.user.ILoginCallback
 import com.kunluiot.sdk.callback.user.IUserCallback
-import com.kunluiot.sdk.net.request.UserRequestUtil
+import com.kunluiot.sdk.helper.UserRequestUtil
 import java.io.File
 
 class KunLuUserImpl : IKunLuUser {

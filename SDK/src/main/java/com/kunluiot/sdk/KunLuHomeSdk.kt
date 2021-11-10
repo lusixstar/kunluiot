@@ -4,8 +4,13 @@ import android.app.Application
 import com.kunluiot.sdk.api.user.IKunLuUser
 import com.kunluiot.sdk.api.user.KunLuUserImpl
 import com.kunluiot.sdk.bean.user.SessionBean
-import com.kunluiot.sdk.net.request.ReqApi
-import com.kunluiot.sdk.net.request.UserApi
+import com.kunluiot.sdk.helper.JsonConverter
+import com.kunluiot.sdk.helper.ReqApi
+import com.kunluiot.sdk.helper.UserApi
+import com.kunluiot.sdk.kalle.Kalle
+import com.kunluiot.sdk.kalle.KalleConfig
+import com.kunluiot.sdk.kalle.connect.BroadcastNetwork
+import com.kunluiot.sdk.kalle.connect.http.LoggerInterceptor
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import com.kunluiot.sdk.ws.WebsocketUtil
@@ -17,17 +22,29 @@ class KunLuHomeSdk {
     private lateinit var appSecret: String
     private var msgId = 1
 
+    private fun setKalle() {
+        Kalle.setConfig(KalleConfig.newBuilder()
+//            .connectFactory(OkHttpConnectFactory.newBuilder().build())
+//            .cookieStore(DBCookieStore.newBuilder(this).build())
+//            .cacheStore(DiskCacheStore.newBuilder(AppConfig.get().PATH_APP_CACHE).build())
+            .network(BroadcastNetwork(app))
+//            .addInterceptor(LoginInterceptor())
+            .addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(JsonConverter(app)).build())
+    }
+
     /**
      * 初始化SDK
      */
     fun init(app: Application) {
         this.app = app
+        setKalle()
     }
 
     fun init(app: Application, appKey: String, appSecret: String) {
         this.app = app
         this.appKey = appKey
         this.appSecret = appSecret
+        setKalle()
     }
 
     fun getApp(): Application {

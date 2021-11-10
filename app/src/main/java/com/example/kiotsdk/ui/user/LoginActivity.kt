@@ -6,6 +6,7 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityLoginBinding
 import com.example.kiotsdk.ui.MainActivity
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.user.SessionBean
 import com.kunluiot.sdk.bean.user.User
 import com.kunluiot.sdk.callback.user.ILoginCallback
 import com.kunluiot.sdk.util.ValidatorUtil
@@ -25,8 +26,8 @@ class LoginActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        mBinding.emailPhone.setText("15080301825")
-        mBinding.password.setText("123123")
+        mBinding.emailPhone.setText("18259158984")
+        mBinding.password.setText("333333")
 
         mBinding.login.setOnClickListener { gotoNext() }
         mBinding.forget.setOnClickListener { startActivity<ForgetActivity>() }
@@ -52,6 +53,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private val loginCallback = object : ILoginCallback {
+
         override fun onSuccess(user: User) {
             setResult(Activity.RESULT_OK, intent)
             startActivity<MainActivity>()

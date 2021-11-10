@@ -19,11 +19,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "PID", '"01770173295"' // PID
         }
         debug {
             minifyEnabled false
-            buildConfigField "String", "PID", '"01770173295"' // PID
         }
     }
 
@@ -44,7 +42,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
 
     //gson
-    api 'com.google.code.gson:gson:2.8.6'
+    api 'com.google.code.gson:gson:2.8.9'
 
+    //WebSocket
     api 'org.java-websocket:Java-WebSocket:1.5.1'
 }

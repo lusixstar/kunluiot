@@ -1,6 +1,7 @@
 package com.kunluiot.sdk.util
 
 import android.text.TextUtils
+import java.lang.Exception
 
 object ValidatorUtil {
 

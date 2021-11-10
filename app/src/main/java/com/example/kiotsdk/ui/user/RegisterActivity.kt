@@ -22,7 +22,17 @@ class RegisterActivity : BaseActivity() {
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         mBinding.send.setOnClickListener { sendCode() }
-        mBinding.register.setOnClickListener { }
+        mBinding.register.setOnClickListener { gotoRegister() }
+    }
+
+    private fun gotoRegister() {
+        val account = mBinding.emailPhone.text.toString()
+        val area = mBinding.countryCode.text.toString()
+        if (account.isEmpty()) {
+            toast("account is empty")
+            return
+        }
+        KunLuHomeSdk.userImpl.getVerifyCode(account, KunLuUserType.SEND_CODE_REGISTER, area, callback)
     }
 
     private fun sendCode() {

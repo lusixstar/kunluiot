@@ -2,7 +2,7 @@ package com.kunluiot.sdk.ws;
 
 
 import com.kunluiot.sdk.KunLuHomeSdk;
-import com.kunluiot.sdk.net.log.KunLuLog;
+import com.kunluiot.sdk.log.KunLuLog;
 import com.kunluiot.sdk.util.JsonUtils;
 import com.kunluiot.sdk.ws.websocket.SocketListener;
 import com.kunluiot.sdk.ws.websocket.WebSocketHandler;
@@ -74,8 +74,7 @@ public class WebsocketUtil {
 
                 @Override
                 public <T> void onMessage(String message, T data) {
-
-                    KunLuLog.d("websocket message " + message);
+                    KunLuLog.INSTANCE.d("websocket message " + message);
                 }
 
                 @Override
@@ -91,8 +90,6 @@ public class WebsocketUtil {
 
                 @Override
                 public void onPong(Framedata framedata) {
-
-
                     if (cloudManager != null) {
                         cloudManager.send("{\"action\":\"heartbeat\",\"msgId\":" + 1 + "}");
                     }
