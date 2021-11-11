@@ -5,10 +5,12 @@
     <string name="user_login">登录</string>
     <string name="user_register">注册</string>
     <string name="country_code">国家码</string>
-    <string name="email_or_phone">邮箱与手机号</string>
+    <string name="email_or_phone">手机号</string>
+<!--    <string name="email_or_phone">邮箱与手机号</string>-->
     <string name="password">密码</string>
     <string name="reset_password">重置密码</string>
     <string name="verify_code">验证码</string>
+    <string name="verify_image_code">图像验证码</string>
     <string name="send_verify_code">发送验证码</string>
     <string name="forget_password">忘记密码</string>
     <string name="user_manager">用户管理</string>

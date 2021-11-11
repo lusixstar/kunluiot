@@ -11,6 +11,24 @@ data class SessionBean(
     var user: String = "",
 )
 
+/**
+ * 图像验证
+ * */
+data class VerifyImageBean(
+    val rid: String = "",
+    val png: String = "",
+)
+
+/**
+ * 检测图像验证
+ * */
+data class CheckVerifyImageBean(
+    val captchaToken: String = "",
+)
+
+/**
+ * 用户信息
+ * */
 data class User(
     var name: String = "",
     var phoneNumber: String = "",
@@ -20,17 +38,23 @@ data class User(
     var avatarUrl: UserAvatarInfo = UserAvatarInfo(),
 )
 
+/**
+ * 检测验证码
+ * */
+data class VerifyCodeBean(
+    var phoneNumber: String = "",
+    var verifyCode: String = "",
+    var token: String = "",
+    val timestamp: Long = 0,
+    var code: Int = 0,
+    var message: String = "",
+    var desc: String = "",
+)
+
 data class UserAvatarInfo(
     val small: String = "",
     val middle: String = "",
     val big: String = "",
-)
-
-data class VerifyCodeBean(
-    var code: Int = 0,
-    var message: String = "",
-    var desc: String = "",
-    val timestamp: Long = 0,
 )
 
 data class AvatarBean(

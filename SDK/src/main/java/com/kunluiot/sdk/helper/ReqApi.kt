@@ -34,12 +34,29 @@ object UserApi {
     //登录接口
     const val KHA_API_LOGIN = "/login"
 
-    //修改账户头像
-    const val KHA_API_UPDATE_PHOTO = "/user/file"
+    //获取图形验证码
+    const val KHA_API_GET_VERIFY_IMAGE_CODE = "/api/v1/captcha"
 
-    //获取验证码接口
+    //检测图形验证码有效性
+    const val KHA_API_CHECK_VERIFY_IMAGE_CODE = "/images/checkCaptcha"
+
+    //获取验证码
     const val KHA_API_GET_VERIFY_CODE = "/sms/getVerifyCode"
+
+    //检测验证码有效性
+    const val KHA_API_CHECK_VERIFY_CODE = "/sms/checkVerifyCode"
+
+    //注册
+    const val KHA_API_REGISTER = "/register?type=phone"
+
+    //忘记密码接口
+    const val KHA_API_RESET_PASSWORD = "/resetPassword?type=phone"
 
     //获取用户信息
     const val KHA_API_GETUSERINFO = "/user/profile"
+
+    //修改账户头像
+    const val KHA_API_UPDATE_PHOTO = "/user/file"
+
+
 }

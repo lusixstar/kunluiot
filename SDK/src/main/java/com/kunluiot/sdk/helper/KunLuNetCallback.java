@@ -30,7 +30,7 @@ import com.kunluiot.sdk.kalle.simple.SimpleResponse;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public abstract class KunLuNetCallback<S> extends Callback<S, String> {
+abstract class KunLuNetCallback<S> extends Callback<S, String> {
 
     private Context mContext;
 

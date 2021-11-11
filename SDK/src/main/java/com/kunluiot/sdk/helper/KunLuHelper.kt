@@ -5,7 +5,7 @@ import com.kunluiot.sdk.kalle.Headers
 import com.kunluiot.sdk.util.HMACSHA256
 import java.util.*
 
-object KunLuHelper {
+internal object KunLuHelper {
 
     private const val lang = "cn"
     private const val accessId = "db96ba0828a146498165f4de8b37dca0"
@@ -38,13 +38,5 @@ object KunLuHelper {
     private fun getUuid(): String {
         val uuid: String = UUID.randomUUID().toString()
         return uuid.replace("-".toRegex(), "")
-    }
-
-    fun isEmail(str: String): Boolean {
-        return if (TextUtils.isEmpty(str)) {
-            false
-        } else {
-            str.contains("@") && str.contains(".")
-        }
     }
 }

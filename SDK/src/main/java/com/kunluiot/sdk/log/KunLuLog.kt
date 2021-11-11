@@ -3,7 +3,7 @@ package com.kunluiot.sdk.log
 import android.util.Log
 import com.kunluiot.sdk.BuildConfig
 
-object KunLuLog {
+internal object KunLuLog {
 
     //是否需要打印bug
     var DEBUG = BuildConfig.DEBUG

@@ -10,7 +10,6 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySplashBinding
 import com.example.kiotsdk.ui.user.LoginActivity
 import com.example.kiotsdk.ui.user.RegisterActivity
-import com.kunluiot.sdk.helper.KunLuHelper
 import org.jetbrains.anko.startActivity
 
 @SuppressLint("CustomSplashScreen")
@@ -28,8 +27,6 @@ class SplashActivity : BaseActivity() {
 
         mBinding.login.setOnClickListener { activityResultLauncher.launch(Intent(this, LoginActivity::class.java)) }
         mBinding.register.setOnClickListener { startActivity<RegisterActivity>() }
-
-        KunLuHelper.getSign()
     }
 
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -37,7 +34,6 @@ class SplashActivity : BaseActivity() {
             finish()
         }
     }
-
 
     private fun getVersion() {
         try {
