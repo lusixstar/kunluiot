@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.kunluiot.sdk.BuildConfig
 import com.kunluiot.sdk.R
+import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.kalle.Response
 import com.kunluiot.sdk.kalle.simple.Converter
 import com.kunluiot.sdk.kalle.simple.SimpleResponse
@@ -37,6 +38,7 @@ class JsonConverter(private val mContext: Context) : Converter {
         val code = response.code()
         val serverJson = response.body().string()
 
+        if (BuildConfig.DEBUG) KunLuLog.i("Server Code: $code")
         if (BuildConfig.DEBUG) KunLuLog.i("Server Data: $serverJson")
 
         when {
@@ -49,7 +51,14 @@ class JsonConverter(private val mContext: Context) : Converter {
                 }
             }
             code in 400..499 -> {
-                failedData = mContext.getString(R.string.http_unknow_error) as F
+                try {
+                    val data = gson.fromJson(response.body().string(), BaseRespBean::class.java)
+                    data.status = data.code
+                    data.message = data.desc
+                    succeedData = data as S
+                } catch (e: Exception) {
+                    failedData = mContext.getString(R.string.http_unknow_error) as F
+                }
             }
             code >= 500 -> {
                 failedData = mContext.getString(R.string.http_server_error) as F

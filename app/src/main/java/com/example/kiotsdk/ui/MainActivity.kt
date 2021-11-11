@@ -1,8 +1,12 @@
 package com.example.kiotsdk.ui
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainBinding
+import com.example.kiotsdk.ui.family.FamilyCreateActivity
+import com.example.kiotsdk.ui.family.FamilySelectActivity
 import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.helper.UserApi
@@ -14,6 +18,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
 
+    private var mCurrentFamilyName = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,7 +29,16 @@ class MainActivity : BaseActivity() {
         mBinding.userInfo.setOnClickListener { startActivity<UserInfoActivity>() }
         mBinding.logout.setOnClickListener { logout() }
 
-        mBinding.homeManagerValue.text = "当前家庭：11890"
+        mBinding.homeCreate.setOnClickListener { startActivity<FamilyCreateActivity>() }
+        mBinding.homeSelect.setOnClickListener { selectFamily.launch(Intent(this, FamilySelectActivity::class.java)) }
+
+    }
+
+    private val selectFamily = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            mCurrentFamilyName = it.data?.getStringExtra(FamilySelectActivity.CURRENT_FAMILY).toString()
+            mBinding.homeManagerValue.text = "当前家庭：$mCurrentFamilyName"
+        }
     }
 
     private fun logout() {

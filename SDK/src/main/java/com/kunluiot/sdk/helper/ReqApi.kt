@@ -12,7 +12,7 @@ object ReqApi {
     const val KHA_UAA_BASE_URL = "$KHA_BASE_URL/uaa"
 
     //webApi-url地址
-    const val KHA_WEB_BASE_URL = "$KHA_BASE_URL/webApi"
+    const val KHA_WEB_BASE_URL = "$KHA_BASE_URL/webapi"
 
     //console-url地址
     const val KHA_CONSOLE_BASE_URL = "$KHA_BASE_URL/console"
@@ -28,6 +28,12 @@ object ReqApi {
     const val KHA_WEB_BASE_URL1 = "https://webapi-openapi-kl.$KHA_DOMAIN"
     //console-url地址
     const val KHA_CONSOLE_BASE_URL1 = "https://console-openapi-kl.$KHA_DOMAIN"
+}
+
+object FamilyApi {
+    // 创建家庭
+    const val KHA_API_FAMILY = "/family"
+
 }
 
 object UserApi {

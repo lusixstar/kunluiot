@@ -35,6 +35,14 @@
     <string name="user_update">更新名称</string>
     <string name="user_avatar_update">更换头像</string>
 
+    <string name="family_create">创建家庭</string>
+    <string name="family_select">选择家庭</string>
+    <string name="family_list">家庭列表</string>
+    <string name="family_details">家庭详情</string>
+    <string name="family_name">家庭名称</string>
+    <string name="city">城市</string>
+    <string name="create">创建</string>
+
 
 
     <string name="back">返回</string>

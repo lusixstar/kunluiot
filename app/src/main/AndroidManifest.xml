@@ -56,6 +56,23 @@
         <activity
             android:name=".ui.user.UserInfoActivity"
             android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".ui.family.FamilyCreateActivity"
+            android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".ui.family.FamilySelectActivity"
+            android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".ui.family.FamilyListActivity"
+            android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".ui.family.FamilyDetailsActivity"
+            android:screenOrientation="fullSensor" />
+
     </application>
 
 </manifest>
