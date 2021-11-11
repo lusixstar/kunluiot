@@ -50,16 +50,18 @@ interface IResetPasswordCallback {
     fun onError(code: String, error: String)
 }
 
+/**
+ * 用户信息
+ * */
 interface IUserCallback {
-
     fun onSuccess(user: User)
-
     fun onError(code: String, error: String)
 }
 
+/**
+ * 上传文件
+ * */
 interface IAvatarCallback {
-
     fun onSuccess(avatar: AvatarBean)
-
     fun onError(code: String, error: String)
 }

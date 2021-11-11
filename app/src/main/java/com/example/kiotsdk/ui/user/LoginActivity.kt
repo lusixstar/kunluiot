@@ -30,6 +30,27 @@ class LoginActivity : BaseActivity() {
 
         mBinding.login.setOnClickListener { gotoNext() }
         mBinding.forget.setOnClickListener { startActivity<ForgetActivity>() }
+
+//        refreshLoginToken()
+    }
+
+    private fun refreshLoginToken() {
+        val token = KunLuHomeSdk.instance.getSessionBean()?.refreshToken ?: ""
+        KunLuHomeSdk.userImpl.refreshToken(token, refreshCallback)
+    }
+
+    private val refreshCallback = object : ILoginCallback {
+
+        override fun onSuccess(user: User) {
+            setResult(Activity.RESULT_OK, intent)
+            startActivity<MainActivity>()
+            finish()
+            toast("login success")
+        }
+
+        override fun onError(code: String, error: String) {
+            toast("code == $code, error == $error")
+        }
     }
 
     private fun gotoNext() {

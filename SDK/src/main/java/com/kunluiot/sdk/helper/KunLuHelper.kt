@@ -35,7 +35,7 @@ internal object KunLuHelper {
         return System.currentTimeMillis()
     }
 
-    private fun getUuid(): String {
+    fun getUuid(): String {
         val uuid: String = UUID.randomUUID().toString()
         return uuid.replace("-".toRegex(), "")
     }

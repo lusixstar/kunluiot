@@ -7,6 +7,11 @@ import java.io.File
 interface IKunLuUser {
 
     /**
+     * 使用refresh_token刷新access_token
+     */
+    fun refreshToken(refreshToken: String, callback: ILoginCallback)
+
+    /**
      * 手机号和密码登录
      */
     fun loginWithPhonePassword(countryCode: String, phone: String, passwd: String, callback: ILoginCallback)
@@ -56,6 +61,6 @@ interface IKunLuUser {
     /**
      * 上传用户头像
      * */
-    fun uploadHeader(file: File, callback: IAvatarCallback)
+    fun uploadHeader(filePath: String, callback: IAvatarCallback)
 
 }

@@ -17,6 +17,7 @@ package com.kunluiot.sdk.helper
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.kunluiot.sdk.BuildConfig
 import com.kunluiot.sdk.R
 import com.kunluiot.sdk.kalle.Response
@@ -27,7 +28,7 @@ import java.lang.reflect.Type
 
 class JsonConverter(private val mContext: Context) : Converter {
 
-    private val gson = Gson()
+    private val gson = GsonBuilder().create()
 
     @Throws(Exception::class)
     override fun <S, F> convert(succeed: Type, failed: Type, response: Response, fromCache: Boolean): SimpleResponse<S, F> {

@@ -48,7 +48,7 @@ public class FormBody extends BaseContent<FormBody> implements RequestBody {
         this.mCharset = builder.mCharset == null ? Kalle.getConfig().getCharset() : builder.mCharset;
         this.mContentType = TextUtils.isEmpty(builder.mContentType) ? VALUE_APPLICATION_FORM : builder.mContentType;
         this.mParams = builder.mParams.build();
-        this.mBoundary = createBoundary();
+        this.mBoundary = TextUtils.isEmpty(builder.mBoundary) ? createBoundary() : builder.mBoundary;
     }
 
     /**
@@ -132,6 +132,7 @@ public class FormBody extends BaseContent<FormBody> implements RequestBody {
 
         private Charset mCharset;
         private String mContentType;
+        private String mBoundary;
         private Params.Builder mParams;
 
         private Builder() {
@@ -151,6 +152,14 @@ public class FormBody extends BaseContent<FormBody> implements RequestBody {
          */
         public Builder contentType(String contentType) {
             this.mContentType = contentType;
+            return this;
+        }
+
+        /**
+         * boundary.
+         */
+        public Builder boundary(String boundary) {
+            this.mBoundary = boundary;
             return this;
         }
 

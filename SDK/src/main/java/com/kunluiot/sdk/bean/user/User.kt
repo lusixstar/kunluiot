@@ -51,12 +51,18 @@ data class VerifyCodeBean(
     var desc: String = "",
 )
 
+/**
+ * 用户头像
+ * */
 data class UserAvatarInfo(
-    val small: String = "",
-    val middle: String = "",
-    val big: String = "",
+    var small: String = "",
+    var middle: String = "",
+    var big: String = "",
 )
 
+/**
+ * 上传文件地址
+ * */
 data class AvatarBean(
     var fileSourceUrl: String = "",
     var fileCDNUrl: String = "",

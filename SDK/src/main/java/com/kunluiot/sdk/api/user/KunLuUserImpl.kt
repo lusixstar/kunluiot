@@ -8,6 +8,13 @@ import java.io.File
 internal class KunLuUserImpl : IKunLuUser {
 
     /**
+     * 使用refresh_token刷新access_token
+     * */
+    override fun refreshToken(refreshToken: String, callback: ILoginCallback) {
+        UserRequestUtil.refreshToken(refreshToken, callback)
+    }
+
+    /**
      * 手机号和密码登录
      */
     override fun loginWithPhonePassword(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
@@ -75,7 +82,7 @@ internal class KunLuUserImpl : IKunLuUser {
     /**
      * 上传用户头像
      * */
-    override fun uploadHeader(file: File, callback: IAvatarCallback) {
-        UserRequestUtil.uploadHeader(file, callback)
+    override fun uploadHeader(filePath: String, callback: IAvatarCallback) {
+        UserRequestUtil.uploadHeader(filePath, callback)
     }
 }

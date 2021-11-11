@@ -1,7 +1,6 @@
 package com.example.kiotsdk.ui.user
 
 import android.os.Bundle
-import android.widget.Toast
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.kiotsdk.app.GlideEngine
@@ -43,9 +42,9 @@ class UserInfoActivity : BaseActivity() {
     }
 
     private fun updateAvatar(filePath: String) {
-        KunLuHomeSdk.userImpl.uploadHeader(File(filePath), object : IAvatarCallback {
+        KunLuHomeSdk.userImpl.uploadHeader(filePath, object : IAvatarCallback {
             override fun onSuccess(avatar: AvatarBean) {
-                toast("update success $avatar" )
+                toast("update success $avatar")
             }
 
             override fun onError(code: String, error: String) {
@@ -56,15 +55,15 @@ class UserInfoActivity : BaseActivity() {
 
     private fun selectAvatar() {
         PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).imageEngine(GlideEngine.createGlideEngine()).selectionMode(PictureConfig.SINGLE).forResult(object : OnResultCallbackListener<LocalMedia> {
-                override fun onResult(result: List<LocalMedia>) {
-                    val filePath: String = result[0].realPath
-                    updateAvatar(filePath)
-                }
+            override fun onResult(result: List<LocalMedia>) {
+                val filePath: String = result[0].realPath
+                updateAvatar(filePath)
+            }
 
-                override fun onCancel() {
+            override fun onCancel() {
 
-                }
-            })
+            }
+        })
     }
 
     private fun updateName() {
@@ -98,9 +97,11 @@ class UserInfoActivity : BaseActivity() {
         mBinding.phoneValue.text = user.phoneNumber
         mBinding.emailValue.text = user.email
         mBinding.countryValue.text = user.areaCode
-        if (user.avatarUrl.small.isNotEmpty()) {
-            mBinding.imgAvatar.load(user.avatarUrl.small) {
-                transformations(CircleCropTransformation())
+        user.avatarUrl.small?.let {
+            if (it.isNotEmpty()) {
+                mBinding.imgAvatar.load(user.avatarUrl.small) {
+                    transformations(CircleCropTransformation())
+                }
             }
         }
     }

@@ -31,6 +31,9 @@ object ReqApi {
 }
 
 object UserApi {
+    //使用refresh_token刷新access_token
+    const val KHA_API_REFRESH_TOKEN = "/token/refresh"
+
     //登录接口
     const val KHA_API_LOGIN = "/login"
 
