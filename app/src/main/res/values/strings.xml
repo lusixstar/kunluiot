@@ -43,11 +43,11 @@
     <string name="family_name_hint">请输入家庭名称</string>
     <string name="family_edit">编辑家庭</string>
     <string name="family_id">家庭 ID</string>
+
     <string name="city">城市</string>
     <string name="city_hint">请输入城市</string>
+
     <string name="create">创建</string>
-
-
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
     <string name="finish">完成</string>

@@ -1,6 +1,7 @@
 package com.example.kiotsdk.util
 
 import android.text.TextUtils
+import com.kunluiot.sdk.bean.device.DeviceProductTabBean
 
 object DemoUtils {
 
@@ -10,5 +11,17 @@ object DemoUtils {
         } else {
             str.contains("@") && str.contains(".")
         }
+    }
+
+    fun getSingle(list: MutableList<DeviceProductTabBean>): MutableList<DeviceProductTabBean> {
+        val tempList: MutableList<DeviceProductTabBean> = mutableListOf()
+        val it: Iterator<DeviceProductTabBean> = list.iterator()
+        while (it.hasNext()) {
+            val obj = it.next()
+            if (!tempList.contains(obj)) {
+                tempList.add(obj)
+            }
+        }
+        return tempList
     }
 }
