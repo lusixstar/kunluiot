@@ -1,5 +1,6 @@
 package com.kunluiot.sdk.api.family
 
+import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
 import com.kunluiot.sdk.callback.family.IFamilyListCallback
@@ -26,5 +27,19 @@ internal class KunLuFamilyImpl : IKunLuFamily {
      */
     override fun getHomeDetails(familyId: String, callback: IFamilyDetailsCallback) {
         FamilyRequestUtil.getHomeDetails(familyId, callback)
+    }
+
+    /**
+     * 删除家庭
+     */
+    override fun delete(familyId: String, callback: IResultCallback) {
+        FamilyRequestUtil.delete(familyId, callback)
+    }
+
+    /**
+     * 更新家庭信息
+     */
+    override fun update(familyId: String, name: String, city: String, callback: IResultCallback) {
+        FamilyRequestUtil.update(familyId, name, city, callback)
     }
 }

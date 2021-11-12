@@ -31,7 +31,7 @@ class LoginActivity : BaseActivity() {
         mBinding.login.setOnClickListener { gotoNext() }
         mBinding.forget.setOnClickListener { startActivity<ForgetActivity>() }
 
-        refreshLoginToken()
+//        refreshLoginToken()
     }
 
     private fun refreshLoginToken() {

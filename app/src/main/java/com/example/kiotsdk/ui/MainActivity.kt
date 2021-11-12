@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainBinding
 import com.example.kiotsdk.ui.family.FamilyCreateActivity
+import com.example.kiotsdk.ui.family.FamilyListActivity
 import com.example.kiotsdk.ui.family.FamilySelectActivity
 import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
@@ -31,6 +32,7 @@ class MainActivity : BaseActivity() {
 
         mBinding.homeCreate.setOnClickListener { startActivity<FamilyCreateActivity>() }
         mBinding.homeSelect.setOnClickListener { selectFamily.launch(Intent(this, FamilySelectActivity::class.java)) }
+        mBinding.homeList.setOnClickListener { startActivity<FamilyListActivity>() }
 
     }
 

@@ -1,65 +1,53 @@
 package com.example.kiotsdk.ui.family
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyCreateBinding
 import com.example.kiotsdk.databinding.ActivityFamilyDetailsBinding
+import com.example.kiotsdk.databinding.ActivityFamilyEditBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.family.FamilyCreateBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
-class FamilyDetailsActivity : BaseActivity() {
+class FamilyEditActivity : BaseActivity() {
 
-    private lateinit var mBinding: ActivityFamilyDetailsBinding
+    private lateinit var mBinding: ActivityFamilyEditBinding
 
     private var mFamilyId = ""
-
-    private var mFamilyBean: FamilyCreateBean = FamilyCreateBean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mBinding = ActivityFamilyDetailsBinding.inflate(layoutInflater)
+        mBinding = ActivityFamilyEditBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        mBinding.edit.setOnClickListener { gotoEdit() }
-        mBinding.delete.setOnClickListener { deleteFamily() }
+        mBinding.finish.setOnClickListener { updateFamily() }
 
         getFamilyDetails()
     }
 
-    private fun gotoEdit() {
-        val intent = Intent(this, FamilyEditActivity::class.java)
-        intent.putExtra(FamilyEditActivity.FAMILY_ID, mFamilyId)
-        gotoUpdateLaunch.launch(intent)
-    }
-
-    private val gotoUpdateLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            setResult(Activity.RESULT_OK)
-            finish()
+    private fun updateFamily() {
+        val name = mBinding.etName.text.trim().toString()
+        val city = mBinding.etCity.text.trim().toString()
+        if (name.isEmpty()) {
+            toast("name is empty")
+            return
         }
+        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.update(mFamilyId, name, city, updateCallback)
     }
 
-    private fun deleteFamily() {
-        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.delete(mFamilyId, deleteCallback)
-    }
-
-    private val deleteCallback = object : IResultCallback {
+    private val updateCallback = object : IResultCallback {
 
         override fun onSuccess() {
             setResult(Activity.RESULT_OK)
-            finish()
+            toast("update success")
         }
 
         override fun onError(code: String, error: String) {
@@ -68,14 +56,12 @@ class FamilyDetailsActivity : BaseActivity() {
     }
 
     private fun setFamilyData(bean: FamilyCreateBean) {
-        mFamilyBean = bean
-        mBinding.id.text = bean.familyId
-        mBinding.name.text = bean.familyName
-        mBinding.city.text = bean.detailAddress
+        mBinding.etName.setText(bean.familyName)
+        mBinding.etCity.setText(bean.detailAddress)
     }
 
     private fun getFamilyDetails() {
-        mFamilyId = intent.getStringExtra(FAMILY_ID) ?: ""
+        mFamilyId = intent.getStringExtra(FamilyDetailsActivity.FAMILY_ID) ?: ""
         if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getHomeDetails(mFamilyId, detailsCallback)
     }
 

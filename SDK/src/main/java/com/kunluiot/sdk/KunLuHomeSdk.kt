@@ -27,8 +27,8 @@ class KunLuHomeSdk {
 
     private fun setKalle() {
         Kalle.setConfig(KalleConfig.newBuilder()
-            .readTimeout(30, TimeUnit.SECONDS)
-            .connectionTimeout(30, TimeUnit.SECONDS)
+//            .readTimeout(30, TimeUnit.SECONDS)
+//            .connectionTimeout(30, TimeUnit.SECONDS)
 //            .connectFactory(OkHttpConnectFactory.newBuilder().build())
 //            .cookieStore(DBCookieStore.newBuilder(this).build())
 //            .cacheStore(DiskCacheStore.newBuilder(AppConfig.get().PATH_APP_CACHE).build())

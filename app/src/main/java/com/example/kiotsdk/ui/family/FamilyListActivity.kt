@@ -1,7 +1,9 @@
 package com.example.kiotsdk.ui.family
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.adapter.family.FamilyListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyCreateBinding
@@ -38,7 +40,15 @@ class FamilyListActivity : BaseActivity() {
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
             val data = adapter.data[position] as FamilyCreateBean
-            startActivity<FamilyDetailsActivity>(FamilyDetailsActivity.FAMILY_ID to data.familyId)
+            val intent = Intent(this, FamilyDetailsActivity::class.java)
+            intent.putExtra(FamilyDetailsActivity.FAMILY_ID, data.familyId)
+            gotoDeleteFamilyLaunch.launch(intent)
+        }
+    }
+
+    private val gotoDeleteFamilyLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            getFamilyData()
         }
     }
 
@@ -50,6 +60,7 @@ class FamilyListActivity : BaseActivity() {
 
         override fun onSuccess(bean: List<FamilyCreateBean>) {
             if (!bean.isNullOrEmpty()) {
+                mAdapter.data.clear()
                 mAdapter.addData(bean)
             }
         }
