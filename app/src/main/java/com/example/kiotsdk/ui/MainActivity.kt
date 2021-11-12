@@ -5,11 +5,13 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainBinding
+import com.example.kiotsdk.ui.device.DeviceListActivity
 import com.example.kiotsdk.ui.family.FamilyCreateActivity
 import com.example.kiotsdk.ui.family.FamilyListActivity
 import com.example.kiotsdk.ui.family.FamilySelectActivity
 import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.device.DeviceListBean
 import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
@@ -33,6 +35,9 @@ class MainActivity : BaseActivity() {
         mBinding.homeCreate.setOnClickListener { startActivity<FamilyCreateActivity>() }
         mBinding.homeSelect.setOnClickListener { selectFamily.launch(Intent(this, FamilySelectActivity::class.java)) }
         mBinding.homeList.setOnClickListener { startActivity<FamilyListActivity>() }
+        mBinding.homeList.setOnClickListener { startActivity<FamilyListActivity>() }
+
+        mBinding.deviceWifiMode.setOnClickListener { startActivity<DeviceListActivity>() }
 
     }
 

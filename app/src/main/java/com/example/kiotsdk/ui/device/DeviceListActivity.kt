@@ -1,14 +1,13 @@
 package com.example.kiotsdk.ui.device
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.adapter.family.FamilyListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceListBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.family.FamilyCreateBean
-import com.kunluiot.sdk.callback.family.IFamilyListCallback
+import com.kunluiot.sdk.bean.device.DeviceListBean
+import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import org.jetbrains.anko.toast
 
 class DeviceListActivity : BaseActivity() {
@@ -31,7 +30,7 @@ class DeviceListActivity : BaseActivity() {
     }
 
     private fun getDeviceList() {
-        KunLuHomeSdk.familyImpl.getHomeList(listCallback)
+        KunLuHomeSdk.deviceImpl.list(listCallback)
     }
 
     private fun initAdapter() {
@@ -47,21 +46,13 @@ class DeviceListActivity : BaseActivity() {
 
     private val gotoDeleteFamilyLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
-            getFamilyData()
         }
     }
 
-    private fun getFamilyData() {
-        KunLuHomeSdk.familyImpl.getHomeList(listCallback)
-    }
+    private val listCallback = object : IDeviceListCallback {
 
-    private val listCallback = object : IFamilyListCallback {
+        override fun onSuccess(bean: DeviceListBean) {
 
-        override fun onSuccess(bean: List<FamilyCreateBean>) {
-            if (!bean.isNullOrEmpty()) {
-                mAdapter.data.clear()
-                mAdapter.addData(bean)
-            }
         }
 
         override fun onError(code: String, error: String) {

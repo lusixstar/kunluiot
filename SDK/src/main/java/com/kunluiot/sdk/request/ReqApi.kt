@@ -30,6 +30,11 @@ object ReqApi {
     const val KHA_CONSOLE_BASE_URL1 = "https://console-openapi-kl.$KHA_DOMAIN"
 }
 
+object DeviceApi {
+    // 设备列表
+    const val KHA_API_GET_PRODUCTLIST = "/api/v2/product"
+}
+
 object FamilyApi {
     // 创建家庭
     const val KHA_API_FAMILY = "/family"

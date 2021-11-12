@@ -77,6 +77,10 @@
             android:name=".ui.family.FamilyEditActivity"
             android:screenOrientation="fullSensor" />
 
+        <activity
+            android:name=".ui.device.DeviceListActivity"
+            android:screenOrientation="fullSensor" />
+
     </application>
 
 </manifest>

@@ -137,12 +137,12 @@
                 app:layout_constraintTop_toBottomOf="@id/home_list" />
 
             <Button
-                android:id="@+id/device_ez_mode"
+                android:id="@+id/device_wifi_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="5dp"
-                android:text="@string/device_ez_mode"
+                android:text="@string/device_wifi_mode"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/device_set_net" />
 
@@ -154,7 +154,7 @@
                 android:layout_marginTop="5dp"
                 android:text="@string/device_ap_mode"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/device_ez_mode" />
+                app:layout_constraintTop_toBottomOf="@id/device_wifi_mode" />
 
             <Button
                 android:id="@+id/device_zigbee_mode"

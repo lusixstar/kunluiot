@@ -1,6 +1,8 @@
 package com.kunluiot.sdk
 
 import android.app.Application
+import com.kunluiot.sdk.api.device.IKunLuDevice
+import com.kunluiot.sdk.api.device.KunLuDeviceImpl
 import com.kunluiot.sdk.api.family.IKunLuFamily
 import com.kunluiot.sdk.api.family.KunLuFamilyImpl
 import com.kunluiot.sdk.api.user.IKunLuUser
@@ -82,6 +84,11 @@ class KunLuHomeSdk {
         val familyImpl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             val family: IKunLuFamily = KunLuFamilyImpl()
             family
+        }
+
+        val deviceImpl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            val device: IKunLuDevice = KunLuDeviceImpl()
+            device
         }
     }
 }
