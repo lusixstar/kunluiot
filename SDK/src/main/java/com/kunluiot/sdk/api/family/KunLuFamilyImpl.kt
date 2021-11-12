@@ -4,7 +4,7 @@ import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
 import com.kunluiot.sdk.callback.family.IFamilyListCallback
-import com.kunluiot.sdk.helper.FamilyRequestUtil
+import com.kunluiot.sdk.request.FamilyRequestUtil
 
 internal class KunLuFamilyImpl : IKunLuFamily {
 

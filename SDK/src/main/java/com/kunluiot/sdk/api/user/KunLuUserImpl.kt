@@ -2,8 +2,7 @@ package com.kunluiot.sdk.api.user
 
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.user.*
-import com.kunluiot.sdk.helper.UserRequestUtil
-import java.io.File
+import com.kunluiot.sdk.request.UserRequestUtil
 
 internal class KunLuUserImpl : IKunLuUser {
 

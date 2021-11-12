@@ -10,7 +10,7 @@ import com.example.kiotsdk.ui.family.FamilyListActivity
 import com.example.kiotsdk.ui.family.FamilySelectActivity
 import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.helper.UserApi
+import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
