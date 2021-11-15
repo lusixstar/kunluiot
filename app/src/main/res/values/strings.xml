@@ -58,5 +58,33 @@
     <string name="delete">删除</string>
     <string name="finish">完成</string>
     <string name="back">返回</string>
+    <string name="retry_">重试</string>
+
+
+    <string name="countdown_of_distribution_network">配网倒计时</string>
+    <string name="routers_mobile_phones_and_devices_should_be_as_close_as_possible">路由器、手机和设备尽量靠近</string>
+    <string name="obtain_the_distribution_network_security_code">1. 获取配网安全码</string>
+    <string name="scene_name_already_exists_">场景名称已经存在！</string>
+    <string name="device_connection_router">2.设备连接路由器</string>
+    <string name="_cloud_verification_device_information">3. 云端验证设备信息</string>
+    <string name="equipment_landing_in_the_cloud_step_4">4. 设备登录云端</string>
+    <string name="binding_equipment">5. 绑定设备</string>
+    <string name="analysis_result_no_device_is_bound_please_try_to_use_compatibility_mode_to_complete_equipment_distribution_network">分析结果：未绑定设备，请尝试使用兼容模式完成设备配网</string>
+    <string name="node">所在节点：</string>
+    <string name="api_status">API状态：1</string>
+    <string name="app_channel">App通道：1</string>
+    <string name="equipment_channel_1">设备通道：1</string>
+    <string name="complete_distribution_network">完成配网</string>
+    <string name="device_net_tips">请尽可能使设备、路由器与手机相互靠近</string>
+    <string name="distribution_network_success">配网成功</string>
+    <string name="compatibility_mode">兼容模式</string>
+    <string name="distribution_network_failure">配网失败</string>
+    <string name="net_failure_tips">原因分析完成，请根据下方提示继续操作！</string>
+    <string name="not_bound_to_device_please_try_to_use_compatibility_mode_to_complete_device_distribution">未绑定到设备，请尝试使用兼容模式完成设备配网</string>
+    <string name="bad_wifi">Wi-Fi网络不稳定，请重试</string>
+    <string name="device_bound_by_sb">1. 不支持绑定此设备\n2. 设备已被其他人绑定</string>
+    <string name="device_bound_not_support">1. 不支持绑定此设备\n2. 设备已被 %1$s绑定</string>
+
+
 
 </resources>

@@ -63,3 +63,13 @@ data class DeviceWifiBean(
     var name: String = "",
     var password: String = "",
 )
+
+data class DeviceNewBean(
+    val devTid: String = "",
+    val mid: String = "",
+    val registerId: String = "",
+    val deviceName: String = "",
+    val ctrlKey: String = "",
+    val bindResultCode: Int = 0,
+    val bindResultMsg: String = "",
+)
