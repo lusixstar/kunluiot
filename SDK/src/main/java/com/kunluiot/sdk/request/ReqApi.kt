@@ -33,6 +33,9 @@ object ReqApi {
 object DeviceApi {
     // 设备列表
     const val KHA_API_GET_PRODUCTLIST = "/api/v2/product"
+
+    //获取pinCode接口
+    const val KHA_API_GET_PIN_CODE = "/getPINCode"
 }
 
 object FamilyApi {

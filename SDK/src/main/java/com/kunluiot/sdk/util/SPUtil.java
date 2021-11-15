@@ -30,6 +30,9 @@ public class SPUtil {
 
     private static final String KEY_NO_OOB = "com.kunluiot.bluetooth.light.KEY_NO_OOB";
 
+    public static final String DEVICE_LIST = "kunlu_device_list";
+    public static final String DEVICE_WIFI_INFO = "kunlu_device_wifi_info";
+
     private static String getSpName(Context context) {
         return context.getPackageName() + "_sp";
     }

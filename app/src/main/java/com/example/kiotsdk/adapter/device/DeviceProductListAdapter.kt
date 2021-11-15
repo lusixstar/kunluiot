@@ -1,30 +1,34 @@
 package com.example.kiotsdk.adapter.device
 
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.kiotsdk.R
-import com.kunluiot.sdk.bean.device.DeviceProductTabBean
+import com.example.kiotsdk.ui.device.DeviceSetWifiActivity
+import com.kunluiot.sdk.bean.device.DeviceListBean
+import com.kunluiot.sdk.bean.device.DeviceProductsBean
+import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
+import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
+import org.jetbrains.anko.startActivity
 
 
-class DeviceProductListAdapter(list : MutableList<DeviceProductTabBean>) : BaseQuickAdapter<DeviceProductTabBean, BaseViewHolder>(R.layout.item_device_tab_list, list) {
+class DeviceProductListAdapter(list: MutableList<DeviceListBean>) : BaseQuickAdapter<DeviceListBean, BaseViewHolder>(R.layout.item_device_product_list, list) {
 
-    override fun convert(holder: BaseViewHolder, item: DeviceProductTabBean) {
-        holder.setText(R.id.text, item.categoryName)
+    override fun convert(holder: BaseViewHolder, item: DeviceListBean) {
+        holder.setText(R.id.text, item.categorySelfName)
 
-        if (item.select) {
-            holder.setTextColor(R.id.text,  ContextCompat.getColor(holder.itemView.context, R.color.black))
-            holder.setBackgroundColor(R.id.item,  ContextCompat.getColor(holder.itemView.context, R.color.white))
-        } else {
-            holder.setTextColor(R.id.text,  ContextCompat.getColor(holder.itemView.context, R.color.black))
-            holder.setBackgroundColor(R.id.item,  ContextCompat.getColor(holder.itemView.context, R.color.picture_color_light_grey))
+        val listView = holder.getView<RecyclerView>(R.id.item_list)
+        val manager = GridLayoutManager(listView.context, 4)
+        val adapter = DeviceProductItemAdapter(mutableListOf())
+        listView.layoutManager = manager
+        listView.adapter = adapter
+        adapter.data.clear()
+        adapter.addData(item.products)
+
+        adapter.setOnItemClickListener { ada, _, position ->
+            val bean = ada.data[position] as DeviceProductsBean
+            listView.context.startActivity<DeviceSetWifiActivity>(DeviceSetWifiActivity.BEAN to bean)
         }
-    }
-
-    fun selectPosition(position: Int) {
-        data.forEach { it.select = false }
-        data[position].select = true
-        notifyItemRangeChanged(0, data.size)
     }
 }

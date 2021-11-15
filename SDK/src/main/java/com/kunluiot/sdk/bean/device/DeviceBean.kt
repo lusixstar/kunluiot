@@ -1,5 +1,8 @@
 package com.kunluiot.sdk.bean.device
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * 设备列表
  * */
@@ -8,7 +11,7 @@ data class DeviceListBean(
     val categoryName: String = "",
     val productName: String = "",
     val categoryId: String = "",
-    val products: List<DeviceProductsBean> = listOf(),
+    var products: List<DeviceProductsBean> = listOf(),
     val categoryParentName: String = "",
     val categorySelfName: String = "",
 )
@@ -20,10 +23,11 @@ data class DeviceCategoryBean(
     val parent: DeviceProductTabBean = DeviceProductTabBean(),
 )
 
+@Parcelize
 data class DeviceNameBean(
     val zh_CN: String = "",
     val en_US: String = "",
-)
+) : Parcelable
 
 data class DeviceProductTabBean(
     var select: Boolean = false,
@@ -32,6 +36,7 @@ data class DeviceProductTabBean(
     var categoryName: String = "",
 )
 
+@Parcelize
 data class DeviceProductsBean(
     val mid: String = "",
     val name: String = "",
@@ -47,4 +52,14 @@ data class DeviceProductsBean(
     val appDisplayName: DeviceNameBean = DeviceNameBean(),
     val accessWay: List<String> = listOf(),
     val configDescImg: List<String> = listOf(),
+) : Parcelable
+
+data class DevicePinCodeBean(
+    var PINCode: String = "",
+    var ssid: String = "",
+)
+
+data class DeviceWifiBean(
+    var name: String = "",
+    var password: String = "",
 )

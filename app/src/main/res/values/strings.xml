@@ -6,6 +6,7 @@
     <string name="user_register">注册</string>
     <string name="country_code">国家码</string>
     <string name="email_or_phone">手机号</string>
+    <string name="account">账号</string>
 <!--    <string name="email_or_phone">邮箱与手机号</string>-->
     <string name="password">密码</string>
     <string name="reset_password">重置密码</string>
@@ -44,6 +45,11 @@
     <string name="family_edit">编辑家庭</string>
     <string name="family_id">家庭 ID</string>
 
+    <string name="device_set_wifi">设置Wifi</string>
+    <string name="device_set_wifi_hint">请连接Wi-Fi并输入Wi-Fi</string>
+    <string name="please_select_a_wifi_network">请选择一个WiFi网络</string>
+
+
     <string name="city">城市</string>
     <string name="city_hint">请输入城市</string>
 
@@ -52,4 +58,5 @@
     <string name="delete">删除</string>
     <string name="finish">完成</string>
     <string name="back">返回</string>
+
 </resources>

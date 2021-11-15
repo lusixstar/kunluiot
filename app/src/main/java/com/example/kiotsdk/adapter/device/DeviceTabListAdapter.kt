@@ -1,6 +1,5 @@
 package com.example.kiotsdk.adapter.device
 
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -18,7 +17,7 @@ class DeviceTabListAdapter(list : MutableList<DeviceProductTabBean>) : BaseQuick
             holder.setBackgroundColor(R.id.item,  ContextCompat.getColor(holder.itemView.context, R.color.white))
         } else {
             holder.setTextColor(R.id.text,  ContextCompat.getColor(holder.itemView.context, R.color.black))
-            holder.setBackgroundColor(R.id.item,  ContextCompat.getColor(holder.itemView.context, R.color.picture_color_light_grey))
+            holder.setBackgroundColor(R.id.item,  ContextCompat.getColor(holder.itemView.context, R.color.color_f5f5f5))
         }
     }
 
