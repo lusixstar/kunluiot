@@ -40,8 +40,11 @@ object DeviceApi {
     //获取新配上的设备列表
     const val KHA_API_GET_NEW_DEVICE_LIST = "/getNewDeviceList"
 
-    //设备获取网关
+    //设备获取
     const val KHA_API_DEVICES = "/devices"
+
+    //设备列表
+    const val KHA_API_DEVICE = "/device"
 
     //设备配网
     const val KHA_API_DEVICE_CONTROL = "/deviceControl"

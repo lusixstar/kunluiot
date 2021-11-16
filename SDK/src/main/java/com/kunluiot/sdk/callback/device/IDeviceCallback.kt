@@ -27,3 +27,11 @@ interface INewDeviceCallback {
     fun onSuccess(bean: List<DeviceNewBean>)
     fun onError(code: String, error: String)
 }
+
+/**
+ * 获取单个设备
+ * */
+interface IOneDeviceCallback {
+    fun onSuccess(bean: DeviceNewBean)
+    fun onError(code: String, error: String)
+}

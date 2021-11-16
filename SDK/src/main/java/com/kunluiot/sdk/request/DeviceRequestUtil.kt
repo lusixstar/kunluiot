@@ -9,6 +9,7 @@ import com.kunluiot.sdk.bean.family.FamilyCreateBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.callback.device.INewDeviceCallback
+import com.kunluiot.sdk.callback.device.IOneDeviceCallback
 import com.kunluiot.sdk.callback.device.IPinCodeCallback
 import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
@@ -173,6 +174,35 @@ object DeviceRequestUtil {
             .param("quickOperation", quickOperation)
             .perform(object : KunLuNetCallback<BaseRespBean<List<DeviceNewBean>>>(KunLuHomeSdk.instance.getApp()) {
                 override fun onResponse(response: SimpleResponse<BaseRespBean<List<DeviceNewBean>>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 扫码添加设备
+     */
+    fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback) {
+        val map = mutableMapOf<String, String>()
+        map["bindKey"] = bindKey
+        map["devTid"] = devTid
+        val param = JsonUtils.toJson(map)
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .body(JsonBody(param))
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceNewBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceNewBean>, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)

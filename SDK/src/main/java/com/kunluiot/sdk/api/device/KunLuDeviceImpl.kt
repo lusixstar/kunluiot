@@ -3,6 +3,7 @@ package com.kunluiot.sdk.api.device
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.callback.device.INewDeviceCallback
+import com.kunluiot.sdk.callback.device.IOneDeviceCallback
 import com.kunluiot.sdk.callback.device.IPinCodeCallback
 import com.kunluiot.sdk.request.DeviceRequestUtil
 
@@ -48,5 +49,12 @@ internal class KunLuDeviceImpl : IKunLuDevice {
      */
     override fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: INewDeviceCallback) {
         DeviceRequestUtil.getSubDevice(ctrlKey, subDevTid, type, quickOperation, callback)
+    }
+
+    /**
+     *  扫码添加设备
+     */
+    override fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback) {
+        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, callback)
     }
 }
