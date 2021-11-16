@@ -16,7 +16,7 @@
 package com.kunluiot.sdk.request
 
 import android.content.Context
-import com.google.gson.GsonBuilder
+import com.hjq.gson.factory.GsonFactory
 import com.kunluiot.sdk.BuildConfig
 import com.kunluiot.sdk.R
 import com.kunluiot.sdk.bean.common.BaseRespBean
@@ -27,8 +27,6 @@ import com.kunluiot.sdk.util.log.KunLuLog
 import java.lang.reflect.Type
 
 class JsonConverter(private val mContext: Context) : Converter {
-
-    private val gson = GsonBuilder().create()
 
     @Throws(Exception::class)
     override fun <S, F> convert(succeed: Type, failed: Type, response: Response, fromCache: Boolean): SimpleResponse<S, F> {
@@ -43,7 +41,7 @@ class JsonConverter(private val mContext: Context) : Converter {
         when {
             code in 200..299 -> { // Http is successful.
                 try {
-                    val data: S = gson.fromJson(response.body().string(), succeed)
+                    val data: S = GsonFactory.getSingletonGson().fromJson(response.body().string(), succeed)
                     succeedData = data
                 } catch (e: Exception) {
                     failedData = mContext.getString(R.string.http_server_data_format_error) as F
@@ -51,7 +49,7 @@ class JsonConverter(private val mContext: Context) : Converter {
             }
             code in 400..499 -> {
                 try {
-                    val data = gson.fromJson(response.body().string(), BaseRespBean::class.java)
+                    val data = GsonFactory.getSingletonGson().fromJson(response.body().string(), BaseRespBean::class.java)
                     data.status = data.code
                     data.message = data.desc
                     succeedData = data as S

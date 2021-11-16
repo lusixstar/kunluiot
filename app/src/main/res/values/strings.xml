@@ -80,11 +80,22 @@
     <string name="compatibility_mode">兼容模式</string>
     <string name="distribution_network_failure">配网失败</string>
     <string name="net_failure_tips">原因分析完成，请根据下方提示继续操作！</string>
-    <string name="not_bound_to_device_please_try_to_use_compatibility_mode_to_complete_device_distribution">未绑定到设备，请尝试使用兼容模式完成设备配网</string>
+    <string name="not_bound_to_device_please_try_to_use_compatibility_mode_to_complete_device_distribution">未绑定到设备，请重试</string>
     <string name="bad_wifi">Wi-Fi网络不稳定，请重试</string>
     <string name="device_bound_by_sb">1. 不支持绑定此设备\n2. 设备已被其他人绑定</string>
     <string name="device_bound_not_support">1. 不支持绑定此设备\n2. 设备已被 %1$s绑定</string>
 
+    <string name="select_gateway">选择网关</string>
+    <string name="add_device">添加设备</string>
+    <string name="gateway_offline">网关不在线!</string>
+
+    <string name="_gateway_enters_add_mode">1.网关进入添加模式</string>
+    <string name="search_for_sub_devices">2.搜索子设备</string>
+    <string name="_the_sub_device_is_bound_successfully">3.子设备绑定成功</string>
+    <string name="treatment_method">处理方式:</string>
+    <string name="please_follow_the_equipment_distribution_network_operation_instructions_and_make_the_sub_equipment_and_gateway_as_close_as_possible">请按照设备配网操作说明进行操作，并使子设备和网关尽量靠近</string>
+    <string name="gateway_has_found_this_type_of_sub_device">网关已搜索到此类型子设备</string>
+    <string name="the_gateway_did_not_search_for_this_type_of_sub_device">网关未搜索到此类型子设备</string>
 
 
 </resources>

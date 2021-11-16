@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.kunluiot.sdk.thirdlib.wifi.ConfigCallback;
+import com.kunluiot.sdk.util.log.KunLuLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -316,9 +317,9 @@ public class SeparatedDeviceConfig {
                             DatagramPacket packet = bean.getSingle();
                             ds.send(packet);
                         }
-                    } catch (IOException e) {
-                        Log.e(TAG, "Error happened when send config message through socket");
-                        e.printStackTrace();
+                    } catch (IOException | InterruptedException e) {
+//                        Log.e(TAG, "Error happened when send config message through socket");
+//                        e.printStackTrace();
                     }
                 }
             } catch (Exception e) {
@@ -537,34 +538,39 @@ public class SeparatedDeviceConfig {
      * @throws IOException          exception
      */
     private void sendEncodedDataByLength(List<byte[]> data, int times, int interval, int micros)
-            throws InterruptedException, IOException {
-        for (int i = 0; i < times; i++) {
-            // 到达interval后需要发送数据
-            int count = 0;
-            for (int j = 0; j < data.size(); j++) {
-                DatagramPacket dp = getLengthPackage(data.get(j));
-                mConfigMessages.put(new ConfigBean(dp));
-                sleep(micros);
-
-                if (count % interval == interval - 1) {
-                    count = 0;
-                    Thread.sleep(TIME_SLEEP_MILLIS_BLOCK);
-                } else {
-                    count++;
-                }
-            }
-
-            if (count != 0) {
-                Log.d(TAG, "Address data not enough to the interval");
-                // 如果有剩余的数据，那么后面全部填充byte[1]
-                for (int j = 0; j < interval - count; j++) {
-                    DatagramPacket dp = getLengthPackage(new byte[1]);
+            throws  InterruptedException, IOException {
+        try {
+            for (int i = 0; i < times; i++) {
+                // 到达interval后需要发送数据
+                int count = 0;
+                for (int j = 0; j < data.size(); j++) {
+                    DatagramPacket dp = getLengthPackage(data.get(j));
                     mConfigMessages.put(new ConfigBean(dp));
                     sleep(micros);
+
+                    if (count % interval == interval - 1) {
+                        count = 0;
+                        Thread.sleep(TIME_SLEEP_MILLIS_BLOCK);
+                    } else {
+                        count++;
+                    }
                 }
-                Thread.sleep(TIME_SLEEP_MILLIS_BLOCK);
+
+                if (count != 0) {
+                    Log.d(TAG, "Address data not enough to the interval");
+                    // 如果有剩余的数据，那么后面全部填充byte[1]
+                    for (int j = 0; j < interval - count; j++) {
+                        DatagramPacket dp = getLengthPackage(new byte[1]);
+                        mConfigMessages.put(new ConfigBean(dp));
+                        sleep(micros);
+                    }
+                    Thread.sleep(TIME_SLEEP_MILLIS_BLOCK);
+                }
             }
+        } catch (InterruptedException e) {
+
         }
+
     }
 
     private DatagramPacket getLengthPackage(byte[] data) throws UnknownHostException {
@@ -626,9 +632,9 @@ public class SeparatedDeviceConfig {
             int millis = micros / 1000;
             int nanos = (micros % 1000) * 1000;
             Thread.sleep(millis, nanos);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+        } catch(InterruptedException | IllegalArgumentException e){
+//            KunLuLog.INSTANCE.e("IllegalArgumentException == ", e.getMessage());
+        } //            e.printStackTrace();
     }
 
     private class ConfigBean {

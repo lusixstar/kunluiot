@@ -272,16 +272,7 @@ object UserRequestUtil {
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status == null) {
-                            callback.onSuccess()
-                        } else {
-                            if (data.status != 200) {
-                                callback.onError(data.status.toString(), data.message)
-                            } else {
-                                callback.onSuccess()
-                            }
-                        }
+                        callback.onSuccess()
                     }
                 }
             })

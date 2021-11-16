@@ -64,15 +64,19 @@ data class DeviceWifiBean(
     var password: String = "",
 )
 
+@Parcelize
 data class DeviceNewBean(
     val devTid: String = "",
     val mid: String = "",
-    val registerId: String = "",
+    var registerId: String = "",
     val deviceName: String = "",
     val ctrlKey: String = "",
     val bindResultCode: Int = 0,
-    val bindResultMsg: String = "",
-)
+    var bindResultMsg: String = "",
+    val name: String = "",
+    val online: Boolean = false,
+    val productName: DeviceNameBean = DeviceNameBean(),
+) : Parcelable
 
 data class ConfigWifiBean(
     val action: String = "",

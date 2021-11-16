@@ -44,6 +44,8 @@ dependencies {
 
     //gson
     api 'com.google.code.gson:gson:2.8.9'
+    api 'com.github.getActivity:GsonFactory:5.2'
+
 
     //WebSocket
     api 'org.java-websocket:Java-WebSocket:1.5.1'

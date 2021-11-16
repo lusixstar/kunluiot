@@ -89,6 +89,14 @@
             android:name=".ui.device.DeviceSetWifiDetailsActivity"
             android:screenOrientation="fullSensor" />
 
+        <activity
+            android:name=".ui.device.DeviceGateWayActivity"
+            android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".ui.device.DeviceGateWayDetailsActivity"
+            android:screenOrientation="fullSensor" />
+
     </application>
 
 </manifest>

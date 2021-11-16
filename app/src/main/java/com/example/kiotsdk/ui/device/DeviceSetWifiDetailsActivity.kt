@@ -75,6 +75,28 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
         mBinding.roundProgressBar.setMax(mTotalProgress)
 
         mBinding.tvFirstStep.text = getString(R.string.obtain_the_distribution_network_security_code) + "(" + mPin + ")"
+
+        mBinding.btnFinish.setOnClickListener { saveConfigNetwork() }
+    }
+
+    private fun saveConfigNetwork() {
+        when (mRespState) {
+            RESP_LOADING -> { }
+            RESP_SUCCESS -> {
+                if (mNewDeviceBean.size > 0) {
+//                    startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
+//                        .putExtra("devTid", mNewDeviceResponses.get(0).getDevTid())
+//                        .putExtra("mid", mNewDeviceResponses.get(0).getMid())
+//                        .putExtra("registerId", mNewDeviceResponses.get(0).getRegisterId())
+//                        .putExtra("deviceName", mNewDeviceResponses.get(0).getName())
+//                        .putExtra("ctrlKey", mNewDeviceResponses.get(0).getCtrlKey()))
+                    return
+                }
+                mRespState = RESP_FAIL
+                showConfigNetworkPage(mRespState)
+            }
+            RESP_FAIL -> startConfig()
+        }
     }
 
     /**
@@ -119,7 +141,7 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
                 mBinding.ivConfigNetworkFinish.visibility = View.VISIBLE
             }
             RESP_FAIL -> {
-                setTipsInfo(if (mCurrStep == 2) getString(R.string.compatibility_mode) else getString(R.string.retry_), getString(R.string.distribution_network_failure), getString(R.string.net_failure_tips))
+                setTipsInfo(if (mCurrStep == 2) getString(R.string.retry_) else getString(R.string.retry_), getString(R.string.distribution_network_failure), getString(R.string.net_failure_tips))
                 mBinding.btnFinish.visibility = View.VISIBLE
                 mBinding.llConfigNetworkError.visibility = View.VISIBLE
                 mBinding.tvConfigNetworkErrorTip.text = getString(R.string.device_connection_router) + "(" + mPin + ")"

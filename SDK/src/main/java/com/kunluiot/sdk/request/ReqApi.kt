@@ -34,11 +34,17 @@ object DeviceApi {
     // 设备列表
     const val KHA_API_GET_PRODUCTLIST = "/api/v2/product"
 
-    //获取pinCode接口
+    //获取pinCode
     const val KHA_API_GET_PIN_CODE = "/getPINCode"
 
     //获取新配上的设备列表
     const val KHA_API_GET_NEW_DEVICE_LIST = "/getNewDeviceList"
+
+    //设备获取网关
+    const val KHA_API_DEVICES = "/devices"
+
+    //设备配网
+    const val KHA_API_DEVICE_CONTROL = "/deviceControl"
 }
 
 object FamilyApi {
