@@ -10,6 +10,7 @@ import com.kunluiot.sdk.bean.device.DevicePinCodeBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import com.kunluiot.sdk.bean.device.DeviceWifiBean
 import com.kunluiot.sdk.callback.device.IPinCodeCallback
+import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
@@ -20,6 +21,8 @@ class DeviceSetWifiActivity : BaseActivity() {
     private lateinit var mBinding: ActivityDeviceSetWifiBinding
 
     private var mBean: DeviceProductsBean = DeviceProductsBean()
+    private var mApModel = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +33,10 @@ class DeviceSetWifiActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        intent?.let { mBean = it.getParcelableExtra(DeviceSetWifiDetailsActivity.BEAN) ?: DeviceProductsBean() }
+        intent?.let {
+            mBean = it.getParcelableExtra(DeviceSetWifiDetailsActivity.BEAN) ?: DeviceProductsBean()
+            mApModel = it.getBooleanExtra(NET_TYPE_AP, false)
+        }
 
         mBinding.finish.setOnClickListener { gotoNext() }
         initWifiInfo()
@@ -69,6 +75,7 @@ class DeviceSetWifiActivity : BaseActivity() {
             DeviceSetWifiDetailsActivity.SSID to bean.ssid,
             DeviceSetWifiDetailsActivity.PIN to bean.PINCode,
             DeviceSetWifiDetailsActivity.PASSWD to password,
+            DeviceSetWifiDetailsActivity.NET_TYPE_AP to mApModel,
         )
     }
 
@@ -96,5 +103,6 @@ class DeviceSetWifiActivity : BaseActivity() {
 
     companion object {
         const val BEAN = "bean"
+        const val NET_TYPE_AP = "type_ap"
     }
 }

@@ -15,6 +15,8 @@ import org.jetbrains.anko.startActivity
 
 class DeviceProductListAdapter(list: MutableList<DeviceListBean>) : BaseQuickAdapter<DeviceListBean, BaseViewHolder>(R.layout.item_device_product_list, list) {
 
+    private var mApModel = false
+
     override fun convert(holder: BaseViewHolder, item: DeviceListBean) {
         holder.setText(R.id.text, item.categorySelfName)
 
@@ -28,7 +30,11 @@ class DeviceProductListAdapter(list: MutableList<DeviceListBean>) : BaseQuickAda
 
         adapter.setOnItemClickListener { ada, _, position ->
             val bean = ada.data[position] as DeviceProductsBean
-            listView.context.startActivity<DeviceSetWifiActivity>(DeviceSetWifiActivity.BEAN to bean)
+            listView.context.startActivity<DeviceSetWifiActivity>(DeviceSetWifiActivity.BEAN to bean, DeviceSetWifiActivity.NET_TYPE_AP to mApModel)
         }
+    }
+
+    fun setApType(model: Boolean) {
+        mApModel = model
     }
 }

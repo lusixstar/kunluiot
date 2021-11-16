@@ -7,17 +7,16 @@ import android.view.View
 import android.widget.ImageView
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
-import com.example.kiotsdk.bean.ConfigWifiBean
 import com.example.kiotsdk.databinding.ActivityDeviceSetWifiDetailsBinding
 import com.example.kiotsdk.widget.GifView
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.device.ConfigWifiBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import com.kunluiot.sdk.callback.device.INewDeviceCallback
 import com.kunluiot.sdk.thirdlib.wifi.RNHekrConfigModule
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.util.JsonUtils
-import org.jetbrains.anko.toast
 import java.util.*
 
 class DeviceSetWifiDetailsActivity : BaseActivity() {
@@ -25,7 +24,6 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
     private lateinit var mBinding: ActivityDeviceSetWifiDetailsBinding
 
     private lateinit var mRNHekrConfigModule: RNHekrConfigModule
-
 
     private var mBean: DeviceProductsBean = DeviceProductsBean()
     private var mSsid: String = ""
@@ -48,6 +46,8 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
     private var mFourStepFlag = 0
     private var mFiveStepFlag = 0
 
+    private var mApModel = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +63,7 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
             mSsid = it.getStringExtra(SSID) ?: ""
             mPin = it.getStringExtra(PIN) ?: ""
             mPassword = it.getStringExtra(PASSWD) ?: ""
+            mApModel = it.getBooleanExtra(NET_TYPE_AP, false)
         }
 
         initView()
@@ -90,7 +91,11 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
         mRNHekrConfigModule = RNHekrConfigModule(this)
         mRespState = RESP_LOADING
         mConfigWifiList.clear()
-        mRNHekrConfigModule.config(mSsid, mPassword, mPin, mHandler)
+        if (mApModel) {
+            mRNHekrConfigModule.softAP(mSsid, mPassword, mPin, mHandler)
+        } else {
+            mRNHekrConfigModule.config(mSsid, mPassword, mPin, mHandler)
+        }
         mCurrStep = 2
         getDoneDevices()
         showConfigNetworkPage(mRespState)
@@ -318,6 +323,8 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
         const val SSID = "ssid"
         const val PIN = "pin"
         const val PASSWD = "password"
+
+        const val NET_TYPE_AP = "type_ap"
 
         const val RESP_LOADING = 0 // 没有状态
         const val RESP_SUCCESS = 1 // 成功

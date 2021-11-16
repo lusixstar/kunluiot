@@ -43,7 +43,7 @@ class MainActivity : BaseActivity() {
         mBinding.homeList.setOnClickListener { startActivity<FamilyListActivity>() }
 
         mBinding.deviceWifiMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_WIFI) }
-        mBinding.deviceApMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_WIFI) }
+        mBinding.deviceApMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_WIFI, DeviceListActivity.NET_TYPE_AP to true) }
         mBinding.deviceZigbeeMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_ZIG_BEE) }
         mBinding.deviceQrMode.setOnClickListener { gotoQrLaunch.launch(Intent(this, QRCodeActivity::class.java)) }
     }

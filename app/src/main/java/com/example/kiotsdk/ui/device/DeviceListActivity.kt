@@ -27,6 +27,7 @@ class DeviceListActivity : BaseActivity() {
     private lateinit var mTabAdapter: DeviceTabListAdapter
 
     private var mNetType = ""
+    private var mApModel = false
 
     private var mAllProductList: List<DeviceListBean> = mutableListOf()
 
@@ -39,7 +40,10 @@ class DeviceListActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        intent?.let { mNetType = it.getStringExtra(NET_TYPE) ?: "" }
+        intent?.let {
+            mNetType = it.getStringExtra(NET_TYPE) ?: ""
+            mApModel = it.getBooleanExtra(NET_TYPE_AP, false)
+        }
 
         initAdapter()
         getDeviceList()
@@ -80,6 +84,7 @@ class DeviceListActivity : BaseActivity() {
         }
 
         mProductAdapter = DeviceProductListAdapter(arrayListOf())
+        mProductAdapter.setApType(mApModel)
         (mBinding.listItem.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.listItem.adapter = mProductAdapter
     }
@@ -137,5 +142,6 @@ class DeviceListActivity : BaseActivity() {
         const val NET_TYPE = "type"
         const val NET_TYPE_WIFI = "WIFI"
         const val NET_TYPE_ZIG_BEE = "ZIG_BEE"
+        const val NET_TYPE_AP = "type_ap"
     }
 }
