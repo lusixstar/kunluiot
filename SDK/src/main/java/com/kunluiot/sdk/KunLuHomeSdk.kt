@@ -1,6 +1,8 @@
 package com.kunluiot.sdk
 
 import android.app.Application
+import com.kunluiot.sdk.api.common.IKunLuCommon
+import com.kunluiot.sdk.api.common.KunLuCommonImpl
 import com.kunluiot.sdk.api.device.IKunLuDevice
 import com.kunluiot.sdk.api.device.KunLuDeviceImpl
 import com.kunluiot.sdk.api.family.IKunLuFamily
@@ -88,6 +90,11 @@ class KunLuHomeSdk {
         val deviceImpl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             val device: IKunLuDevice = KunLuDeviceImpl()
             device
+        }
+
+        val commonImpl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            val common: IKunLuCommon = KunLuCommonImpl()
+            common
         }
     }
 }

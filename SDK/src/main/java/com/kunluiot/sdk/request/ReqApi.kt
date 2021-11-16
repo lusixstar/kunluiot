@@ -87,5 +87,12 @@ object UserApi {
     //修改账户头像
     const val KHA_API_UPDATE_PHOTO = "/user/file"
 
+}
 
+object CommonApi {
+    //常见问题列表
+    const val KHA_API_COMMON_PROBLEM = "/api/v2/commonProblem/app"
+
+    //意见反馈
+    const val KHA_API_FEEDBACK = "/external/feedback"
 }
