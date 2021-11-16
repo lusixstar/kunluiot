@@ -42,4 +42,11 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     override fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IResultCallback) {
         DeviceRequestUtil.deviceControl(overtime, mid, devTid, ctrlKey, callback)
     }
+
+    /**
+     *  获取子设备信息
+     */
+    override fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: INewDeviceCallback) {
+        DeviceRequestUtil.getSubDevice(ctrlKey, subDevTid, type, quickOperation, callback)
+    }
 }

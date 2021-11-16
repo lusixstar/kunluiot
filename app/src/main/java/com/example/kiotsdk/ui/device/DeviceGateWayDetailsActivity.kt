@@ -1,5 +1,6 @@
 package com.example.kiotsdk.ui.device
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -8,11 +9,19 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceGatewayDetailsBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
+import com.kunluiot.sdk.bean.common.BaseSocketBean
+import com.kunluiot.sdk.bean.device.ConfigZigBeeBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.device.INewDeviceCallback
+import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
+import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
+import com.kunluiot.sdk.util.JsonUtils
+import org.java_websocket.framing.Framedata
 import org.jetbrains.anko.toast
+import java.nio.ByteBuffer
+import java.util.ArrayList
 
 
 class DeviceGateWayDetailsActivity : BaseActivity() {
@@ -26,6 +35,9 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
     private val mCountDownInterval = 1000 //1s = 1000ms
 
     private var mRespState = 0
+
+    private var mConfigWifiBean: ConfigZigBeeBean = ConfigZigBeeBean()
+    private val mSubDeviceList: MutableList<DeviceNewBean> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +56,103 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
 
         initView()
         startConfig()
+        KunLuHomeSdk.instance.getWebSocketManager()?.addListener(webSocketListener)
+    }
+
+    private val webSocketListener = object : SocketListener {
+        override fun onConnected() {}
+        override fun onConnectFailed(e: Throwable?) {}
+        override fun onDisconnect() {}
+        override fun onSendDataError(errorResponse: ErrorResponse?) {}
+
+        override fun <T : Any?> onMessage(message: String?, data: T) {
+            message?.let { getSocketMsg(message, JsonUtils.toJson(data)) }
+        }
+
+        override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {}
+        override fun onPing(framedata: Framedata?) {}
+        override fun onPong(framedata: Framedata?) {}
+    }
+
+    private fun getSocketMsg(message: String, toJson: String) {
+        val msg: BaseSocketBean = JsonUtils.fromJson(toJson, BaseSocketBean::class.java)
+        if (msg.action == KunLuDeviceType.DEVICE_ADD_SUB_DEV) {
+            val configNetworkBean: ConfigZigBeeBean = JsonUtils.fromJson(message, ConfigZigBeeBean::class.java)
+            mConfigWifiBean = configNetworkBean
+            KunLuHomeSdk.deviceImpl.getSubDevice(mGatewayBean.ctrlKey, configNetworkBean.params.subDevTid, KunLuDeviceType.DEVICE_SUB, true, deviceCallback)
+        }
+    }
+
+    private val deviceCallback = object : INewDeviceCallback {
+
+        override fun onSuccess(bean: List<DeviceNewBean>) {
+            gotoNext(bean)
+        }
+
+        override fun onError(code: String, error: String) {
+            toast("code : $code,  error: $error")
+        }
+    }
+
+    private fun gotoNext(list: List<DeviceNewBean>) {
+        if (list.isNullOrEmpty()) {
+            return
+        }
+        mSubDeviceList.clear()
+        mSubDeviceList.addAll(list)
+        mRespState = RESP_SUCCESS
+        mBinding.gifSecondStep.visibility = View.GONE
+        mBinding.gifThirdStep.visibility = View.GONE
+        mBinding.ivSecondStep.visibility = View.VISIBLE
+        mBinding.ivThirdStep.visibility = View.VISIBLE
+        mBinding.btnFinish.visibility = View.VISIBLE
+        mBinding.btnFinish.text = getString(R.string.complete_distribution_network)
+        mBinding.roundProgressBar.visibility = View.INVISIBLE
+        mBinding.configResult.visibility = View.VISIBLE
+        countDownTimer.cancel()
     }
 
     private fun initView() {
         mBinding.roundProgressBar.circularProgressBar.setCircleWidth(15f)
         mBinding.roundProgressBar.setMax(mTotalProgress)
+
+        mBinding.btnFinish.setOnClickListener { saveConfigNetwork() }
+    }
+
+    private fun saveConfigNetwork() {
+        when (mRespState) {
+            RESP_LOADING -> { }
+            RESP_SUCCESS -> {
+                if (mSubDeviceList.size > 0) {
+                    val devType: String = mSubDeviceList[0].devTid
+                    var deviceName: String = mSubDeviceList[0].name
+                    if (deviceName.isEmpty()) {
+                        deviceName = mSubDeviceList[0].productName.zh_CN
+                    }
+//                    if (devType == KunLuDeviceType.DEVICE_SUB) {
+//                        startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
+//                            .putExtra("devTid", mSubDeviceList[0].getParentDevTid())
+//                            .putExtra("branchNames", JsonUtils.toJson(mSubDeviceList[0].getBranchNames()))
+//                            .putExtra("subDevTid", mSubDeviceList[0].getDevTid())
+//                            .putExtra("resisterId", mSubDeviceList[0].getRegisterId())
+//                            .putExtra("mid", mSubDeviceList[0].getMid()).putExtra("deviceName", deviceName)
+//                            .putExtra("ctrlKey", mSubDeviceList[0].getParentCtrlKey()))
+//                    } else {
+//                        startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
+//                            .putExtra("devTid", mSubDeviceList[0].getDevTid())
+//                            .putExtra("deviceName", deviceName)
+//                            .putExtra("branchNames", JsonUtils.toJson(mSubDeviceList[0].getBranchNames()))
+//                            .putExtra("resisterId", mSubDeviceList[0].getRegisterId())
+//                            .putExtra("mid", mSubDeviceList[0].getMid())
+//                            .putExtra("ctrlKey", mSubDeviceList[0].getCtrlKey()))
+//                    }
+                    return
+                }
+                mRespState = RESP_FAIL
+                showConfigNetworkPage(mRespState)
+            }
+            RESP_FAIL -> startConfig()
+        }
     }
 
     /**
@@ -123,9 +227,9 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
     private val countDownTimer = object : CountDownTimer(((mTotalProgress * mCountDownInterval).toLong()), mCountDownInterval.toLong()) {
         override fun onFinish() {
             mBinding.roundProgressBar.progress = mTotalProgress
-//            if (mConfigNetwork == null) {
+            if (mConfigWifiBean.params.devTid.isEmpty()) {
                 mRespState = RESP_FAIL
-//            }
+            }
             showConfigNetworkPage(mRespState)
         }
 
@@ -137,6 +241,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopConfig()
+        KunLuHomeSdk.instance.getWebSocketManager()?.removeListener(webSocketListener)
         countDownTimer.cancel()
     }
 

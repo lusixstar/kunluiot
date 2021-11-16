@@ -15,9 +15,10 @@ import com.kunluiot.sdk.thirdlib.kalle.Kalle
 import com.kunluiot.sdk.thirdlib.kalle.KalleConfig
 import com.kunluiot.sdk.thirdlib.kalle.connect.BroadcastNetwork
 import com.kunluiot.sdk.thirdlib.kalle.connect.http.LoggerInterceptor
+import com.kunluiot.sdk.thirdlib.ws.WebsocketUtil
+import com.kunluiot.sdk.thirdlib.ws.websocket.WebSocketManager
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
-import com.kunluiot.sdk.thirdlib.ws.WebsocketUtil
 
 class KunLuHomeSdk {
 
@@ -54,6 +55,10 @@ class KunLuHomeSdk {
     fun getSessionBean(): SessionBean? {
         val sessionJson = SPUtil.get(app, UserApi.KHA_API_LOGIN, "") as String
         return JsonUtils.fromJson(sessionJson, SessionBean::class.java)
+    }
+
+    fun getWebSocketManager(): WebSocketManager? {
+        return WebsocketUtil.getWebSocketManager()
     }
 
     fun getMsgId(): Int {

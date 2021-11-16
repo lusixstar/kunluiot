@@ -68,6 +68,8 @@ data class DeviceWifiBean(
 data class DeviceNewBean(
     val devTid: String = "",
     val mid: String = "",
+    val devType: String = "",
+    val pid: String = "",
     var registerId: String = "",
     val deviceName: String = "",
     val ctrlKey: String = "",
@@ -95,4 +97,21 @@ data class ConfigWifiParamsBean(
     val DNSTimer: Int = 0,
     val DNSType: Int = 0,
     val binVer: String = "",
+)
+
+data class ConfigZigBeeBean(
+    val params: ConfigZigBeeParamsBean = ConfigZigBeeParamsBean(),
+)
+
+data class ConfigZigBeeParamsBean(
+    val devTid: String = "",
+    val subDevTid: String = "",
+    val ctrlKey: String = "",
+    val data: ConfigZigBeeDataBean = ConfigZigBeeDataBean(),
+)
+
+data class ConfigZigBeeDataBean(
+    val cmdId: Int = 0,
+    val devStatus: Int = 0,
+    val battPercent: Int = 0,
 )

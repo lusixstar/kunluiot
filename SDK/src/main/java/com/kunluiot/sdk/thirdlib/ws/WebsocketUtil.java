@@ -2,13 +2,12 @@ package com.kunluiot.sdk.thirdlib.ws;
 
 
 import com.kunluiot.sdk.KunLuHomeSdk;
-import com.kunluiot.sdk.util.log.KunLuLog;
-import com.kunluiot.sdk.util.JsonUtils;
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener;
 import com.kunluiot.sdk.thirdlib.ws.websocket.WebSocketHandler;
 import com.kunluiot.sdk.thirdlib.ws.websocket.WebSocketManager;
 import com.kunluiot.sdk.thirdlib.ws.websocket.WebSocketSetting;
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse;
+import com.kunluiot.sdk.util.JsonUtils;
 
 import org.java_websocket.framing.Framedata;
 
@@ -19,6 +18,12 @@ import java.util.Map;
 public class WebsocketUtil {
 
     static Map<String, WebSocketManager> managerMap = new HashMap<>();
+
+    public static WebSocketManager mCloudManager;
+
+    public static WebSocketManager getWebSocketManager() {
+        return mCloudManager;
+    }
 
     public static void init(String url) {
 
@@ -50,6 +55,7 @@ public class WebsocketUtil {
 
             //通过 init 方法初始化默认的 WebSocketManager 对象
             WebSocketManager cloudManager = WebSocketHandler.initGeneralWebSocket(url, setting);
+            mCloudManager = cloudManager;
             cloudManager.addListener(new SocketListener() {
                 @Override
                 public void onConnected() {
@@ -74,7 +80,7 @@ public class WebsocketUtil {
 
                 @Override
                 public <T> void onMessage(String message, T data) {
-                    KunLuLog.INSTANCE.d("websocket message " + message);
+//                    KunLuLog.INSTANCE.d("websocket message " + message);
                 }
 
                 @Override

@@ -31,4 +31,9 @@ interface IKunLuDevice {
      * 设备配网
      */
     fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IResultCallback)
+
+    /**
+     *  获取子设备信息
+     */
+    fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: INewDeviceCallback)
 }
