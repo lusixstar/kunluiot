@@ -71,7 +71,7 @@ class LoginActivity : BaseActivity() {
         if (DemoUtils.isEmail(account)) {
 
         } else {
-            KunLuHomeSdk.userImpl.loginWithPhonePassword(country, account, password, loginCallback)
+            KunLuHomeSdk.userImpl.login(country, account, password, loginCallback)
         }
     }
 

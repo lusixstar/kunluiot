@@ -317,7 +317,7 @@ public class SeparatedDeviceConfig {
                             DatagramPacket packet = bean.getSingle();
                             ds.send(packet);
                         }
-                    } catch (IOException | InterruptedException e) {
+                    } catch (IOException e) {
 //                        Log.e(TAG, "Error happened when send config message through socket");
 //                        e.printStackTrace();
                     }
@@ -539,7 +539,6 @@ public class SeparatedDeviceConfig {
      */
     private void sendEncodedDataByLength(List<byte[]> data, int times, int interval, int micros)
             throws  InterruptedException, IOException {
-        try {
             for (int i = 0; i < times; i++) {
                 // 到达interval后需要发送数据
                 int count = 0;
@@ -567,10 +566,6 @@ public class SeparatedDeviceConfig {
                     Thread.sleep(TIME_SLEEP_MILLIS_BLOCK);
                 }
             }
-        } catch (InterruptedException e) {
-
-        }
-
     }
 
     private DatagramPacket getLengthPackage(byte[] data) throws UnknownHostException {
@@ -632,7 +627,7 @@ public class SeparatedDeviceConfig {
             int millis = micros / 1000;
             int nanos = (micros % 1000) * 1000;
             Thread.sleep(millis, nanos);
-        } catch(InterruptedException | IllegalArgumentException e){
+        } catch(IllegalArgumentException e){
 //            KunLuLog.INSTANCE.e("IllegalArgumentException == ", e.getMessage());
         } //            e.printStackTrace();
     }

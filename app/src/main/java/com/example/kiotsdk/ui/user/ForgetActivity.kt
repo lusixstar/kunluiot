@@ -18,7 +18,6 @@ import com.kunluiot.sdk.bean.user.VerifyImageBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.user.ICheckVerifyImageCallback
 import com.kunluiot.sdk.callback.user.ICodeCallback
-import com.kunluiot.sdk.callback.user.IResetPasswordCallback
 import com.kunluiot.sdk.callback.user.IVerifyImageCallback
 import org.jetbrains.anko.toast
 
@@ -73,15 +72,16 @@ class ForgetActivity : BaseActivity() {
 
     private fun finishResetPassword(bean: VerifyCodeBean) {
         val password = mBinding.password.text.toString()
-        KunLuHomeSdk.userImpl.resetPassword(bean.phoneNumber, password, bean.token, resetPasswordCallback)
+        val code = mBinding.verifyCode.text.toString()
+        KunLuHomeSdk.userImpl.resetPassword(bean.phoneNumber, password, bean.token, code, resetPasswordCallback)
     }
 
-    private val resetPasswordCallback = object : IResetPasswordCallback {
+    private val resetPasswordCallback = object : IResultCallback {
         override fun onError(code: String, error: String) {
             toast("code: $code error: $error")
         }
 
-        override fun onSuccess(bean: User) {
+        override fun onSuccess() {
             toast("resetPassword success")
         }
     }

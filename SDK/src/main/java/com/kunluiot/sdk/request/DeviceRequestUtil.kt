@@ -5,7 +5,6 @@ import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.bean.device.DeviceListBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DevicePinCodeBean
-import com.kunluiot.sdk.bean.family.FamilyCreateBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.callback.device.INewDeviceCallback
