@@ -115,3 +115,11 @@ data class ConfigZigBeeDataBean(
     val devStatus: Int = 0,
     val battPercent: Int = 0,
 )
+
+data class DeviceFrameBean(
+    val ctrlKey: String = "",
+    val devTid: String = "",
+    val subDevTid: String = "",
+    val mid: String = "",
+    val frameType: Int = 0,
+)

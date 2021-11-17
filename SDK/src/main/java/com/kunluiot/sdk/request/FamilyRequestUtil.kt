@@ -2,6 +2,7 @@ package com.kunluiot.sdk.request
 
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.common.BaseRespBean
+import com.kunluiot.sdk.bean.device.DeviceFrameBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
@@ -432,6 +433,31 @@ object FamilyRequestUtil {
             .body(JsonBody(param))
             .perform(object : KunLuNetCallback<BaseRespBean<List<String>>>(KunLuHomeSdk.instance.getApp()) {
                 override fun onResponse(response: SimpleResponse<BaseRespBean<List<String>>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 获取设备上报下发帧
+     */
+    fun getDeviceFrame(familyId: String, callback: IFamilyRoomDeviceFrameCallback) {
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_DEVICE_PROTOCOL)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .param("familyId", familyId)
+            .perform(object : KunLuNetCallback<BaseRespBean<List<DeviceFrameBean>>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<List<DeviceFrameBean>>, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)

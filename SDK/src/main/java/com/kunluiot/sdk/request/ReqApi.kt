@@ -34,6 +34,10 @@ object ReqApi {
 }
 
 object DeviceApi {
+
+    //获取设备上报下发帧
+    const val KHA_API_DEVICE_PROTOCOL = "/family/device/protocol"
+
     // 设备列表
     const val KHA_API_GET_PRODUCTLIST = "/api/v2/product"
 
@@ -65,6 +69,9 @@ object FamilyApi {
 
     //房间排序
     const val KHA_API_FOLDER_SORT = "/folder/sort"
+
+    //获取设备上报下发帧
+    const val KHA_API_DEVICE_PROTOCOL = "/family/device/protocol"
 }
 
 object UserApi {

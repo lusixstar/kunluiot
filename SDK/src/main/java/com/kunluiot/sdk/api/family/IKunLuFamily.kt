@@ -86,4 +86,9 @@ interface IKunLuFamily {
      */
     fun sortRoom(sortFolders: List<FolderBean>, callback: IFamilyRoomSortCallback)
 
+    /**
+     * 获取设备上报下发帧
+     */
+    fun getDeviceFrame(familyId: String, callback: IFamilyRoomDeviceFrameCallback)
+
 }

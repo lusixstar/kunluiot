@@ -118,4 +118,11 @@ internal class KunLuFamilyImpl : IKunLuFamily {
     override fun sortRoom(sortFolders: List<FolderBean>, callback: IFamilyRoomSortCallback) {
         FamilyRequestUtil.sortRoom(sortFolders, callback)
     }
+
+    /**
+     * 获取设备上报下发帧
+     */
+    override fun getDeviceFrame(familyId: String, callback: IFamilyRoomDeviceFrameCallback) {
+        FamilyRequestUtil.getDeviceFrame(familyId, callback)
+    }
 }
