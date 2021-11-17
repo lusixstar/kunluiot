@@ -54,11 +54,17 @@ object DeviceApi {
 }
 
 object FamilyApi {
-    // 创建家庭
+    // 家庭
     const val KHA_API_FAMILY = "/family"
 
-    //添加家庭成员
-    const val KHA_API_ADD_FAMILY_MEMBER = "/family"
+    //房间列表
+    const val KHA_API_FOLDER = "/folder"
+
+    //房间列表并且返回房间下的所有设备
+    const val KHA_API_FOLDER_DEVICE = "/newFolder"
+
+    //房间排序
+    const val KHA_API_FOLDER_SORT = "/folder/sort"
 }
 
 object UserApi {
