@@ -3,7 +3,7 @@ package com.kunluiot.sdk.bean.family
 /**
  * 创建家庭
  * */
-data class FamilyCreateBean(
+data class FamilyBean(
     val contact: String = "",
     val detailAddress: String = "",
     val deviceNum: Int = 0,

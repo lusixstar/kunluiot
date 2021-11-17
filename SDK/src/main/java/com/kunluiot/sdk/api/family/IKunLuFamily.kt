@@ -8,19 +8,14 @@ import com.kunluiot.sdk.callback.family.IFamilyListCallback
 interface IKunLuFamily {
 
     /**
-     * 创建家庭
-     */
-    fun createHome(name: String, area: String, callback: ICreateFamilyCallback)
-
-    /**
      * 获取家庭列表
      */
-    fun getHomeList(callback: IFamilyListCallback)
+    fun getFamilyList(callback: IFamilyListCallback)
 
     /**
      * 获取家庭详情
      */
-    fun getHomeDetails(familyId: String, callback: IFamilyDetailsCallback)
+    fun getFamilyDetails(familyId: String, callback: IFamilyDetailsCallback)
 
     /**
      * 删除家庭
@@ -31,4 +26,14 @@ interface IKunLuFamily {
      * 更新家庭信息
      */
     fun update(familyId: String, name: String, city: String, callback: IResultCallback)
+
+    /**
+     * 添加家庭
+     */
+    fun addFamily(name: String, area: String, callback: ICreateFamilyCallback)
+
+    /**
+     * 添加家庭成员
+     */
+    fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, callback: IResultCallback)
 }

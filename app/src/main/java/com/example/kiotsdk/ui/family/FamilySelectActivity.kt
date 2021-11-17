@@ -4,11 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import com.example.kiotsdk.adapter.family.FamilyListAdapter
 import com.example.kiotsdk.base.BaseActivity
-import com.example.kiotsdk.databinding.ActivityFamilyCreateBinding
 import com.example.kiotsdk.databinding.ActivityFamilySelectBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.family.FamilyCreateBean
-import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
+import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.callback.family.IFamilyListCallback
 import org.jetbrains.anko.toast
 
@@ -36,12 +34,12 @@ class FamilySelectActivity : BaseActivity() {
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
             adapter.data.forEachIndexed { index, it ->
-                if ((it as FamilyCreateBean).current) {
+                if ((it as FamilyBean).current) {
                     it.current = false
                     adapter.notifyItemChanged(index)
                 }
             }
-            val data = adapter.data[position] as FamilyCreateBean
+            val data = adapter.data[position] as FamilyBean
             data.current = true
             adapter.notifyItemChanged(position)
             intent.putExtra(CURRENT_FAMILY, data.familyName)
@@ -51,12 +49,12 @@ class FamilySelectActivity : BaseActivity() {
     }
 
     private fun getFamilyData() {
-        KunLuHomeSdk.familyImpl.getHomeList(listCallback)
+        KunLuHomeSdk.familyImpl.getFamilyList(listCallback)
     }
 
     private val listCallback = object : IFamilyListCallback {
 
-        override fun onSuccess(bean: List<FamilyCreateBean>) {
+        override fun onSuccess(bean: List<FamilyBean>) {
             if (!bean.isNullOrEmpty()) {
                 mAdapter.addData(bean)
             }

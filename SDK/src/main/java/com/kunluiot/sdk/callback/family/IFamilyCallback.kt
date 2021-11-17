@@ -1,12 +1,12 @@
 package com.kunluiot.sdk.callback.family
 
-import com.kunluiot.sdk.bean.family.FamilyCreateBean
+import com.kunluiot.sdk.bean.family.FamilyBean
 
 /**
  * 创建家庭
  * */
 interface ICreateFamilyCallback {
-    fun onSuccess(bean: FamilyCreateBean)
+    fun onSuccess(bean: FamilyBean)
     fun onError(code: String, error: String)
 }
 
@@ -14,7 +14,7 @@ interface ICreateFamilyCallback {
  * 家庭列表
  * */
 interface IFamilyListCallback {
-    fun onSuccess(bean: List<FamilyCreateBean>)
+    fun onSuccess(bean: List<FamilyBean>)
     fun onError(code: String, error: String)
 }
 
@@ -22,6 +22,6 @@ interface IFamilyListCallback {
  * 家庭详情
  * */
 interface IFamilyDetailsCallback {
-    fun onSuccess(bean: FamilyCreateBean)
+    fun onSuccess(bean: FamilyBean)
     fun onError(code: String, error: String)
 }

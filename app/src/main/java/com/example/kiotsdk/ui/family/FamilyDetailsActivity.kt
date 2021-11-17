@@ -5,14 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
-import com.example.kiotsdk.databinding.ActivityFamilyCreateBinding
 import com.example.kiotsdk.databinding.ActivityFamilyDetailsBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.family.FamilyCreateBean
+import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 class FamilyDetailsActivity : BaseActivity() {
@@ -21,7 +18,7 @@ class FamilyDetailsActivity : BaseActivity() {
 
     private var mFamilyId = ""
 
-    private var mFamilyBean: FamilyCreateBean = FamilyCreateBean()
+    private var mFamilyBean: FamilyBean = FamilyBean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +64,7 @@ class FamilyDetailsActivity : BaseActivity() {
         }
     }
 
-    private fun setFamilyData(bean: FamilyCreateBean) {
+    private fun setFamilyData(bean: FamilyBean) {
         mFamilyBean = bean
         mBinding.id.text = bean.familyId
         mBinding.name.text = bean.familyName
@@ -76,12 +73,12 @@ class FamilyDetailsActivity : BaseActivity() {
 
     private fun getFamilyDetails() {
         mFamilyId = intent.getStringExtra(FAMILY_ID) ?: ""
-        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getHomeDetails(mFamilyId, detailsCallback)
+        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getFamilyDetails(mFamilyId, detailsCallback)
     }
 
     private val detailsCallback = object : IFamilyDetailsCallback {
 
-        override fun onSuccess(bean: FamilyCreateBean) {
+        override fun onSuccess(bean: FamilyBean) {
             setFamilyData(bean)
         }
 

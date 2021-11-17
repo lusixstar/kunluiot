@@ -57,6 +57,8 @@ object FamilyApi {
     // 创建家庭
     const val KHA_API_FAMILY = "/family"
 
+    //添加家庭成员
+    const val KHA_API_ADD_FAMILY_MEMBER = "/family"
 }
 
 object UserApi {

@@ -9,24 +9,17 @@ import com.kunluiot.sdk.request.FamilyRequestUtil
 internal class KunLuFamilyImpl : IKunLuFamily {
 
     /**
-     * 创建家庭
+     * 家庭列表
      */
-    override fun createHome(name: String, area: String, callback: ICreateFamilyCallback) {
-        FamilyRequestUtil.createHome(name, area, callback)
+    override fun getFamilyList(callback: IFamilyListCallback) {
+        FamilyRequestUtil.getFamilyList(callback)
     }
 
     /**
-     * 获取家庭列表
+     * 家庭详情
      */
-    override fun getHomeList(callback: IFamilyListCallback) {
-        FamilyRequestUtil.getHomeList(callback)
-    }
-
-    /**
-     * 获取家庭详情
-     */
-    override fun getHomeDetails(familyId: String, callback: IFamilyDetailsCallback) {
-        FamilyRequestUtil.getHomeDetails(familyId, callback)
+    override fun getFamilyDetails(familyId: String, callback: IFamilyDetailsCallback) {
+        FamilyRequestUtil.getFamilyDetails(familyId, callback)
     }
 
     /**
@@ -41,5 +34,19 @@ internal class KunLuFamilyImpl : IKunLuFamily {
      */
     override fun update(familyId: String, name: String, city: String, callback: IResultCallback) {
         FamilyRequestUtil.update(familyId, name, city, callback)
+    }
+
+    /**
+     * 添加家庭
+     */
+    override fun addFamily(name: String, area: String, callback: ICreateFamilyCallback) {
+        FamilyRequestUtil.addFamily(name, area, callback)
+    }
+
+    /**
+     * 添加家庭成员
+     */
+    override fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, callback: IResultCallback) {
+        FamilyRequestUtil.addFamilyMember(familyId, phoneNumber, name, gender, type, callback)
     }
 }

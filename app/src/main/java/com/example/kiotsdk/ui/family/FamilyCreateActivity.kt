@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyCreateBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.family.FamilyCreateBean
+import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import org.jetbrains.anko.toast
 
@@ -31,12 +31,12 @@ class FamilyCreateActivity :BaseActivity() {
             toast("name is empty")
             return
         }
-        KunLuHomeSdk.familyImpl.createHome(name, city, createCallback)
+        KunLuHomeSdk.familyImpl.addFamily(name, city, createCallback)
     }
 
     private val createCallback = object : ICreateFamilyCallback {
 
-        override fun onSuccess(bean: FamilyCreateBean) {
+        override fun onSuccess(bean: FamilyBean) {
             toast("create success name: ${bean.familyName}")
         }
 
