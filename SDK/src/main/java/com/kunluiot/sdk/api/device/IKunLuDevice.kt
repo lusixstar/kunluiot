@@ -1,17 +1,45 @@
 package com.kunluiot.sdk.api.device
 
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.device.IDeviceListCallback
-import com.kunluiot.sdk.callback.device.INewDeviceCallback
-import com.kunluiot.sdk.callback.device.IOneDeviceCallback
-import com.kunluiot.sdk.callback.device.IPinCodeCallback
+import com.kunluiot.sdk.callback.device.*
 
 interface IKunLuDevice {
 
     /**
-     * 设备列表
+     * 所有设备
+     * */
+    fun getAllDevicesAct(quickOperation: Boolean, callback: IDeviceListCallback)
+
+
+    /**
+     * 房间中设备列表
+     * */
+    fun getRoomsDevices(folderId: String, quickOperation: Boolean, callback: IDeviceListCallback)
+
+    /**
+     * 获取网关
      */
-    fun list(callback: IDeviceListCallback)
+    fun getGateway(quickOperation: Boolean, type: String, callback: IDeviceListCallback)
+
+    /**
+     *  获取子设备信息
+     */
+    fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: IDeviceListCallback)
+
+    /**
+     * 设备配网
+     */
+    fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IConfigNetworkCallback)
+
+    /**
+     * 设备配网成功后将设备配置到某个家庭下某个房间
+     * */
+    fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback)
+
+    /**
+     * 子设备配网成功后将设备配置到某个家庭下某个房间
+     * */
+    fun subDeviceConfigFinish(devTid: String, subDevTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback)
 
     /**
      * 获取pinCode
@@ -21,25 +49,22 @@ interface IKunLuDevice {
     /**
      * 获取新配上的设备列表
      */
-    fun getNewDeviceList(ssid: String, pinCode: String, callback: INewDeviceCallback)
+    fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback)
 
     /**
-     * 获取网关
+     * 设备产品列表
      */
-    fun getGateway(quickOperation: Boolean, type: String, callback: INewDeviceCallback)
+    fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback)
 
     /**
-     * 设备配网
+     * 产品说明子页面列表
      */
-    fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IResultCallback)
+    fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback)
 
-    /**
-     *  获取子设备信息
-     */
-    fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: INewDeviceCallback)
 
-    /**
-     *  扫码添加设备
-     */
-    fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback)
+
+//    /**
+//     *  扫码添加设备
+//     */
+//    fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback)
 }

@@ -9,8 +9,7 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
-import com.kunluiot.sdk.callback.device.INewDeviceCallback
-import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
+import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -71,7 +70,7 @@ class DeviceGateWayActivity : BaseActivity() {
         KunLuHomeSdk.deviceImpl.getGateway(true, KunLuDeviceType.DEVICE_GATEWAY, gatewayCallback)
     }
 
-    private val gatewayCallback = object : INewDeviceCallback {
+    private val gatewayCallback = object : IDeviceListCallback {
 
         override fun onSuccess(bean: List<DeviceNewBean>) {
             if (!bean.isNullOrEmpty()) {

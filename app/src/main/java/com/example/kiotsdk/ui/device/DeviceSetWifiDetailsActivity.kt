@@ -13,7 +13,7 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.ConfigWifiBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
-import com.kunluiot.sdk.callback.device.INewDeviceCallback
+import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.thirdlib.wifi.RNHekrConfigModule
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.util.JsonUtils
@@ -280,7 +280,7 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
         }
     }
 
-    private val listCallback = object : INewDeviceCallback {
+    private val listCallback = object : IDeviceListCallback {
 
         override fun onSuccess(bean: List<DeviceNewBean>) {
             if (bean.isNullOrEmpty()) {

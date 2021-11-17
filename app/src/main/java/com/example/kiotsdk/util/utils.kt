@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.wifi.WifiManager
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
-import com.kunluiot.sdk.bean.device.DeviceListBean
 import com.kunluiot.sdk.bean.device.DeviceProductTabBean
 
 object DemoUtils {

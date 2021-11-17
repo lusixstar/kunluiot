@@ -8,16 +8,16 @@ import com.example.kiotsdk.R
 import com.example.kiotsdk.ui.device.DeviceGateWayActivity
 import com.example.kiotsdk.ui.device.DeviceListActivity
 import com.example.kiotsdk.ui.device.DeviceSetWifiActivity
-import com.kunluiot.sdk.bean.device.DeviceListBean
+import com.kunluiot.sdk.bean.device.DeviceListProductBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import org.jetbrains.anko.startActivity
 
 
-class DeviceProductListAdapter(list: MutableList<DeviceListBean>) : BaseQuickAdapter<DeviceListBean, BaseViewHolder>(R.layout.item_device_product_list, list) {
+class DeviceProductListAdapter(list: MutableList<DeviceListProductBean>) : BaseQuickAdapter<DeviceListProductBean, BaseViewHolder>(R.layout.item_device_product_list, list) {
 
     private var mApModel = false
 
-    override fun convert(holder: BaseViewHolder, item: DeviceListBean) {
+    override fun convert(holder: BaseViewHolder, item: DeviceListProductBean) {
         holder.setText(R.id.text, item.categorySelfName)
 
         val listView = holder.getView<RecyclerView>(R.id.item_list)

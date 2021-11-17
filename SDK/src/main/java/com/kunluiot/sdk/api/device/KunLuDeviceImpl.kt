@@ -1,19 +1,58 @@
 package com.kunluiot.sdk.api.device
 
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.device.IDeviceListCallback
-import com.kunluiot.sdk.callback.device.INewDeviceCallback
-import com.kunluiot.sdk.callback.device.IOneDeviceCallback
-import com.kunluiot.sdk.callback.device.IPinCodeCallback
+import com.kunluiot.sdk.callback.device.*
 import com.kunluiot.sdk.request.DeviceRequestUtil
 
 internal class KunLuDeviceImpl : IKunLuDevice {
 
     /**
-     * 设备列表
+     * 所有设备
+     * */
+    override fun getAllDevicesAct(quickOperation: Boolean, callback: IDeviceListCallback) {
+        DeviceRequestUtil.getAllDevicesAct(quickOperation, callback)
+    }
+
+    /**
+     * 房间中设备列表
+     * */
+    override fun getRoomsDevices(folderId: String, quickOperation: Boolean, callback: IDeviceListCallback) {
+        DeviceRequestUtil.getRoomsDevices(folderId, quickOperation, callback)
+    }
+
+    /**
+     * 获取网关
      */
-    override fun list(callback: IDeviceListCallback) {
-        DeviceRequestUtil.list(callback)
+    override fun getGateway(quickOperation: Boolean, type: String, callback: IDeviceListCallback) {
+        DeviceRequestUtil.getGateway(quickOperation, type, callback)
+    }
+
+    /**
+     *  获取子设备信息
+     */
+    override fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: IDeviceListCallback) {
+        DeviceRequestUtil.getSubDevice(ctrlKey, subDevTid, type, quickOperation, callback)
+    }
+
+    /**
+     * 设备配网
+     */
+    override fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IConfigNetworkCallback) {
+        DeviceRequestUtil.deviceControl(overtime, mid, devTid, ctrlKey, callback)
+    }
+
+    /**
+     * 设备配网成功后将设备配置到某个家庭下某个房间
+     * */
+    override fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback) {
+        DeviceRequestUtil.deviceConfigFinish(devTid, ctrlKey, deviceName, familyId, folderId, branchNames, anotherNames, callback)
+    }
+
+    /**
+     * 子设备配网成功后将设备配置到某个家庭下某个房间
+     * */
+    override fun subDeviceConfigFinish(devTid: String, subDevTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback) {
+        DeviceRequestUtil.subDeviceConfigFinish(devTid, subDevTid, ctrlKey, deviceName, familyId, folderId, branchNames, anotherNames, callback)
     }
 
     /**
@@ -26,35 +65,29 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 获取新配上的设备列表
      */
-    override fun getNewDeviceList(ssid: String, pinCode: String, callback: INewDeviceCallback) {
+    override fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback) {
         DeviceRequestUtil.getNewDeviceList(ssid, pinCode, callback)
     }
 
     /**
-     * 获取网关
+     * 设备产品列表
      */
-    override fun getGateway(quickOperation: Boolean, type: String, callback: INewDeviceCallback) {
-        DeviceRequestUtil.getGateway(quickOperation, type, callback)
+    override fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback) {
+        DeviceRequestUtil.getDeviceProducts(filterFlag, callback)
     }
 
     /**
-     * 设备配网
+     * 产品说明子页面列表
      */
-    override fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IResultCallback) {
-        DeviceRequestUtil.deviceControl(overtime, mid, devTid, ctrlKey, callback)
+    override fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback) {
+        DeviceRequestUtil.getProductDescribe(category, callback)
     }
 
-    /**
-     *  获取子设备信息
-     */
-    override fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: INewDeviceCallback) {
-        DeviceRequestUtil.getSubDevice(ctrlKey, subDevTid, type, quickOperation, callback)
-    }
 
-    /**
-     *  扫码添加设备
-     */
-    override fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback) {
-        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, callback)
-    }
+//    /**
+//     *  扫码添加设备
+//     */
+//    override fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback) {
+//        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, callback)
+//    }
 }

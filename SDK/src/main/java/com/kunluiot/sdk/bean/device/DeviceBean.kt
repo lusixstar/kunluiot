@@ -3,10 +3,72 @@ package com.kunluiot.sdk.bean.device
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+data class DeviceWifiBean(
+    var name: String = "",
+    var password: String = "",
+)
+
+data class ConfigWifiBean(
+    val action: String = "",
+    val params: ConfigWifiParamsBean = ConfigWifiParamsBean(),
+    val ip: String = "",
+)
+
+data class ConfigWifiParamsBean(
+    val devTid: String = "",
+    val STEP: Int = 0,
+    val encodeConfigType: Int = 0,
+    val getIp: String = "",
+    val PIN: String = "",
+    val bind: Int = 0,
+    val code: Int = 0,
+    val DNSTimer: Int = 0,
+    val DNSType: Int = 0,
+    val binVer: String = "",
+)
+
+data class ConfigZigBeeBean(
+    val params: ConfigZigBeeParamsBean = ConfigZigBeeParamsBean(),
+)
+
+data class ConfigZigBeeParamsBean(
+    val devTid: String = "",
+    val subDevTid: String = "",
+    val ctrlKey: String = "",
+    val data: ConfigZigBeeDataBean = ConfigZigBeeDataBean(),
+)
+
+data class ConfigZigBeeDataBean(
+    val cmdId: Int = 0,
+    val devStatus: Int = 0,
+    val battPercent: Int = 0,
+)
+
+
+//-------------------
+
+data class DeviceFrameBean(
+    val ctrlKey: String = "",
+    val devTid: String = "",
+    val subDevTid: String = "",
+    val mid: String = "",
+    val frameType: Int = 0,
+)
+
+data class  ConfigNetworkBean(
+    val ctrlKey: String = "",
+    val result: String = "",
+)
+
+data class DevicePinCodeBean(
+    var PINCode: String = "",
+    var ssid: String = "",
+)
+
 /**
- * 设备列表
+ * 设备产品列表
  * */
-data class DeviceListBean(
+data class DeviceListProductBean(
     val category: DeviceCategoryBean = DeviceCategoryBean(),
     val categoryName: String = "",
     val productName: String = "",
@@ -54,16 +116,6 @@ data class DeviceProductsBean(
     val configDescImg: List<String> = listOf(),
 ) : Parcelable
 
-data class DevicePinCodeBean(
-    var PINCode: String = "",
-    var ssid: String = "",
-)
-
-data class DeviceWifiBean(
-    var name: String = "",
-    var password: String = "",
-)
-
 @Parcelize
 data class DeviceNewBean(
     val devTid: String = "",
@@ -80,46 +132,16 @@ data class DeviceNewBean(
     val productName: DeviceNameBean = DeviceNameBean(),
 ) : Parcelable
 
-data class ConfigWifiBean(
-    val action: String = "",
-    val params: ConfigWifiParamsBean = ConfigWifiParamsBean(),
-    val ip: String = "",
-)
-
-data class ConfigWifiParamsBean(
-    val devTid: String = "",
-    val STEP: Int = 0,
-    val encodeConfigType: Int = 0,
-    val getIp: String = "",
-    val PIN: String = "",
-    val bind: Int = 0,
-    val code: Int = 0,
-    val DNSTimer: Int = 0,
-    val DNSType: Int = 0,
-    val binVer: String = "",
-)
-
-data class ConfigZigBeeBean(
-    val params: ConfigZigBeeParamsBean = ConfigZigBeeParamsBean(),
-)
-
-data class ConfigZigBeeParamsBean(
-    val devTid: String = "",
-    val subDevTid: String = "",
-    val ctrlKey: String = "",
-    val data: ConfigZigBeeDataBean = ConfigZigBeeDataBean(),
-)
-
-data class ConfigZigBeeDataBean(
-    val cmdId: Int = 0,
-    val devStatus: Int = 0,
-    val battPercent: Int = 0,
-)
-
-data class DeviceFrameBean(
-    val ctrlKey: String = "",
-    val devTid: String = "",
-    val subDevTid: String = "",
+data class DeviceProductDescribeBean(
+    val id: String = "",
+    val pid: String = "",
     val mid: String = "",
-    val frameType: Int = 0,
+    val title: String = "",
+    val createTime: String = "",
+    val updateTime: String = "",
+    val content: String = "",
+    val logo: String = "",
+    val category: String = "",
+    val enable: Boolean = false,
+    val openContent: String = "",
 )

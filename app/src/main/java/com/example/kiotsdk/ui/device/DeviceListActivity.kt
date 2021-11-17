@@ -10,9 +10,9 @@ import com.example.kiotsdk.util.DemoUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.device.DeviceListBean
+import com.kunluiot.sdk.bean.device.DeviceListProductBean
 import com.kunluiot.sdk.bean.device.DeviceProductTabBean
-import com.kunluiot.sdk.callback.device.IDeviceListCallback
+import com.kunluiot.sdk.callback.device.IDeviceListProductCallback
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.toast
@@ -29,7 +29,7 @@ class DeviceListActivity : BaseActivity() {
     private var mNetType = ""
     private var mApModel = false
 
-    private var mAllProductList: List<DeviceListBean> = mutableListOf()
+    private var mAllProductList: List<DeviceListProductBean> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,13 +52,13 @@ class DeviceListActivity : BaseActivity() {
     private fun getDeviceList() {
         val str = SPUtil.get(this, SPUtil.DEVICE_LIST, "") as String
         if (str.isNotEmpty()) {
-            val list: List<DeviceListBean> = Gson().fromJson(str, object : TypeToken<List<DeviceListBean>>() {}.type)
+            val list: List<DeviceListProductBean> = Gson().fromJson(str, object : TypeToken<List<DeviceListProductBean>>() {}.type)
             if (!list.isNullOrEmpty()) {
                 mAllProductList = list
                 setListData(list)
             }
         }
-        KunLuHomeSdk.deviceImpl.list(listCallback)
+        KunLuHomeSdk.deviceImpl.getDeviceProducts(true, listCallback)
     }
 
     private fun initAdapter() {
@@ -70,7 +70,7 @@ class DeviceListActivity : BaseActivity() {
             mTabAdapter.selectPosition(position)
             if (mAllProductList.isNotEmpty()) {
                 val parentList = mAllProductList.filter { it.category.parent.id == tabBean.id }
-                val list = mutableListOf<DeviceListBean>()
+                val list = mutableListOf<DeviceListProductBean>()
                 parentList.forEach { item ->
                     val l = item.products.filter { it.bindType == mNetType }
                     item.products = l
@@ -90,7 +90,7 @@ class DeviceListActivity : BaseActivity() {
     }
 
 
-    private fun setListData(bean: List<DeviceListBean> = arrayListOf()) {
+    private fun setListData(bean: List<DeviceListProductBean> = arrayListOf()) {
         if (bean.isNullOrEmpty()) {
             toast("data get error, please once again")
             return
@@ -114,7 +114,7 @@ class DeviceListActivity : BaseActivity() {
         if (bean.isNotEmpty() && mProductAdapter.data.isNullOrEmpty()) {
             val parentId = tabList.first().id
             val parentList = bean.filter { it.category.parent.id == parentId }
-            val list = mutableListOf<DeviceListBean>()
+            val list = mutableListOf<DeviceListProductBean>()
             parentList.forEach { item ->
                 val l = item.products.filter { it.bindType == mNetType }
                 item.products = l
@@ -127,9 +127,9 @@ class DeviceListActivity : BaseActivity() {
         }
     }
 
-    private val listCallback = object : IDeviceListCallback {
+    private val listCallback = object : IDeviceListProductCallback {
 
-        override fun onSuccess(bean: List<DeviceListBean>) {
+        override fun onSuccess(bean: List<DeviceListProductBean>) {
             setListData(bean)
         }
 

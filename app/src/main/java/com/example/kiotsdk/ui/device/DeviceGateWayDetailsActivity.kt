@@ -1,6 +1,5 @@
 package com.example.kiotsdk.ui.device
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -10,18 +9,18 @@ import com.example.kiotsdk.databinding.ActivityDeviceGatewayDetailsBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.common.BaseSocketBean
+import com.kunluiot.sdk.bean.device.ConfigNetworkBean
 import com.kunluiot.sdk.bean.device.ConfigZigBeeBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
-import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.device.INewDeviceCallback
+import com.kunluiot.sdk.callback.device.IConfigNetworkCallback
+import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.util.JsonUtils
 import org.java_websocket.framing.Framedata
 import org.jetbrains.anko.toast
 import java.nio.ByteBuffer
-import java.util.ArrayList
 
 
 class DeviceGateWayDetailsActivity : BaseActivity() {
@@ -83,7 +82,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
         }
     }
 
-    private val deviceCallback = object : INewDeviceCallback {
+    private val deviceCallback = object : IDeviceListCallback {
 
         override fun onSuccess(bean: List<DeviceNewBean>) {
             gotoNext(bean)
@@ -213,9 +212,9 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
         mBinding.llConfigNetwork.visibility = View.GONE
     }
 
-    private val controlCallback = object : IResultCallback {
+    private val controlCallback = object : IConfigNetworkCallback {
 
-        override fun onSuccess() {
+        override fun onSuccess(bean: List<ConfigNetworkBean>) {
 
         }
 

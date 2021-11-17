@@ -13,9 +13,9 @@ import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
-import com.kunluiot.sdk.callback.device.IOneDeviceCallback
 import com.kunluiot.sdk.request.UserApi
-import com.kunluiot.sdk.thirdlib.qrcode.*
+import com.kunluiot.sdk.thirdlib.qrcode.CameraScan
+import com.kunluiot.sdk.thirdlib.qrcode.QRCodeActivity
 import com.kunluiot.sdk.util.SPUtil
 import com.kunluiot.sdk.util.Tools
 import org.jetbrains.anko.startActivity
@@ -67,19 +67,19 @@ class MainActivity : BaseActivity() {
         if (bindKey.isEmpty() || devTid.isEmpty()) {
             return
         }
-        KunLuHomeSdk.deviceImpl.scanCodeDevice(bindKey, devTid, scanCallback)
+//        KunLuHomeSdk.deviceImpl.scanCodeDevice(bindKey, devTid, scanCallback)
     }
 
-    private val scanCallback = object : IOneDeviceCallback {
-
-        override fun onSuccess(bean: DeviceNewBean) {
-            gotoNext(bean)
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
-    }
+//    private val scanCallback = object : IOneDeviceCallback {
+//
+//        override fun onSuccess(bean: DeviceNewBean) {
+//            gotoNext(bean)
+//        }
+//
+//        override fun onError(code: String, error: String) {
+//            toast("code == $code, error == $error")
+//        }
+//    }
 
     private fun gotoNext(bean: DeviceNewBean) {
         val devType: String = bean.devType
