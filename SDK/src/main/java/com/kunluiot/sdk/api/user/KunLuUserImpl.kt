@@ -7,17 +7,31 @@ import com.kunluiot.sdk.request.UserRequestUtil
 internal class KunLuUserImpl : IKunLuUser {
 
     /**
-     * 使用refresh_token刷新access_token
+     * 刷新登录token
      * */
     override fun refreshToken(refreshToken: String, callback: ILoginCallback) {
         UserRequestUtil.refreshToken(refreshToken, callback)
     }
 
     /**
-     * 手机号和密码登录
+     * 手机号登录
      */
-    override fun loginWithPhonePassword(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
-        UserRequestUtil.loginWithPhonePassword(countryCode, phone, passwd, callback)
+    override fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
+        UserRequestUtil.login(countryCode, phone, passwd, callback)
+    }
+
+    /**
+     * 绑定第三方账号
+     */
+    override fun bindOtherAccount(bindToken: String, callback: IResultCallback) {
+        UserRequestUtil.bindOtherAccount(bindToken, callback)
+    }
+
+    /**
+     * 解绑第三方账号
+     */
+    override fun unBindOtherAccount(type: String, callback: IResultCallback) {
+        UserRequestUtil.unBindOtherAccount(type, callback)
     }
 
     /**
@@ -60,8 +74,15 @@ internal class KunLuUserImpl : IKunLuUser {
     /**
      * 重置密码
      */
-    override fun resetPassword(account: String, password: String, token: String, callback: IResetPasswordCallback) {
-        UserRequestUtil.resetPassword(account, password, token, callback)
+    override fun resetPassword(account: String, password: String, token: String, verifyCode: String, callback: IResultCallback) {
+        UserRequestUtil.resetPassword(account, password, token, verifyCode, callback)
+    }
+
+    /**
+     * 修改密码
+     */
+    override fun changePassword(oldPassword: String, newPassword: String, callback: IResultCallback) {
+        UserRequestUtil.changePassword(oldPassword, newPassword, callback)
     }
 
     /**
@@ -69,6 +90,13 @@ internal class KunLuUserImpl : IKunLuUser {
      */
     override fun getUserInfo(callback: IUserCallback) {
         UserRequestUtil.getUserInfo(callback)
+    }
+
+    /**
+     * 获取设备数量
+     */
+    override fun getDeviceCount(callback: IUserDevicesCallback) {
+        UserRequestUtil.getDeviceCount(callback)
     }
 
     /**
@@ -83,5 +111,19 @@ internal class KunLuUserImpl : IKunLuUser {
      * */
     override fun uploadHeader(filePath: String, callback: IAvatarCallback) {
         UserRequestUtil.uploadHeader(filePath, callback)
+    }
+
+    /**
+     * 更新用户头像
+     * */
+    override fun updateHeader(url: String, callback: IResultCallback) {
+        UserRequestUtil.updateHeader(url, callback)
+    }
+
+    /**
+     * 修改手机号码
+     * */
+    override fun changePhoneNum(verifyCode: String, token: String, phoneNumber: String, callback: IResultCallback) {
+        UserRequestUtil.changePhoneNum(verifyCode, token, phoneNumber, callback)
     }
 }

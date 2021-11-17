@@ -7,14 +7,24 @@ import java.io.File
 interface IKunLuUser {
 
     /**
-     * 使用refresh_token刷新access_token
+     * 刷新登录token
      */
     fun refreshToken(refreshToken: String, callback: ILoginCallback)
 
     /**
-     * 手机号和密码登录
+     * 手机号登录
      */
-    fun loginWithPhonePassword(countryCode: String, phone: String, passwd: String, callback: ILoginCallback)
+    fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback)
+
+    /**
+     * 绑定第三方账号
+     */
+    fun bindOtherAccount(bindToken: String, callback: IResultCallback)
+
+    /**
+     * 解绑第三方账号
+     */
+    fun unBindOtherAccount(type: String, callback: IResultCallback)
 
     /**
      * 获取图像验证
@@ -36,7 +46,7 @@ interface IKunLuUser {
     /**
      * 检测验证码有效性
      */
-    fun checkVerifyCode(phoneNumber: String, type: String, areaCode: String, code :String, callback: ICodeCallback)
+    fun checkVerifyCode(phoneNumber: String, type: String, areaCode: String, code: String, callback: ICodeCallback)
 
     /**
      * 注册
@@ -46,12 +56,22 @@ interface IKunLuUser {
     /**
      * 重置密码
      */
-    fun resetPassword(account: String, password: String, token: String, callback: IResetPasswordCallback)
+    fun resetPassword(account: String, password: String, token: String, verifyCode: String, callback: IResultCallback)
 
     /**
-     * 获取用户详情
+     * 修改密码
+     */
+    fun changePassword(oldPassword: String, newPassword: String, callback: IResultCallback)
+
+    /**
+     * 获取用户信息
      */
     fun getUserInfo(callback: IUserCallback)
+
+    /**
+     * 获取设备数量
+     */
+    fun getDeviceCount(callback: IUserDevicesCallback)
 
     /**
      * 更新用户昵称
@@ -62,5 +82,15 @@ interface IKunLuUser {
      * 上传用户头像
      * */
     fun uploadHeader(filePath: String, callback: IAvatarCallback)
+
+    /**
+     * 更新用户头像
+     * */
+    fun updateHeader(url: String, callback: IResultCallback)
+
+    /**
+     * 修改手机号码
+     * */
+    fun changePhoneNum(verifyCode: String, token: String, phoneNumber: String, callback: IResultCallback)
 
 }

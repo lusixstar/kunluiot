@@ -61,10 +61,13 @@ data class UserAvatarInfo(
 )
 
 /**
- * 上传文件地址
+ * 上传头像地址
  * */
 data class AvatarBean(
     var fileSourceUrl: String = "",
     var fileCDNUrl: String = "",
     var md5: String = "",
+    var fileOriginName: String = "",
+    var fileName: String = "",
+    var uploadTime: Long = 0,
 )

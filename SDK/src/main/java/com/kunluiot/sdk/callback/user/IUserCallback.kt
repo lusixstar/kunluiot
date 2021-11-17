@@ -43,18 +43,18 @@ interface IRegisterCallback {
 }
 
 /**
- * 重置密码
- * */
-interface IResetPasswordCallback {
-    fun onSuccess(bean: User)
-    fun onError(code: String, error: String)
-}
-
-/**
  * 用户信息
  * */
 interface IUserCallback {
     fun onSuccess(user: User)
+    fun onError(code: String, error: String)
+}
+
+/**
+ * 设备数量
+ * */
+interface IUserDevicesCallback {
+    fun onSuccess(info: String)
     fun onError(code: String, error: String)
 }
 
