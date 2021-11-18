@@ -143,6 +143,18 @@ object SceneApi {
 
     //联动场景列表
     const val KHA_API_LINKAGE_SCENE_LIST = "/rule/iftttRule_v2"
+
+    //删除联动场景
+    const val KHA_API_DELETE_LINKAGE_SCENE = "/rule/iftttRule"
+
+    //新玩法列表接口
+    const val KHA_API_NEW_PLAY = "/api/v2/newPlay/all"
+
+    //更新一键场景排序
+    const val KHA_API_UPDATE_ONEKEY_SCENE_SORT = "/sceneSort"
+
+    //更新联动场景排序
+    const val KHA_API_UPDATE_LINK_SCENE_SORT = "/rule/iftttRuleSort"
 }
 
 object CommonApi {

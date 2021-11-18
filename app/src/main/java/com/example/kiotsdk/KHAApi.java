@@ -55,33 +55,6 @@ public interface KHAApi {
 
 
 
-
-
-//
-//    //编辑联动场景
-//    @PUT(HttpConfig.KHA_API_LINKAGE_SCENE_LIST)
-//    Observable<ErrorResponse> updateLinkageScene(@Query("ruleId") String ruleId, @Query("enable") boolean enable, @Body RequestBody body);
-//
-//    //删除联动场景
-//    @DELETE(HttpConfig.KHA_API_DELETE_LINKAGE_SCENE)
-//    Observable<DeleteLinkageSceneResponse> deleteLinkageScene(@Query("ruleId") String ruleId);
-//
-//    //删除已使用的联动场景
-//    @DELETE(HttpConfig.KHA_API_DELETE_LINKAGE_SCENE)
-//    Observable<ErrorResponse> deleteUseLinkageScene(@Query("ruleId") String ruleId, @Query("randomToken") String randomToken);
-//
-//    //新玩法列表接口
-//    @GET(HttpConfig.KHA_API_NEW_PLAY)
-//    Observable<NewPlayBean> getNewPlay(@Query("pid") String pid);
-//
-//    //更新一键场景排序
-//    @PATCH(HttpConfig.KHA_API_UPDATE_ONEKEY_SCENE_SORT)
-//    Observable<Map> updateOneKeySort(@Body RequestBody body);
-//
-//    //更新联动场景排序
-//    @PATCH(HttpConfig.KHA_API_UPDATE_LINK_SCENE_SORT)
-//    Observable<Map> updateLinkSceneSort(@Body RequestBody body);
-//
 //
 //    //常见问题列表接口
 //    @GET(HttpConfig.KHA_API_COMMON_PROBLEM)

@@ -67,3 +67,31 @@ data class SceneDeleteBean(
     val uid: String = "",
     val type: String = "",
 )
+
+data class SceneNewPlayBean(
+    val state: Int = 0,
+    val data: SceneNewPlayItemBean = SceneNewPlayItemBean(),
+)
+
+data class SceneNewPlayItemBean(
+    val last: Boolean = false,
+    val totalPages: Int = 0,
+    val totalElements: Int = 0,
+    val first: Boolean = false,
+    val numberOfElements: Int = 0,
+    val size: Int = 0,
+    val number: Int = 0,
+    val page: Int = 0,
+    val content: List<SceneListBean> = listOf(),
+)
+
+data class SceneOneKeySortBean(
+    val sceneSort: Int = 0,
+    val showType: String = "",
+    val sceneId: String = "",
+)
+
+data class SceneLinkSortBean(
+    val ruleId: String = "",
+    val ruleSort: Int = 0,
+)
