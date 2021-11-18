@@ -7,6 +7,8 @@ import com.kunluiot.sdk.api.device.IKunLuDevice
 import com.kunluiot.sdk.api.device.KunLuDeviceImpl
 import com.kunluiot.sdk.api.family.IKunLuFamily
 import com.kunluiot.sdk.api.family.KunLuFamilyImpl
+import com.kunluiot.sdk.api.scene.IKunLuScene
+import com.kunluiot.sdk.api.scene.KunLuSceneImpl
 import com.kunluiot.sdk.api.user.IKunLuUser
 import com.kunluiot.sdk.api.user.KunLuUserImpl
 import com.kunluiot.sdk.bean.user.SessionBean
@@ -30,9 +32,7 @@ class KunLuHomeSdk {
     private var msgId = 1
 
     private fun setKalle() {
-        Kalle.setConfig(KalleConfig.newBuilder()
-            .network(BroadcastNetwork(app))
-            .addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(JsonConverter(app)).build())
+        Kalle.setConfig(KalleConfig.newBuilder().network(BroadcastNetwork(app)).addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(JsonConverter(app)).build())
     }
 
     /**
@@ -95,6 +95,11 @@ class KunLuHomeSdk {
         val commonImpl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             val common: IKunLuCommon = KunLuCommonImpl()
             common
+        }
+
+        val sceneImpl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            val scene: IKunLuScene = KunLuSceneImpl()
+            scene
         }
     }
 }

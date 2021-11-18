@@ -137,6 +137,11 @@ object UserApi {
 
 }
 
+object SceneApi {
+    //手动场景列表
+    const val KHA_API_ONE_KEY_SCENE_LIST = "/scene"
+}
+
 object CommonApi {
     //常见问题列表
     const val KHA_API_COMMON_PROBLEM = "/api/v2/commonProblem/app"
