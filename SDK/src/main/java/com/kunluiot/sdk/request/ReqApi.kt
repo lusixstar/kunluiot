@@ -140,6 +140,9 @@ object UserApi {
 object SceneApi {
     //手动场景列表
     const val KHA_API_ONE_KEY_SCENE_LIST = "/scene"
+
+    //联动场景列表
+    const val KHA_API_LINKAGE_SCENE_LIST = "/rule/iftttRule_v2"
 }
 
 object CommonApi {

@@ -14,6 +14,8 @@ data class SceneListBean(
     val templateId: String = "",
     val name: String = "",
     val sceneTaskList: List<SceneAddOneKeyBean> = listOf(),
+    val conditionList: List<SceneAddOneKeyBean> = listOf(),
+    val iftttTasks: List<SceneAddOneKeyBean> = listOf(),
     val icon: String = "",
     val oneKeyType: Int = 0,
     val triggerDevTid: String = "",
@@ -57,4 +59,11 @@ data class SceneCustomParamBean(
     val disPlayName: String = "",
     val devName: String = "",
     val desc: String = "",
+)
+
+data class SceneDeleteBean(
+    val ruleId: String = "",
+    val ruleName: String = "",
+    val uid: String = "",
+    val type: String = "",
 )

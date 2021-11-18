@@ -13,6 +13,7 @@ import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
+import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.thirdlib.qrcode.CameraScan
 import com.kunluiot.sdk.thirdlib.qrcode.QRCodeActivity
@@ -45,6 +46,20 @@ class MainActivity : BaseActivity() {
         mBinding.deviceApMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_WIFI, DeviceListActivity.NET_TYPE_AP to true) }
         mBinding.deviceZigbeeMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_ZIG_BEE) }
         mBinding.deviceQrMode.setOnClickListener { gotoQrLaunch.launch(Intent(this, QRCodeActivity::class.java)) }
+
+        mBinding.deviceList.setOnClickListener { getDeviceList() }
+    }
+
+    private fun getDeviceList() {
+        KunLuHomeSdk.deviceImpl.getAllDevicesAct(true, object : IDeviceListCallback {
+            override fun onSuccess(bean: List<DeviceNewBean>) {
+
+            }
+
+            override fun onError(code: String, error: String) {
+
+            }
+        })
     }
 
     private val gotoQrLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

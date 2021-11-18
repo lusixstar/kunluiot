@@ -56,30 +56,7 @@ public interface KHAApi {
 
 
 
-//
-//    //新增手动场景
-//    @POST(HttpConfig.KHA_API_ONE_KEY_SCENE_LIST)
-//    Observable<ErrorResponse> addOneKeyScene(@Body RequestBody body);
-//
-//    //编辑手动场景
-//    @PATCH(HttpConfig.KHA_API_UPDATE_ONE_KEY_SCENE)
-//    Observable<ErrorResponse> updateOneKeyScene(@Path("sceneId") String sceneId, @Body RequestBody body);
-//
-//    //删除手动场景
-//    @DELETE(HttpConfig.KHA_API_UPDATE_ONE_KEY_SCENE)
-//    Observable<ArrayList<DeleteOneKeySceneBean>> deleteOneKeyScene(@Path("sceneId") String sceneId);
-//
-//    //删除使用中的手动场景
-//    @DELETE(HttpConfig.KHA_API_UPDATE_ONE_KEY_SCENE)
-//    Observable<ErrorResponse> deleteUseOneKeyScene(@Path("sceneId") String sceneId, @Query("iftttIds") String iftttIds);
-//
-//    //联动场景列表
-//    @GET(HttpConfig.KHA_API_LINKAGE_SCENE_LIST)
-//    Observable<ArrayList<SceneLinkageResponse>> getLinkageSceneList(@Query("page") int page, @Query("size") int size);
-//
-//    //新增联动场景
-//    @POST(HttpConfig.KHA_API_LINKAGE_SCENE_LIST)
-//    Observable<ErrorResponse> addLinkageScene(@Body RequestBody body);
+
 //
 //    //编辑联动场景
 //    @PUT(HttpConfig.KHA_API_LINKAGE_SCENE_LIST)
