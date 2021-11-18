@@ -145,3 +145,17 @@ data class DeviceProductDescribeBean(
     val enable: Boolean = false,
     val openContent: String = "",
 )
+
+data class DeviceUpdateBean(
+    val devTid: String = "",
+    val update: String = "",
+    val devFirmwareOTARawRuleVO: DeviceDevFirmwareOTARawRuleVO = DeviceDevFirmwareOTARawRuleVO(),
+)
+
+data class DeviceDevFirmwareOTARawRuleVO(
+    val binUrl: String = "",
+    val md5: String = "",
+    val latestBinType: String = "",
+    val latestBinVer: String = "",
+    val size: Int = 0,
+)

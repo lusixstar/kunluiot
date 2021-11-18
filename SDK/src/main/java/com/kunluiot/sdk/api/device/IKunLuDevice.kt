@@ -61,10 +61,18 @@ interface IKunLuDevice {
      */
     fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback)
 
+    /**
+     *  扫码添加设备
+     */
+    fun scanCodeDevice(bindKey: String, devTid: String, callback: IDeviceOneCallback)
 
+    /**
+     * 检查设备固件是否需要升级
+     */
+    fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, callback: IDeviceUpdateCallback)
 
-//    /**
-//     *  扫码添加设备
-//     */
-//    fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback)
+    /**
+     * 设备详情-更换WiFi
+     */
+    fun switchDeviceWifi(ctrlKey: String , ssid: String , password: String, callback: IResultCallback)
 }

@@ -42,14 +42,19 @@ interface IConfigNetworkCallback {
     fun onError(code: String, error: String)
 }
 
+/**
+ * 获取单个设备
+ * */
+interface IDeviceOneCallback {
+    fun onSuccess(bean: DeviceNewBean)
+    fun onError(code: String, error: String)
+}
 
-
-
-///**
-// * 获取单个设备
-// * */
-//interface IOneDeviceCallback {
-//    fun onSuccess(bean: DeviceNewBean)
-//    fun onError(code: String, error: String)
-//}
+/**
+ * 检查设备升级
+ * */
+interface IDeviceUpdateCallback {
+    fun onSuccess(bean: DeviceUpdateBean)
+    fun onError(code: String, error: String)
+}
 

@@ -84,10 +84,24 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     }
 
 
-//    /**
-//     *  扫码添加设备
-//     */
-//    override fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback) {
-//        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, callback)
-//    }
+    /**
+     *  扫码添加设备
+     */
+    override fun scanCodeDevice(bindKey: String, devTid: String, callback: IDeviceOneCallback) {
+        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, callback)
+    }
+
+    /**
+     * 检查设备固件是否需要升级
+     */
+    override fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, callback: IDeviceUpdateCallback) {
+        DeviceRequestUtil.checkDeviceIsUpdate(binVer, binType, binVersion, productPublicKey, devTid, ctrlKey, callback)
+    }
+
+    /**
+     * 设备详情-更换WiFi
+     */
+    override fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
+        DeviceRequestUtil.switchDeviceWifi(ctrlKey, ssid, password, callback)
+    }
 }

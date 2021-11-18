@@ -331,37 +331,96 @@ object DeviceRequestUtil {
             })
     }
 
+    /**
+     * 扫码添加设备
+     */
+    fun scanCodeDevice(bindKey: String, devTid: String, callback: IDeviceOneCallback) {
+        val map = mutableMapOf<String, String>()
+        map["bindKey"] = bindKey
+        map["devTid"] = devTid
+        val param = JsonUtils.toJson(map)
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .body(JsonBody(param))
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceNewBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceNewBean>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
 
+    /**
+     * 检查设备固件是否需要升级
+     */
+    fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, callback: IDeviceUpdateCallback) {
+        val map = mutableMapOf<String, String>()
+        map["binVer"] = binVer
+        map["binType"] = binType
+        map["binVersion"] = binVersion
+        map["productPublicKey"] = productPublicKey
+        map["devTid"] = devTid
+        map["ctrlKey"] = ctrlKey
+        val maps: MutableList<MutableMap<String, String>> = ArrayList()
+        maps.add(map)
+        val param = JsonUtils.toJson(maps)
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .body(JsonBody(param))
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceUpdateBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceUpdateBean>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
 
-
-
-
-//    /**
-//     * 扫码添加设备
-//     */
-//    fun scanCodeDevice(bindKey: String, devTid: String, callback: IOneDeviceCallback) {
-//        val map = mutableMapOf<String, String>()
-//        map["bindKey"] = bindKey
-//        map["devTid"] = devTid
-//        val param = JsonUtils.toJson(map)
-//        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
-//            .setHeaders(KunLuHelper.getSign())
-//            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-//            .body(JsonBody(param))
-//            .perform(object : KunLuNetCallback<BaseRespBean<DeviceNewBean>>(KunLuHomeSdk.instance.getApp()) {
-//                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceNewBean>, String>) {
-//                    val failed = response.failed()
-//                    if (!failed.isNullOrEmpty()) {
-//                        callback.onError(response.code().toString(), failed)
-//                    } else {
-//                        val data = response.succeed()
-//                        if (data.status != 200) {
-//                            callback.onError(data.status.toString(), data.message)
-//                        } else {
-//                            callback.onSuccess(data.data)
-//                        }
-//                    }
-//                }
-//            })
-//    }
+    /**
+     * 设备详情-更换WiFi
+     */
+    fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
+        val map = mutableMapOf<String, String>()
+        map["ssid"] = ssid
+        map["password"] = password
+        val param = JsonUtils.toJson(map)
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$ctrlKey/wifi")
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .body(JsonBody(param))
+            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess()
+                        }
+                    }
+                }
+            })
+    }
 }
