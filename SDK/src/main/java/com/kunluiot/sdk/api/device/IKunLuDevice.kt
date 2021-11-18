@@ -1,6 +1,7 @@
 package com.kunluiot.sdk.api.device
 
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.IResultStringCallback
 import com.kunluiot.sdk.callback.device.*
 
 interface IKunLuDevice {
@@ -74,5 +75,35 @@ interface IKunLuDevice {
     /**
      * 设备详情-更换WiFi
      */
-    fun switchDeviceWifi(ctrlKey: String , ssid: String , password: String, callback: IResultCallback)
+    fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback)
+
+    /**
+     * 设备操作列表
+     */
+    fun getDeviceOperationList(ppk: String, callback: IDeviceOperationCallback)
+
+    /**
+     * 设备操作模板
+     */
+    fun getDeviceProtocolTemplate(ppk: String, callback: IResultStringCallback)
+
+    /**
+     * 删除设备
+     */
+    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, callback: IDeviceDeleteCallback)
+
+    /**
+     * 删除授权设备
+     */
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback)
+
+    /**
+     * 删除子设备
+     */
+    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, callback: IDeviceDeleteCallback)
+
+    /**
+     * 获取群控
+     */
+    fun getGroupsAct(callback: IResultCallback)
 }

@@ -41,6 +41,12 @@ object DeviceApi {
     // 设备列表
     const val KHA_API_GET_PRODUCTLIST = "/api/v2/product"
 
+    //设备操作列表
+    const val KHA_API_DEVICE_OPERATION_LIST = "/api/v1/protocol"
+
+    //设备操作模板
+    const val KHA_API_DEVICE_PROTOCOL_LIST = "/external/device/protocolTemplate"
+
     //获取pinCode
     const val KHA_API_GET_PIN_CODE = "/getPINCode"
 
@@ -49,6 +55,15 @@ object DeviceApi {
 
     //设备列表
     const val KHA_API_DEVICE = "/device"
+
+    //删除授权设备
+    const val KHA_API_DELETE_AUTHORIZATION_DEVICE = "/authorization"
+
+    //删除子设备接口
+    const val KHA_API_DELETE_SUB_DEVICE = "/device/delSubDevice"
+
+    //获取群控
+    const val KHA_API_GROUP_ACT = "/group"
 
     //设备配网
     const val KHA_API_DEVICE_CONTROL = "/deviceControl"

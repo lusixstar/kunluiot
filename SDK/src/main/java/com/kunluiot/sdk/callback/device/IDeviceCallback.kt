@@ -58,3 +58,19 @@ interface IDeviceUpdateCallback {
     fun onError(code: String, error: String)
 }
 
+/**
+ * 设备操作
+ * */
+interface IDeviceOperationCallback {
+    fun onSuccess(bean: DeviceOperationBean)
+    fun onError(code: String, error: String)
+}
+
+/**
+ * 设备删除
+ * */
+interface IDeviceDeleteCallback {
+    fun onSuccess(bean: DeviceDeleteBean)
+    fun onError(code: String, error: String)
+}
+

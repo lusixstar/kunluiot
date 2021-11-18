@@ -159,3 +159,38 @@ data class DeviceDevFirmwareOTARawRuleVO(
     val latestBinVer: String = "",
     val size: Int = 0,
 )
+
+data class DeviceOperationBean(
+    val mid: String = "",
+    val pid: String = "",
+    val createTime: Long = 0,
+    val workModeType: String = "",
+    val fixedLength: Boolean = false,
+    val statistics: Boolean = false,
+    val accessProtocol: Int = 0,
+    val protocol: Map<String, DeviceOperationProtocolBean> = mutableMapOf(),
+    val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
+)
+
+data class DeviceOperationProtocolBean(
+    val cmdId: Int = 0,
+    val cmdTag: String = "",
+    val desc: String = "",
+    val frameType: Int = 0,
+    val usedForIFTTT: Boolean = false,
+    val tags: List<String> = mutableListOf(),
+    val fields: List<DeviceOperationFieldsBean> = mutableListOf(),
+    val associateProtocol: List<Int> = mutableListOf(),
+)
+
+data class DeviceOperationFieldsBean(
+    val selectedDesc: String = "",
+    val selectValue: String = "",
+    val operator: String = "",
+    val selected: Boolean = false,
+)
+
+data class DeviceDeleteBean(
+    val randomKey: String = "",
+    val randomToken: String = "",
+)

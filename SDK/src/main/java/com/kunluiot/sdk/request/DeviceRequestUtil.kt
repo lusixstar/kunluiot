@@ -4,6 +4,7 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.bean.device.*
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.IResultStringCallback
 import com.kunluiot.sdk.callback.device.*
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
@@ -407,6 +408,164 @@ object DeviceRequestUtil {
             .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(param))
+            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess()
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 设备操作列表
+     */
+    fun getDeviceOperationList(ppk: String, callback: IDeviceOperationCallback) {
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_OPERATION_LIST)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .param("ppk", ppk)
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceOperationBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceOperationBean>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 设备操作模板
+     */
+    fun getDeviceProtocolTemplate(ppk: String, callback: IResultStringCallback) {
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_PROTOCOL_LIST)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .addHeader("X-Hekr-ProdPubKey", ppk)
+            .perform(object : KunLuNetCallback<BaseRespBean<Map<String, Any>>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<Map<String, Any>>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            val json = JsonUtils.toJson(data.data)
+                            callback.onSuccess(json)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 删除设备
+     */
+    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, callback: IDeviceDeleteCallback) {
+        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$delDevTid")
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .param("bindKey", bindKey)
+            .param("randomToken", randomToken)
+            .param("bluetooth", bluetooth)
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceDeleteBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceDeleteBean>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 删除授权设备
+     */
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback) {
+        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .param("grantor", grantor)
+            .param("ctrlKey", ctrlKey)
+            .param("grantee", grantee)
+            .param("devTid", devTid)
+            .param("randomToken", randomToken)
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceDeleteBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceDeleteBean>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 删除子设备
+     */
+    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, callback: IDeviceDeleteCallback) {
+        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_SUB_DEVICE)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .param("devTid", devTid)
+            .param("ctrlKey", ctrlKey)
+            .param("subDevTid", subDevTid)
+            .perform(object : KunLuNetCallback<BaseRespBean<DeviceDeleteBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<BaseRespBean<DeviceDeleteBean>, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        callback.onError(response.code().toString(), failed)
+                    } else {
+                        val data = response.succeed()
+                        if (data.status != 200) {
+                            callback.onError(data.status.toString(), data.message)
+                        } else {
+                            callback.onSuccess(data.data)
+                        }
+                    }
+                }
+            })
+    }
+
+    /**
+     * 获取群控
+     */
+    fun getGroupsAct(callback: IResultCallback) {
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GROUP_ACT)
+            .setHeaders(KunLuHelper.getSign())
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
                 override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
                     val failed = response.failed()

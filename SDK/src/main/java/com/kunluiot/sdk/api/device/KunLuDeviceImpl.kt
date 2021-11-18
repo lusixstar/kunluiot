@@ -1,6 +1,7 @@
 package com.kunluiot.sdk.api.device
 
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.IResultStringCallback
 import com.kunluiot.sdk.callback.device.*
 import com.kunluiot.sdk.request.DeviceRequestUtil
 
@@ -103,5 +104,47 @@ internal class KunLuDeviceImpl : IKunLuDevice {
      */
     override fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
         DeviceRequestUtil.switchDeviceWifi(ctrlKey, ssid, password, callback)
+    }
+
+    /**
+     * 设备操作列表
+     */
+    override fun getDeviceOperationList(ppk: String, callback: IDeviceOperationCallback) {
+        DeviceRequestUtil.getDeviceOperationList(ppk, callback)
+    }
+
+    /**
+     * 设备操作模板
+     */
+    override fun getDeviceProtocolTemplate(ppk: String, callback: IResultStringCallback) {
+        DeviceRequestUtil.getDeviceProtocolTemplate(ppk, callback)
+    }
+
+    /**
+     * 删除设备
+     */
+    override fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, callback: IDeviceDeleteCallback) {
+        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, randomToken, bluetooth, callback)
+    }
+
+    /**
+     * 删除授权设备
+     */
+    override fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback) {
+        DeviceRequestUtil.deleteAuthorizationDevice(grantor, ctrlKey, grantee, devTid, randomToken, callback)
+    }
+
+    /**
+     * 删除子设备
+     */
+    override fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, callback: IDeviceDeleteCallback) {
+        DeviceRequestUtil.deletesSubDevice(devTid, ctrlKey, subDevTid, callback)
+    }
+
+    /**
+     * 获取群控
+     */
+    override fun getGroupsAct(callback: IResultCallback) {
+        DeviceRequestUtil.getGroupsAct(callback)
     }
 }
