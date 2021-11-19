@@ -301,9 +301,9 @@ object SceneRequestUtil {
     /**
      * 编辑联动场景
      * */
-    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneAddOneKeyBean, callback: IResultCallback) {
+    fun updateLinkageScene(ruleId: String, enable: Boolean, bean: SceneAddOneKeyBean, callback: IResultCallback) {
 
-        var json = JsonUtils.toJson(data)
+        var json = JsonUtils.toJson(bean)
         try {
             val jsonObject = JSONObject(json)
             val conditionList = jsonObject.getJSONArray("conditionList")

@@ -1,15 +1,6 @@
 package com.example.kiotsdk;
 
 
-import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.MultipartBody;
-
-
 /**
  * Created by LianCP on 2019/11/26.
  */
@@ -50,48 +41,15 @@ public interface KHAApi {
 //    @GET(HttpConfig.KHA_API_DEVICE_POLLING_WIFI)
 //    Observable<PollingWifiResponse> pollingDeviceWifi(@Path("ctrlKey") String ctrlKey);
 
-
-
-
-
-
-//
-//    //常见问题列表接口
-//    @GET(HttpConfig.KHA_API_COMMON_PROBLEM)
-//    Observable<CommonProblemResponse> getCommonProblem(@Query("pid") String pid);
-//
-//    //检测APK版本接口
-//    @GET(HttpConfig.KHA_API_CHECK_APK_VERSION)
-//    Observable<UpgradeApkInfoResponse> checkAppVersion(@Query("pid") String pid, @Query("platform") int platform);
-//
-//    //意见反馈
-//    @POST(HttpConfig.KHA_API_FEEDBACK)
-//    Observable<StateResult> feedback(@Body RequestBody route);
 //
 //    //获取天气接口
 //    @GET(HttpConfig.KHA_API_NOW_WEATHER)
 //    Observable<NowWeatherResponse> getNowWeather(@Query("location") String location, @Query("timestamp") long timestamp,
 //            @Query("sign") String sign, @Query("language") String language);
-//
-//    //平台消息列表接口
-//    @GET(HttpConfig.KHA_API_MESSAGE_PLATFORM)
-//    Observable<MessagePlatformResponse> getMessagePlatform(@Query("page") int page, @Query("size") int size);
-//
-//    //设备消息列表接口
-//    @GET(HttpConfig.KHA_API_MESSAGE_DEVICE)
-//    Observable<MessageDevicesResponse> getMessageDevice(@Query("page") int page, @Query("size") int size);
-//
-//    //设备消息置为已读接口
-//    @PATCH(HttpConfig.KHA_API_MESSAGE_DEVICE_READ)
-//    Observable<ErrorResponse> readMessageDevice(@Path("id") String id);
-//
-//    //设备消息全部置为已读接口
-//    @PATCH(HttpConfig.KHA_MESSAGE_DEVICE_ALL_READ)
-//    Observable<ErrorResponse> allReadMessageDevice();
-//
-//    //设备消息清空接口
-//    @DELETE(HttpConfig.KHA_API_MESSAGE_DEVICE_EMPTY)
-//    Observable<ErrorResponse> emptyMessageDevice();
+
+
+
+
 //
 //    //绑定的第三方平台列表接口
 //    @GET(HttpConfig.KHA_API_BIND_THIRD_PLATFORM_LIST)

@@ -163,4 +163,22 @@ object CommonApi {
 
     //意见反馈
     const val KHA_API_FEEDBACK = "/external/feedback"
+
+    //平台消息列表
+    const val KHA_API_MESSAGE_PLATFORM = "/api/v1/app/push/history"
+
+    //设备消息列表
+    const val KHA_API_MESSAGE_DEVICE = "/user/allDevicesInfo"
+
+    //设备消息置为已读
+    const val KHA_API_MESSAGE_DEVICE_READ = "/api/v1/notification"
+
+    //设备消息全部置为已读
+    const val KHA_MESSAGE_DEVICE_ALL_READ = "/api/v1/warning"
+
+    //设备消息清空
+    const val KHA_API_MESSAGE_DEVICE_EMPTY = "/user/warnings"
+
+    //绑定的第三方平台列表
+    const val KHA_API_BIND_THIRD_PLATFORM_LIST = "/oauth/client/bind/list"
 }
