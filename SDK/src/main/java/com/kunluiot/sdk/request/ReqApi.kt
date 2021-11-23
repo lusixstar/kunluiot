@@ -1,36 +1,57 @@
 package com.kunluiot.sdk.request
 
+    /********************************* 线上地址 start **************** ******************************/
+//    public final static String KHA_DOMAIN = "creoiot.com";
+//    public static String KHA_WEB_SOCKET_URL = "wss://hub." + KHA_DOMAIN + ":186";
+//
+//    //uaa-url地址
+//    public static final String KHA_UAA_BASE_URL = "https://uaa-openapi." + KHA_DOMAIN;
+//    //webApi-url地址
+//    public static final String KHA_WEB_BASE_URL = "https://webapi-openapi." + KHA_DOMAIN;
+//    //console-url地址
+//    public static final String KHA_CONSOLE_BASE_URL = "https://console-openapi." + KHA_DOMAIN;
+//    public static String CHINADOMAIN = "creoiot.com";
+//    public static String INTERNATIONDOMAIN = "arenlink.com";
+    /********************************* 线上地址 end ************************************************/
+
+    /********************************* 测试地址2 KL start **********************************************/
+//    public static final String KHA_DOMAIN = "creoiot.com";//dd // 不是正式地址
+//    public static final String KHA_WEB_SOCKET_URL = "wss://hub-kl."+ KHA_DOMAIN + ":2186";
+//
+//    //uaa-url地址
+//    public static final String KHA_UAA_BASE_URL = "https://uaa-openapi-kl."+ KHA_DOMAIN;
+//    //webApi-url地址
+//    public static final String KHA_WEB_BASE_URL = "https://webapi-openapi-kl." + KHA_DOMAIN;
+//    //console-url地址
+//    public static final String KHA_CONSOLE_BASE_URL = "https://console-openapi-kl." + KHA_DOMAIN;
+//    public static String CHINADOMAIN = "creoiot.com";
+//    public static String INTERNATIONDOMAIN = "arenlink.com";
+    /********************************* 测试地址 end ************************************************/
+
 object ReqApi {
 
-    const val KHA_DOMAIN = "creoiot.com" //dd // 不是正式地址
+    const val KHA_DOMAIN = "creoiot.com"
+    const val INTERNATIONDOMAIN = "arenlink.com"
 
+    //new-test-url
     private const val KHA_TEST_URL = "https://api.kunluiot.com"
-
     private const val KHA_BASE_URL = KHA_TEST_URL
-
-    //uaa-url地址
     const val KHA_UAA_BASE_URL = "$KHA_BASE_URL/uaa"
-
-    //webApi-url地址
     const val KHA_WEB_BASE_URL = "$KHA_BASE_URL/webapi"
-
-    //console-url地址
     const val KHA_CONSOLE_BASE_URL = "$KHA_BASE_URL/console"
-
-
     const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
 
+    //old-test-url
+//    const val KHA_UAA_BASE_URL = "https://uaa-openapi-kl.$KHA_DOMAIN"
+//    const val KHA_WEB_BASE_URL = "https://webapi-openapi-kl.$KHA_DOMAIN"
+//    const val KHA_CONSOLE_BASE_URL = "https://console-openapi-kl.$KHA_DOMAIN"
+//    const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
 
-    const val KHA_WEB_SOCKET_URL1 = "wss://hub-kl.$KHA_DOMAIN:2186"
-
-    //uaa-url地址
-    const val KHA_UAA_BASE_URL1 = "https://uaa-openapi-kl.$KHA_DOMAIN"
-
-    //webApi-url地址
-    const val KHA_WEB_BASE_URL1 = "https://webapi-openapi-kl.$KHA_DOMAIN"
-
-    //console-url地址
-    const val KHA_CONSOLE_BASE_URL1 = "https://console-openapi-kl.$KHA_DOMAIN"
+    //now-release-url
+//    const val KHA_UAA_BASE_URL = "https://uaa-openapi.$KHA_DOMAIN"
+//    const val KHA_WEB_BASE_URL = "https://webapi-openapi.$KHA_DOMAIN"
+//    const val KHA_CONSOLE_BASE_URL = "https://console-openapi.$KHA_DOMAIN"
+//    const val KHA_WEB_SOCKET_URL = "wss://hub.$KHA_DOMAIN:186"
 }
 
 object DeviceApi {
