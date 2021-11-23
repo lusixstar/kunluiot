@@ -17,6 +17,7 @@ import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.thirdlib.qrcode.CameraScan
 import com.kunluiot.sdk.thirdlib.qrcode.QRCodeActivity
+import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
 import com.kunluiot.sdk.util.SPUtil
 import com.kunluiot.sdk.util.Tools
 import org.jetbrains.anko.startActivity
@@ -67,6 +68,7 @@ class MainActivity : BaseActivity() {
             it.data?.let { bean ->
                 val result: String = CameraScan.parseScanResult(bean) ?: ""
                 val resultMap: Map<String, String> = Tools.parseUrl(result)
+                LogUtils.e("resultMap == $resultMap")
                 if (resultMap.containsKey(KunLuDeviceType.DEVICE_ACTION)) {
                     when (resultMap[KunLuDeviceType.DEVICE_ACTION]) {
                         KunLuDeviceType.DEVICE_BIND -> {

@@ -52,29 +52,64 @@ object UserRequestUtil {
     /**
      * 手机号登录
      */
+//    fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
+//        Kalle.post(ReqApi.KHA_UAA_BASE_URL1 + UserApi.KHA_API_LOGIN)
+////            .setHeaders(KunLuHelper.getSign())
+//            .param("username", phone)
+//            .param("password", passwd)
+//            .param("pid", "00000000000")
+//            .param("clientType", "ANDROID")
+//            .param("areaCode", "86")
+////            .param("areaCode", countryCode)
+//            .perform(object : KunLuNetCallback<BaseRespBean<SessionBean>>(KunLuHomeSdk.instance.getApp()) {
+//                override fun onResponse(response: SimpleResponse<BaseRespBean<SessionBean>, String>) {
+//                    val failed = response.failed()
+//                    if (!failed.isNullOrEmpty()) {
+//                        callback.onError(response.code().toString(), failed)
+//                    } else {
+//                        val data = response.succeed()
+//                        if (data.status == null) {
+//                            callback.onError("-1", "status == null")
+//                            return
+//                        }
+//                        if (data.status != 200) {
+//                            callback.onError(data.status.toString(), data.message)
+//                        } else {
+//                            SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data.data)
+//                            val user = User()
+//                            user.uid = data.data.user
+//                            callback.onSuccess(user)
+//                            WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
+//                        }
+//                    }
+//                }
+//            })
+//    }
+
+    /**
+     * 手机号登录
+     */
     fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
-        Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_LOGIN)
-            .setHeaders(KunLuHelper.getSign())
+        Kalle.post(ReqApi.KHA_UAA_BASE_URL1 + UserApi.KHA_API_LOGIN)
+//            .setHeaders(KunLuHelper.getSign())
             .param("username", phone)
             .param("password", passwd)
+            .param("pid", "00000000000")
             .param("clientType", "ANDROID")
-            .param("areaCode", countryCode)
-            .perform(object : KunLuNetCallback<BaseRespBean<SessionBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<SessionBean>, String>) {
+            .param("areaCode", "86")
+//            .param("areaCode", countryCode)
+            .perform(object : KunLuNetCallback<SessionBean>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<SessionBean, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
                         val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data.data)
+                            SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data)
                             val user = User()
-                            user.uid = data.data.user
+                            user.uid = data.user
                             callback.onSuccess(user)
-                            WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
-                        }
+                            WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL1)
                     }
                 }
             })

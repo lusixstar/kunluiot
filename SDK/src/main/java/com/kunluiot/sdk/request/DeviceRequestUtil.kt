@@ -234,23 +234,46 @@ object DeviceRequestUtil {
     /**
      * 设备列表
      */
+//    fun getPINCode(ssid: String, callback: IPinCodeCallback) {
+//        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_PIN_CODE)
+//            .setHeaders(KunLuHelper.getSign())
+//            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+//            .param("ssid", ssid)
+//            .perform(object : KunLuNetCallback<BaseRespBean<DevicePinCodeBean>>(KunLuHomeSdk.instance.getApp()) {
+//                override fun onResponse(response: SimpleResponse<BaseRespBean<DevicePinCodeBean>, String>) {
+//                    val failed = response.failed()
+//                    if (!failed.isNullOrEmpty()) {
+//                        callback.onError(response.code().toString(), failed)
+//                    } else {
+//                        val data = response.succeed()
+//                        if (data.status != 200) {
+//                            callback.onError(data.status.toString(), data.message)
+//                        } else {
+//                            callback.onSuccess(data.data)
+//                        }
+//                    }
+//                }
+//            })
+//    }
+
+    /**
+     * 设备列表
+     */
     fun getPINCode(ssid: String, callback: IPinCodeCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_PIN_CODE)
-            .setHeaders(KunLuHelper.getSign())
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL1 + DeviceApi.KHA_API_GET_PIN_CODE)
+//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("ssid", ssid)
-            .perform(object : KunLuNetCallback<BaseRespBean<DevicePinCodeBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<DevicePinCodeBean>, String>) {
+            .perform(object : KunLuNetCallback<DevicePinCodeBean>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<DevicePinCodeBean, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
                         val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+
+                            callback.onSuccess(data)
+
                     }
                 }
             })
@@ -259,24 +282,45 @@ object DeviceRequestUtil {
     /**
      * 获取新配上的设备列表
      */
+//    fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback) {
+//        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST)
+//            .setHeaders(KunLuHelper.getSign())
+//            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+//            .param("ssid", ssid)
+//            .param("pinCode", pinCode)
+//            .perform(object : KunLuNetCallback<BaseRespBean<List<DeviceNewBean>>>(KunLuHomeSdk.instance.getApp()) {
+//                override fun onResponse(response: SimpleResponse<BaseRespBean<List<DeviceNewBean>>, String>) {
+//                    val failed = response.failed()
+//                    if (!failed.isNullOrEmpty()) {
+//                        callback.onError(response.code().toString(), failed)
+//                    } else {
+//                        val data = response.succeed()
+//                        if (data.status != 200) {
+//                            callback.onError(data.status.toString(), data.message)
+//                        } else {
+//                            callback.onSuccess(data.data)
+//                        }
+//                    }
+//                }
+//            })
+//    }
+
     fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST)
-            .setHeaders(KunLuHelper.getSign())
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL1 + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST)
+//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("ssid", ssid)
             .param("pinCode", pinCode)
-            .perform(object : KunLuNetCallback<BaseRespBean<List<DeviceNewBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<DeviceNewBean>>, String>) {
+            .perform(object : KunLuNetCallback<List<DeviceNewBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<List<DeviceNewBean>, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
                         val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+
+                            callback.onSuccess(data)
+
                     }
                 }
             })
@@ -285,23 +329,45 @@ object DeviceRequestUtil {
     /**
      * 设备产品列表
      */
+//    fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback) {
+//        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST)
+//            .setHeaders(KunLuHelper.getSign())
+//            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+//            .param("filterFlag", filterFlag)
+//            .perform(object : KunLuNetCallback<BaseRespBean<List<DeviceListProductBean>>>(KunLuHomeSdk.instance.getApp()) {
+//                override fun onResponse(response: SimpleResponse<BaseRespBean<List<DeviceListProductBean>>, String>) {
+//                    val failed = response.failed()
+//                    if (!failed.isNullOrEmpty()) {
+//                        callback.onError(response.code().toString(), failed)
+//                    } else {
+//                        val data = response.succeed()
+//                        if (data.status != 200) {
+//                            callback.onError(data.status.toString(), data.message)
+//                        } else {
+//                            callback.onSuccess(data.data)
+//                        }
+//                    }
+//                }
+//            })
+//    }
+
+    /**
+     * 设备产品列表
+     */
     fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST)
-            .setHeaders(KunLuHelper.getSign())
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL1 + DeviceApi.KHA_API_GET_PRODUCTLIST)
+//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("filterFlag", filterFlag)
-            .perform(object : KunLuNetCallback<BaseRespBean<List<DeviceListProductBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<DeviceListProductBean>>, String>) {
+            .param("pid", "00000000000")
+            .perform(object : KunLuNetCallback<List<DeviceListProductBean>>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<List<DeviceListProductBean>, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
                         val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                            callback.onSuccess(data)
                     }
                 }
             })
