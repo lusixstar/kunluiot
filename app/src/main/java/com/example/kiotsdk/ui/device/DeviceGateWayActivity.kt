@@ -22,7 +22,7 @@ class DeviceGateWayActivity : BaseActivity() {
 
     private var mCurrentSelectGateway = ""
 
-    private lateinit var mGatewayNameArray: Array<String>
+    private var mGatewayNameArray: Array<String> = arrayOf()
     private var mGatewayBeanList: List<DeviceNewBean> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {

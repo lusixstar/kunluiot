@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainBinding
+import com.example.kiotsdk.ui.device.DeviceConfigFinishActivity
 import com.example.kiotsdk.ui.device.DeviceListActivity
 import com.example.kiotsdk.ui.family.FamilyCreateActivity
 import com.example.kiotsdk.ui.family.FamilyListActivity
@@ -14,10 +15,13 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.callback.device.IDeviceListCallback
+import com.kunluiot.sdk.callback.device.IDeviceOneCallback
 import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.thirdlib.qrcode.CameraScan
 import com.kunluiot.sdk.thirdlib.qrcode.QRCodeActivity
 import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
+import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
+import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import com.kunluiot.sdk.util.Tools
 import org.jetbrains.anko.startActivity
@@ -84,41 +88,30 @@ class MainActivity : BaseActivity() {
         if (bindKey.isEmpty() || devTid.isEmpty()) {
             return
         }
-//        KunLuHomeSdk.deviceImpl.scanCodeDevice(bindKey, devTid, scanCallback)
+        KunLuHomeSdk.deviceImpl.scanCodeDevice(bindKey, devTid, scanCallback)
     }
 
-//    private val scanCallback = object : IOneDeviceCallback {
-//
-//        override fun onSuccess(bean: DeviceNewBean) {
-//            gotoNext(bean)
-//        }
-//
-//        override fun onError(code: String, error: String) {
-//            toast("code == $code, error == $error")
-//        }
-//    }
+    private val scanCallback = object : IDeviceOneCallback {
+
+        override fun onSuccess(bean: DeviceNewBean) {
+            gotoNext(bean)
+        }
+
+        override fun onError(code: String, error: String) {
+            toast("code == $code, error == $error")
+        }
+    }
 
     private fun gotoNext(bean: DeviceNewBean) {
-        val devType: String = bean.devType
-//        if (devType == KunLuDeviceType.DEVICE_SUB) {
-//            startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
-//                .putExtra("devTid", response.getParentDevTid())
-//                .putExtra("subDevTid", response.getDevTid())
-//                .putExtra("branchNames", JsonUtils.toJson(response.getBranchNames()))
-//                //                    .putExtra("device", response)
-//                .putExtra("registerId", response.getRegisterId())
-//                .putExtra("deviceName", response.getName()).putExtra("mid", response.getMid())
-//                .putExtra("ctrlKey", response.getParentCtrlKey()))
-//        } else {
-//            startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
-//                .putExtra("devTid", response.getDevTid())
-//                .putExtra("branchNames", JsonUtils.toJson(response.getBranchNames()))
-    //                    .putExtra("device", response)
-//                .putExtra("mid", response.getMid())
-//                .putExtra("registerId", response.getRegisterId())
-//                .putExtra("deviceName", response.getName())
-//                .putExtra("ctrlKey", response.getCtrlKey()))
-//        }
+        startActivity<DeviceConfigFinishActivity>(
+            DeviceConfigFinishActivity.DEV_TID to bean.devTid,
+            DeviceConfigFinishActivity.DEVICE to bean,
+            DeviceConfigFinishActivity.MID to bean.mid,
+            DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
+            DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
+            DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
+            DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+        )
     }
 
     private val selectFamily = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

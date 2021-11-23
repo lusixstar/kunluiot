@@ -5,15 +5,19 @@ import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.bean.user.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.user.*
-import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
-import com.kunluiot.sdk.util.log.KunLuLog
 import com.kunluiot.sdk.thirdlib.kalle.FileBinary
 import com.kunluiot.sdk.thirdlib.kalle.FormBody
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
-import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.util.SPUtil
+import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
+import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
 import com.kunluiot.sdk.thirdlib.ws.WebsocketUtil
+import com.kunluiot.sdk.util.JsonUtils
+import com.kunluiot.sdk.util.KotlinSerializationUtils
+import com.kunluiot.sdk.util.SPUtil
+import com.kunluiot.sdk.util.log.KunLuLog
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.io.File
 
 object UserRequestUtil {
@@ -90,7 +94,7 @@ object UserRequestUtil {
      * 手机号登录
      */
     fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
-        Kalle.post(ReqApi.KHA_UAA_BASE_URL1 + UserApi.KHA_API_LOGIN)
+        Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_LOGIN)
 //            .setHeaders(KunLuHelper.getSign())
             .param("username", phone)
             .param("password", passwd)
@@ -98,18 +102,19 @@ object UserRequestUtil {
             .param("clientType", "ANDROID")
             .param("areaCode", "86")
 //            .param("areaCode", countryCode)
-            .perform(object : KunLuNetCallback<SessionBean>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<SessionBean, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
+                        KotlinSerializationUtils.getJsonData<SessionBean>(response.succeed()).let { data ->
                             SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data)
                             val user = User()
                             user.uid = data.user
                             callback.onSuccess(user)
-                            WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL1)
+                            WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
+                        }
                     }
                 }
             })

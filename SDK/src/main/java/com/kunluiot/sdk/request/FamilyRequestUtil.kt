@@ -1,37 +1,57 @@
 package com.kunluiot.sdk.request
 
+import com.kunluiot.sdk.BuildConfig
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.bean.device.DeviceFrameBean
+import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.family.*
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
+import com.kunluiot.sdk.thirdlib.kalle.KalleConfig
+import com.kunluiot.sdk.thirdlib.kalle.connect.BroadcastNetwork
+import com.kunluiot.sdk.thirdlib.kalle.connect.http.LoggerInterceptor
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
 import com.kunluiot.sdk.util.JsonUtils
+import com.kunluiot.sdk.util.KotlinSerializationUtils
 
 object FamilyRequestUtil {
 
     /**
      * 家庭列表
      */
+//    fun getFamilyList(callback: IFamilyListCallback) {
+//        Kalle.get(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY)
+////            .setHeaders(KunLuHelper.getSign())
+//            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+//            .perform(object : KunLuNetCallback<List<FamilyBean>>(KunLuHomeSdk.instance.getApp()) {
+//                override fun onResponse(response: SimpleResponse<List<FamilyBean>, String>) {
+//                    val failed = response.failed()
+//                    if (!failed.isNullOrEmpty()) {
+//                        callback.onError(response.code().toString(), failed)
+//                    } else {
+//                        val data = response.succeed()
+//                            callback.onSuccess(data)
+//                    }
+//                }
+//            })
+//    }
+
     fun getFamilyList(callback: IFamilyListCallback) {
         Kalle.get(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY)
-            .setHeaders(KunLuHelper.getSign())
+//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<List<FamilyBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<FamilyBean>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
+                        KotlinSerializationUtils.getJsonData<List<FamilyBean>>(response.succeed()).let {
+                            callback.onSuccess(it)
                         }
                     }
                 }
@@ -257,24 +277,45 @@ object FamilyRequestUtil {
     /**
      *  房间列表
      */
+//    fun getRooms(familyId: String, page: Int, size: Int, callback: IFamilyRoomListCallback) {
+//        Kalle.get(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FOLDER)
+//            .setHeaders(KunLuHelper.getSign())
+//            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+//            .param("familyId", familyId)
+//            .param("page", page)
+//            .param("size", size)
+//            .perform(object : KunLuNetCallback<BaseRespBean<List<FolderBean>>>(KunLuHomeSdk.instance.getApp()) {
+//                override fun onResponse(response: SimpleResponse<BaseRespBean<List<FolderBean>>, String>) {
+//                    val failed = response.failed()
+//                    if (!failed.isNullOrEmpty()) {
+//                        callback.onError(response.code().toString(), failed)
+//                    } else {
+//                        val data = response.succeed()
+//                        if (data.status != 200) {
+//                            callback.onError(data.status.toString(), data.message)
+//                        } else {
+//                            callback.onSuccess(data.data)
+//                        }
+//                    }
+//                }
+//            })
+//    }
+
     fun getRooms(familyId: String, page: Int, size: Int, callback: IFamilyRoomListCallback) {
         Kalle.get(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FOLDER)
-            .setHeaders(KunLuHelper.getSign())
+//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("familyId", familyId)
             .param("page", page)
             .param("size", size)
-            .perform(object : KunLuNetCallback<BaseRespBean<List<FolderBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<FolderBean>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
+                        KotlinSerializationUtils.getJsonData<List<FolderBean>>(response.succeed()).let {
+                            callback.onSuccess(it)
                         }
                     }
                 }

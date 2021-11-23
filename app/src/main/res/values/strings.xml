@@ -24,6 +24,7 @@
     <string name="device_manager">设备管理</string>
     <string name="device_list">设备列表</string>
     <string name="device_set_net">设备配网</string>
+    <string name="device_set_net_finish">完成配网</string>
     <string name="device_wifi_mode">WIFI配网</string>
     <string name="device_ap_mode">AP兼容模式配网</string>
     <string name="device_zigbee_mode">Zigbee Gateway</string>

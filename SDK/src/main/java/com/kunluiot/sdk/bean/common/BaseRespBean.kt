@@ -1,5 +1,7 @@
 package com.kunluiot.sdk.bean.common
 
+import kotlinx.serialization.Serializable
+
 
 data class BaseRespBean<T>(
     var status: Int = 0,
@@ -71,6 +73,7 @@ data class CommonMsgSortBean(
     val descending: Boolean = false,
 )
 
+@Serializable
 data class CommonThirdPlatformBean(
     val last: Boolean = false,
     val totalPages: Int = 0,

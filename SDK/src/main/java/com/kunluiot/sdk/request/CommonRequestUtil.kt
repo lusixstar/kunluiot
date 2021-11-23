@@ -5,6 +5,7 @@ import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.bean.common.CommonMessageListBean
 import com.kunluiot.sdk.bean.common.CommonProblemBean
 import com.kunluiot.sdk.bean.common.CommonThirdPlatformBean
+import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.ICommonMsgListCallback
 import com.kunluiot.sdk.callback.common.ICommonProblemCallback
@@ -13,6 +14,7 @@ import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
 import com.kunluiot.sdk.util.JsonUtils
+import com.kunluiot.sdk.util.KotlinSerializationUtils
 
 object CommonRequestUtil {
 
@@ -195,20 +197,15 @@ object CommonRequestUtil {
      * */
     fun getBindThirdPlatformList(callback: ICommonThirdPlatformCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + CommonApi.KHA_API_BIND_THIRD_PLATFORM_LIST)
-            .setHeaders(KunLuHelper.getSign())
+//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<CommonThirdPlatformBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<CommonThirdPlatformBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<CommonThirdPlatformBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })

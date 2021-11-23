@@ -2,6 +2,7 @@ package com.kunluiot.sdk.bean.device
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 data class DeviceWifiBean(
     var name: String = "",
@@ -55,7 +56,7 @@ data class DeviceFrameBean(
     val frameType: Int = 0,
 )
 
-data class  ConfigNetworkBean(
+data class ConfigNetworkBean(
     val ctrlKey: String = "",
     val result: String = "",
 )
@@ -68,6 +69,7 @@ data class DevicePinCodeBean(
 /**
  * 设备产品列表
  * */
+@Serializable
 data class DeviceListProductBean(
     val category: DeviceCategoryBean = DeviceCategoryBean(),
     val categoryName: String = "",
@@ -78,6 +80,7 @@ data class DeviceListProductBean(
     val categorySelfName: String = "",
 )
 
+@Serializable
 data class DeviceCategoryBean(
     val id: String = "",
     val name: DeviceNameBean = DeviceNameBean(),
@@ -86,11 +89,13 @@ data class DeviceCategoryBean(
 )
 
 @Parcelize
+@Serializable
 data class DeviceNameBean(
     val zh_CN: String = "",
     val en_US: String = "",
 ) : Parcelable
 
+@Serializable
 data class DeviceProductTabBean(
     var select: Boolean = false,
     val id: String = "",
@@ -99,6 +104,7 @@ data class DeviceProductTabBean(
 )
 
 @Parcelize
+@Serializable
 data class DeviceProductsBean(
     val mid: String = "",
     val name: String = "",
@@ -117,6 +123,7 @@ data class DeviceProductsBean(
 ) : Parcelable
 
 @Parcelize
+@Serializable
 data class DeviceNewBean(
     val devTid: String = "",
     val mid: String = "",
@@ -130,6 +137,7 @@ data class DeviceNewBean(
     val name: String = "",
     val online: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),
+    val branchNames: List<String> = listOf(),
 ) : Parcelable
 
 data class DeviceProductDescribeBean(

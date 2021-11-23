@@ -39,7 +39,7 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.user.LoginActivity"
@@ -95,6 +95,10 @@
 
         <activity
             android:name=".ui.device.DeviceGateWayDetailsActivity"
+            android:screenOrientation="fullSensor" />
+
+        <activity
+            android:name=".ui.device.DeviceConfigFinishActivity"
             android:screenOrientation="fullSensor" />
 
     </application>

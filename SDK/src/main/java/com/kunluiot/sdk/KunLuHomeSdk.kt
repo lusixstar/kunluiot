@@ -12,7 +12,7 @@ import com.kunluiot.sdk.api.scene.KunLuSceneImpl
 import com.kunluiot.sdk.api.user.IKunLuUser
 import com.kunluiot.sdk.api.user.KunLuUserImpl
 import com.kunluiot.sdk.bean.user.SessionBean
-import com.kunluiot.sdk.request.JsonConverter
+import com.kunluiot.sdk.request.KunLuJsonConverter
 import com.kunluiot.sdk.request.ReqApi
 import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
@@ -32,7 +32,11 @@ class KunLuHomeSdk {
     private var msgId = 1
 
     private fun setKalle() {
-        Kalle.setConfig(KalleConfig.newBuilder().network(BroadcastNetwork(app)).addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(JsonConverter(app)).build())
+        Kalle.setConfig(KalleConfig.newBuilder()
+            .network(BroadcastNetwork(app))
+            .addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG))
+            .converter(KunLuJsonConverter(app))
+            .build())
     }
 
     /**
