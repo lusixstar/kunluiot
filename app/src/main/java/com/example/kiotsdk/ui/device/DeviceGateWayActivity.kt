@@ -56,8 +56,6 @@ class DeviceGateWayActivity : BaseActivity() {
         } else {
             mGatewayBeanList.first { mCurrentSelectGateway.contains(it.name) }.let { bean ->
                 if (bean.online) {
-                    if(bean.registerId.isNullOrEmpty()) bean.registerId = ""
-                    if(bean.bindResultMsg.isNullOrEmpty()) bean.bindResultMsg = ""
                     startActivity<DeviceGateWayDetailsActivity>(DeviceGateWayDetailsActivity.BEAN to mBean, DeviceGateWayDetailsActivity.GATEWAY_BEAN to bean)
                 } else {
                     toast(R.string.gateway_offline)

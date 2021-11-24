@@ -7,6 +7,7 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainBinding
 import com.example.kiotsdk.ui.device.DeviceConfigFinishActivity
 import com.example.kiotsdk.ui.device.DeviceListActivity
+import com.example.kiotsdk.ui.device.DeviceRoomListActivity
 import com.example.kiotsdk.ui.family.FamilyCreateActivity
 import com.example.kiotsdk.ui.family.FamilyListActivity
 import com.example.kiotsdk.ui.family.FamilySelectActivity
@@ -52,19 +53,13 @@ class MainActivity : BaseActivity() {
         mBinding.deviceZigbeeMode.setOnClickListener { startActivity<DeviceListActivity>(DeviceListActivity.NET_TYPE to DeviceListActivity.NET_TYPE_ZIG_BEE) }
         mBinding.deviceQrMode.setOnClickListener { gotoQrLaunch.launch(Intent(this, QRCodeActivity::class.java)) }
 
-        mBinding.deviceList.setOnClickListener { getDeviceList() }
+        mBinding.deviceList.setOnClickListener { startActivity<DeviceRoomListActivity>() }
+
+        getData()
     }
 
-    private fun getDeviceList() {
-        KunLuHomeSdk.deviceImpl.getAllDevicesAct(true, object : IDeviceListCallback {
-            override fun onSuccess(bean: List<DeviceNewBean>) {
-
-            }
-
-            override fun onError(code: String, error: String) {
-
-            }
-        })
+    private fun getData() {
+        KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, { info -> mBinding.homeManagerValue.text = "当前家庭：${info.first().familyName}" })
     }
 
     private val gotoQrLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -72,7 +67,6 @@ class MainActivity : BaseActivity() {
             it.data?.let { bean ->
                 val result: String = CameraScan.parseScanResult(bean) ?: ""
                 val resultMap: Map<String, String> = Tools.parseUrl(result)
-                LogUtils.e("resultMap == $resultMap")
                 if (resultMap.containsKey(KunLuDeviceType.DEVICE_ACTION)) {
                     when (resultMap[KunLuDeviceType.DEVICE_ACTION]) {
                         KunLuDeviceType.DEVICE_BIND -> {

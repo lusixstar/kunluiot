@@ -38,23 +38,7 @@ class SplashActivity : BaseActivity() {
         getVersion()
 
         mBinding.login.setOnClickListener { activityResultLauncher.launch(Intent(this, LoginActivity::class.java)) }
-        mBinding.register.setOnClickListener { testGo() }
-//        mBinding.register.setOnClickListener { startActivity<RegisterActivity>() }
-    }
-
-    private fun testGo() {
-        KunLuHomeSdk.commonImpl.getBindThirdPlatformList(testCallback)
-    }
-
-    private val testCallback = object : ICommonThirdPlatformCallback {
-
-        override fun onSuccess(bean: CommonThirdPlatformBean) {
-            LogUtils.e("bean == $bean")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        mBinding.register.setOnClickListener { startActivity<RegisterActivity>() }
     }
 
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

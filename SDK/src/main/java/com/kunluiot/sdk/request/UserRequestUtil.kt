@@ -30,21 +30,17 @@ object UserRequestUtil {
         map["refresh_token"] = refreshToken
         val param = JsonUtils.toJson(map)
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_REFRESH_TOKEN)
-            .setHeaders(KunLuHelper.getSign())
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<SessionBean>>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<BaseRespBean<SessionBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
-                    val data = response.succeed()
-                    if (data.status != 200) {
-                        callback.onError(data.status.toString(), data.message)
-                    } else {
-                        SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data.data)
+                    KotlinSerializationUtils.getJsonData<SessionBean>(response.succeed()).let { data ->
+                        SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data)
                         val user = User()
-                        user.uid = data.data.user
+                        user.uid = data.user
                         callback.onSuccess(user)
                         WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
                     }
@@ -56,52 +52,12 @@ object UserRequestUtil {
     /**
      * 手机号登录
      */
-//    fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
-//        Kalle.post(ReqApi.KHA_UAA_BASE_URL1 + UserApi.KHA_API_LOGIN)
-////            .setHeaders(KunLuHelper.getSign())
-//            .param("username", phone)
-//            .param("password", passwd)
-//            .param("pid", "00000000000")
-//            .param("clientType", "ANDROID")
-//            .param("areaCode", "86")
-////            .param("areaCode", countryCode)
-//            .perform(object : KunLuNetCallback<BaseRespBean<SessionBean>>(KunLuHomeSdk.instance.getApp()) {
-//                override fun onResponse(response: SimpleResponse<BaseRespBean<SessionBean>, String>) {
-//                    val failed = response.failed()
-//                    if (!failed.isNullOrEmpty()) {
-//                        callback.onError(response.code().toString(), failed)
-//                    } else {
-//                        val data = response.succeed()
-//                        if (data.status == null) {
-//                            callback.onError("-1", "status == null")
-//                            return
-//                        }
-//                        if (data.status != 200) {
-//                            callback.onError(data.status.toString(), data.message)
-//                        } else {
-//                            SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data.data)
-//                            val user = User()
-//                            user.uid = data.data.user
-//                            callback.onSuccess(user)
-//                            WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
-//                        }
-//                    }
-//                }
-//            })
-//    }
-
-    /**
-     * 手机号登录
-     */
     fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback) {
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_LOGIN)
-//            .setHeaders(KunLuHelper.getSign())
             .param("username", phone)
             .param("password", passwd)
-            .param("pid", "00000000000")
             .param("clientType", "ANDROID")
-            .param("areaCode", "86")
-//            .param("areaCode", countryCode)
+            .param("areaCode", countryCode)
             .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
                 override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
@@ -125,16 +81,15 @@ object UserRequestUtil {
      */
     fun bindOtherAccount(token: String, callback: IResultCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_BIND_OTHER_ACCOUNT)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("token", token)
-            .perform(object : KunLuNetCallback<BaseRespBean<BaseRespBean<Any>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<BaseRespBean<Any>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        callback.onSuccess()
+                        KotlinSerializationUtils.getJsonData<SessionBean>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -145,16 +100,15 @@ object UserRequestUtil {
      */
     fun unBindOtherAccount(type: String, callback: IResultCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_UNBIND_OTHER_ACCOUNT)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("type", type)
-            .perform(object : KunLuNetCallback<BaseRespBean<BaseRespBean<Any>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<BaseRespBean<Any>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        callback.onSuccess()
+                        KotlinSerializationUtils.getJsonData<SessionBean>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -165,19 +119,13 @@ object UserRequestUtil {
      */
     fun getVerifyImageCode(callback: IVerifyImageCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GET_VERIFY_IMAGE_CODE)
-            .setHeaders(KunLuHelper.getSign())
-            .perform(object : KunLuNetCallback<BaseRespBean<VerifyImageBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<VerifyImageBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<VerifyImageBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -188,21 +136,15 @@ object UserRequestUtil {
      */
     fun checkVerifyImageCode(rid: String, code: String, callback: ICheckVerifyImageCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_CHECK_VERIFY_IMAGE_CODE)
-            .setHeaders(KunLuHelper.getSign())
             .param("rid", rid)
             .param("code", code)
-            .perform(object : KunLuNetCallback<BaseRespBean<CheckVerifyImageBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<CheckVerifyImageBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<CheckVerifyImageBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -217,18 +159,13 @@ object UserRequestUtil {
             .param("type", type)
             .param("phoneNumber", phoneNumber)
             .param("token", token)
-            .perform(object : KunLuNetCallback<BaseRespBean<String>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<String>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -246,18 +183,13 @@ object UserRequestUtil {
             .param("phoneNumber", phoneNumber)
             .param("areaCode", area)
             .param("code", code)
-            .perform(object : KunLuNetCallback<BaseRespBean<VerifyCodeBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<VerifyCodeBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<VerifyCodeBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -273,20 +205,14 @@ object UserRequestUtil {
         map["token"] = token
         val param = JsonUtils.toJson(map)
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_REGISTER)
-            .setHeaders(KunLuHelper.getSign())
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<User>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<User>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<User>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -297,23 +223,17 @@ object UserRequestUtil {
      */
     fun resetPassword(phoneNumber: String, password: String, token: String, verifyCode: String, callback: IResultCallback) {
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_RESET_PASSWORD)
-            .setHeaders(KunLuHelper.getSign())
             .param("phoneNumber", phoneNumber)
             .param("password", password)
             .param("token", token)
             .param("verifyCode", verifyCode)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -328,21 +248,15 @@ object UserRequestUtil {
         map["newPassword"] = newPassword
         val param = JsonUtils.toJson(map)
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_CHANGE_PASSWORD)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -353,20 +267,14 @@ object UserRequestUtil {
      */
     fun getUserInfo(callback: IUserCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GETUSERINFO)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<User>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<User>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<User>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -377,20 +285,14 @@ object UserRequestUtil {
      */
     fun getDeviceCount(callback: IUserDevicesCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GET_DEVICE_COUNT)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<String>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<String>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -404,16 +306,15 @@ object UserRequestUtil {
         map["lastName"] = nick
         val param = JsonUtils.toJson(map)
         Kalle.put(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GETUSERINFO)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        callback.onSuccess()
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -429,16 +330,15 @@ object UserRequestUtil {
         map["avatarUrl"] = m
         val param = JsonUtils.toJson(map)
         Kalle.put(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GETUSERINFO)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        callback.onSuccess()
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -458,21 +358,15 @@ object UserRequestUtil {
         formBody.onProgress{ _, progress -> KunLuLog.d("formBody progress == $progress") }
 
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_UPDATE_PHOTO)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(formBody)
-            .perform(object : KunLuNetCallback<BaseRespBean<AvatarBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<AvatarBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<AvatarBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -488,21 +382,15 @@ object UserRequestUtil {
         map["phoneNumber"] = phoneNumber
         val param = JsonUtils.toJson(map)
         Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_CHANGE_PHONE_NUM)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })

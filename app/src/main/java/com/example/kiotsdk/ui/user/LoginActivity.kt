@@ -30,6 +30,7 @@ class LoginActivity : BaseActivity() {
 
 //        mBinding.emailPhone.setText("13559243607")
         mBinding.emailPhone.setText("15080301825")
+//        mBinding.password.setText("123456")
         mBinding.password.setText("123123")
 
         mBinding.login.setOnClickListener { gotoNext() }

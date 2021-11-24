@@ -64,5 +64,12 @@ internal class KunLuCommonImpl : IKunLuCommon {
         CommonRequestUtil.getBindThirdPlatformList(callback)
     }
 
+    /**
+     * 下载文件
+     * */
+    override fun downloadsUrlFile(url: String) {
+        CommonRequestUtil.downloadsUrlFile(url)
+    }
+
 
 }

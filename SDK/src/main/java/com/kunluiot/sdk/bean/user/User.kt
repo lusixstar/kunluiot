@@ -16,6 +16,7 @@ data class SessionBean(
 /**
  * 图像验证
  * */
+@Serializable
 data class VerifyImageBean(
     val rid: String = "",
     val png: String = "",
@@ -24,6 +25,7 @@ data class VerifyImageBean(
 /**
  * 检测图像验证
  * */
+@Serializable
 data class CheckVerifyImageBean(
     val captchaToken: String = "",
 )
@@ -31,6 +33,7 @@ data class CheckVerifyImageBean(
 /**
  * 用户信息
  * */
+@Serializable
 data class User(
     var name: String = "",
     var phoneNumber: String = "",
@@ -43,6 +46,7 @@ data class User(
 /**
  * 检测验证码
  * */
+@Serializable
 data class VerifyCodeBean(
     var phoneNumber: String = "",
     var verifyCode: String = "",
@@ -56,6 +60,7 @@ data class VerifyCodeBean(
 /**
  * 用户头像
  * */
+@Serializable
 data class UserAvatarInfo(
     var small: String = "",
     var middle: String = "",
@@ -65,6 +70,7 @@ data class UserAvatarInfo(
 /**
  * 上传头像地址
  * */
+@Serializable
 data class AvatarBean(
     var fileSourceUrl: String = "",
     var fileCDNUrl: String = "",

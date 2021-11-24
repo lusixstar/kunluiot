@@ -46,4 +46,9 @@ interface IKunLuCommon {
      * 绑定的第三方平台列表
      * */
     fun getBindThirdPlatformList(callback: ICommonThirdPlatformCallback)
+
+    /**
+     * 下载文件
+     * */
+    fun downloadsUrlFile(url: String)
 }

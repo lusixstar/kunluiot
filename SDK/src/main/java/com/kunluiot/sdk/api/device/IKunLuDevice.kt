@@ -2,9 +2,35 @@ package com.kunluiot.sdk.api.device
 
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.IResultStringCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.device.*
 
 interface IKunLuDevice {
+
+
+    /**
+     * 删除设备
+     */
+    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 删除子设备
+     */
+    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 设备配网
+     */
+    fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceConfigGatewayResult)
+
+    // ------------------------------------------------
+
+    /**
+     * 删除授权设备
+     */
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback)
+
 
     /**
      * 所有设备
@@ -26,11 +52,6 @@ interface IKunLuDevice {
      *  获取子设备信息
      */
     fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: IDeviceListCallback)
-
-    /**
-     * 设备配网
-     */
-    fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IConfigNetworkCallback)
 
     /**
      * 设备配网成功后将设备配置到某个家庭下某个房间
@@ -87,20 +108,8 @@ interface IKunLuDevice {
      */
     fun getDeviceProtocolTemplate(ppk: String, callback: IResultStringCallback)
 
-    /**
-     * 删除设备
-     */
-    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, callback: IDeviceDeleteCallback)
 
-    /**
-     * 删除授权设备
-     */
-    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback)
 
-    /**
-     * 删除子设备
-     */
-    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, callback: IDeviceDeleteCallback)
 
     /**
      * 获取群控

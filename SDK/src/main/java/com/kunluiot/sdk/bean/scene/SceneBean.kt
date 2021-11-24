@@ -1,5 +1,8 @@
 package com.kunluiot.sdk.bean.scene
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SceneListBean(
     val objectId: SceneObjectIdBean = SceneObjectIdBean(),
     val sceneId: String = "",
@@ -24,6 +27,7 @@ data class SceneListBean(
     val taskCtrlKey: String = "",
 )
 
+@Serializable
 data class SceneObjectIdBean(
     val timestamp: Int = 0,
     val machineIdentifier: Int = 0,
@@ -34,9 +38,10 @@ data class SceneObjectIdBean(
     val timeSecond: Int = 0,
 )
 
+@Serializable
 data class SceneAddOneKeyBean(
     val taskId: String = "",
-    val cmdArgs: Map<String, Any> = mapOf(),
+    val cmdArgs: Map<String, Unit> = mapOf(),
     val customParam: SceneCustomParamBean = SceneCustomParamBean(),
     val time: String = "",
     val iftttId: String = "",
@@ -50,6 +55,7 @@ data class SceneAddOneKeyBean(
     val updateIndex: Int = -1,
 )
 
+@Serializable
 data class SceneCustomParamBean(
     val name: String = "",
     val icon: String = "",
@@ -61,6 +67,7 @@ data class SceneCustomParamBean(
     val desc: String = "",
 )
 
+@Serializable
 data class SceneDeleteBean(
     val ruleId: String = "",
     val ruleName: String = "",
@@ -68,11 +75,13 @@ data class SceneDeleteBean(
     val type: String = "",
 )
 
+@Serializable
 data class SceneNewPlayBean(
     val state: Int = 0,
     val data: SceneNewPlayItemBean = SceneNewPlayItemBean(),
 )
 
+@Serializable
 data class SceneNewPlayItemBean(
     val last: Boolean = false,
     val totalPages: Int = 0,
@@ -85,12 +94,14 @@ data class SceneNewPlayItemBean(
     val content: List<SceneListBean> = listOf(),
 )
 
+@Serializable
 data class SceneOneKeySortBean(
     val sceneSort: Int = 0,
     val showType: String = "",
     val sceneId: String = "",
 )
 
+@Serializable
 data class SceneLinkSortBean(
     val ruleId: String = "",
     val ruleSort: Int = 0,

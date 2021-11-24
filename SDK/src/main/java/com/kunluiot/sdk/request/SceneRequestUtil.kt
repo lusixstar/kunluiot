@@ -3,6 +3,7 @@ package com.kunluiot.sdk.request
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.common.BaseRespBean
 import com.kunluiot.sdk.bean.common.CommonProblemBean
+import com.kunluiot.sdk.bean.common.CommonThirdPlatformBean
 import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
@@ -12,6 +13,7 @@ import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
 import com.kunluiot.sdk.util.JsonUtils
+import com.kunluiot.sdk.util.KotlinSerializationUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
@@ -25,20 +27,14 @@ object SceneRequestUtil {
      * */
     fun getOneKeySceneList(callback: ISceneListCallback) {
         Kalle.get(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<List<SceneListBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<SceneListBean>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -88,21 +84,15 @@ object SceneRequestUtil {
         }
 
         Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(json))
-            .perform(object : KunLuNetCallback<BaseRespBean<List<SceneListBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<SceneListBean>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -151,21 +141,15 @@ object SceneRequestUtil {
         }
 
         Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId")
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(json))
-            .perform(object : KunLuNetCallback<BaseRespBean<List<SceneListBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<SceneListBean>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -176,20 +160,14 @@ object SceneRequestUtil {
      * */
     fun deleteOneKeyScene(sceneId: String, callback: ISceneDeleteCallback) {
         Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId/delete")
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<SceneDeleteBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<SceneDeleteBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<SceneDeleteBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -200,21 +178,15 @@ object SceneRequestUtil {
      * */
     fun deleteUseOneKeyScene(sceneId: String, iftttIds: String, callback: IResultCallback) {
         Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId/delete/use")
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("iftttIds", iftttIds)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -229,18 +201,13 @@ object SceneRequestUtil {
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("page", page)
             .param("size", size)
-            .perform(object : KunLuNetCallback<BaseRespBean<List<SceneListBean>>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<List<SceneListBean>>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -278,21 +245,15 @@ object SceneRequestUtil {
         }
 
         Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(json))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -330,23 +291,17 @@ object SceneRequestUtil {
         }
 
         Kalle.put(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("ruleId", ruleId)
             .param("enable", enable)
             .body(JsonBody(json))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -360,18 +315,13 @@ object SceneRequestUtil {
             .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("ruleId", ruleId)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -382,22 +332,16 @@ object SceneRequestUtil {
      * */
     fun deleteUseLinkageScene(ruleId: String, randomToken: String, callback: IResultCallback) {
         Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_DELETE_LINKAGE_SCENE)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("ruleId", ruleId)
             .param("randomToken", randomToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -410,18 +354,13 @@ object SceneRequestUtil {
         Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + SceneApi.KHA_API_NEW_PLAY)
             .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<SceneNewPlayBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<SceneNewPlayBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<SceneNewPlayBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -435,21 +374,15 @@ object SceneRequestUtil {
         map["requestList"] = list
         val json = JsonUtils.toJson(map)
         Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_UPDATE_ONEKEY_SCENE_SORT)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(json))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -463,21 +396,15 @@ object SceneRequestUtil {
         map["requestList"] = list
         val json = JsonUtils.toJson(map)
         Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_UPDATE_LINK_SCENE_SORT)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(json))
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })

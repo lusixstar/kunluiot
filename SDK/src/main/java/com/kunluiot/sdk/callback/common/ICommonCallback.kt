@@ -5,6 +5,22 @@ import com.kunluiot.sdk.bean.common.CommonProblemBean
 import com.kunluiot.sdk.bean.common.CommonThirdPlatformBean
 
 /**
+ * 成功无返回数据
+ * */
+fun interface OnSuccessResult {
+    fun success()
+}
+
+/**
+ * 失败
+ * */
+fun interface OnFailResult {
+    fun fail(code: String, msg: String)
+}
+
+
+//-----------------------------------------
+/**
  * 常见问题列表
  * */
 interface ICommonProblemCallback {

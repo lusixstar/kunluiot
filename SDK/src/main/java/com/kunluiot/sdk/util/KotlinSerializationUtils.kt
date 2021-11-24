@@ -11,7 +11,7 @@ object KotlinSerializationUtils {
     }
 
     inline fun <reified T> getJsonData(str: String = ""): T {
-        if (str.isEmpty()) return "" as T
+        if (str.isNullOrEmpty()) return "" as T
         return json.decodeFromString(str)
     }
 }

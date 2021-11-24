@@ -2,10 +2,35 @@ package com.kunluiot.sdk.api.device
 
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.IResultStringCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.device.*
 import com.kunluiot.sdk.request.DeviceRequestUtil
 
 internal class KunLuDeviceImpl : IKunLuDevice {
+
+    /**
+     * 删除设备
+     */
+    override fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, randomToken, bluetooth, fail, success)
+    }
+
+    /**
+     * 删除子设备
+     */
+    override fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.deletesSubDevice(devTid, ctrlKey, subDevTid, fail, success)
+    }
+
+    /**
+     * 设备配网
+     */
+    override fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceConfigGatewayResult) {
+        DeviceRequestUtil.deviceControl(overtime, mid, devTid, ctrlKey, fail, success)
+    }
+
+    //-----------------------------------------------
 
     /**
      * 所有设备
@@ -35,12 +60,7 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.getSubDevice(ctrlKey, subDevTid, type, quickOperation, callback)
     }
 
-    /**
-     * 设备配网
-     */
-    override fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, callback: IConfigNetworkCallback) {
-        DeviceRequestUtil.deviceControl(overtime, mid, devTid, ctrlKey, callback)
-    }
+
 
     /**
      * 设备配网成功后将设备配置到某个家庭下某个房间
@@ -121,24 +141,10 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     }
 
     /**
-     * 删除设备
-     */
-    override fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, callback: IDeviceDeleteCallback) {
-        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, randomToken, bluetooth, callback)
-    }
-
-    /**
      * 删除授权设备
      */
     override fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback) {
         DeviceRequestUtil.deleteAuthorizationDevice(grantor, ctrlKey, grantee, devTid, randomToken, callback)
-    }
-
-    /**
-     * 删除子设备
-     */
-    override fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, callback: IDeviceDeleteCallback) {
-        DeviceRequestUtil.deletesSubDevice(devTid, ctrlKey, subDevTid, callback)
     }
 
     /**

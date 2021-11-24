@@ -3,6 +3,14 @@ package com.kunluiot.sdk.callback.device
 import com.kunluiot.sdk.bean.device.*
 
 /**
+ * 设备网关配网
+ * */
+fun interface DeviceConfigGatewayResult {
+    fun result(info: DeviceConfigGateWayBean)
+}
+// ------------------------------------------
+
+/**
  * 设备列表
  * */
 interface IDeviceListCallback {

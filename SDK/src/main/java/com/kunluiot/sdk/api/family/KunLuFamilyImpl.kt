@@ -2,6 +2,7 @@ package com.kunluiot.sdk.api.family
 
 import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.family.*
 import com.kunluiot.sdk.request.FamilyRequestUtil
 
@@ -10,9 +11,21 @@ internal class KunLuFamilyImpl : IKunLuFamily {
     /**
      * 家庭列表
      */
-    override fun getFamilyList(callback: IFamilyListCallback) {
-        FamilyRequestUtil.getFamilyList(callback)
+    override fun getFamilyList(fail: OnFailResult, success: FamilyListResult) {
+        FamilyRequestUtil.getFamilyList(fail, success)
     }
+
+    /**
+     * 房间列表并且返回房间下的所有设备
+     */
+    override fun getRoomsDevice(familyId: String, filterFlag: Boolean, page: Int, size: Int, fail: OnFailResult, success: RoomListResult) {
+        FamilyRequestUtil.getRoomsDevice(familyId, filterFlag, page, size, fail, success)
+    }
+
+
+
+
+    //-----------------------------------------------------
 
     /**
      * 家庭详情
@@ -75,13 +88,6 @@ internal class KunLuFamilyImpl : IKunLuFamily {
      */
     override fun getRooms(familyId: String, page: Int, size: Int, callback: IFamilyRoomListCallback) {
         FamilyRequestUtil.getRooms(familyId, page, size, callback)
-    }
-
-    /**
-     * 房间列表并且返回房间下的所有设备
-     */
-    override fun getRoomsDevice(familyId: String, filterFlag: Boolean, page: Int, size: Int, callback: IFamilyRoomListCallback) {
-        FamilyRequestUtil.getRoomsDevice(familyId, filterFlag, page, size, callback)
     }
 
     /**

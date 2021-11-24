@@ -48,20 +48,11 @@ class FamilyListActivity : BaseActivity() {
     }
 
     private fun getFamilyData() {
-        KunLuHomeSdk.familyImpl.getFamilyList(listCallback)
-    }
-
-    private val listCallback = object : IFamilyListCallback {
-
-        override fun onSuccess(bean: List<FamilyBean>) {
-            if (!bean.isNullOrEmpty()) {
+        KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, {
+            if (!it.isNullOrEmpty()) {
                 mAdapter.data.clear()
-                mAdapter.addData(bean)
+                mAdapter.addData(it)
             }
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        })
     }
 }

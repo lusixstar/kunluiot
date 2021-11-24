@@ -49,23 +49,14 @@ class FamilySelectActivity : BaseActivity() {
     }
 
     private fun getFamilyData() {
-        KunLuHomeSdk.familyImpl.getFamilyList(listCallback)
-    }
-
-    private val listCallback = object : IFamilyListCallback {
-
-        override fun onSuccess(bean: List<FamilyBean>) {
-            if (!bean.isNullOrEmpty()) {
-                mAdapter.addData(bean)
+        KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, {
+            if (!it.isNullOrEmpty()) {
+                mAdapter.addData(it)
             }
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        })
     }
 
     companion object {
-        const val CURRENT_FAMILY : String = "current_family"
+        const val CURRENT_FAMILY: String = "current_family"
     }
 }

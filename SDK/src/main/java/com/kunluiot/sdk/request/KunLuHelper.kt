@@ -6,6 +6,11 @@ import java.util.*
 
 internal object KunLuHelper {
 
+    const val CACHE_DIR_NAME = "kunlu"
+    const val CACHE_URL_NAME = "url"
+    const val CACHE_INDEX_HTML = "index.html"
+    const val CACHE_ZIP = "pck.zip"
+
     private const val lang = "cn"
     private const val accessId = "db96ba0828a146498165f4de8b37dca0"
     private const val accessSecret = "gCijFSQYavXhfLjsk2,L86u@VMWmxXFcBAWytvBAarkfwvaxLp4uYuK/Fbb02dz;ZRCMcByt,QH8RA7vR;3Dzuih6tMkaka3EEwgWA@kv3nHPN5GLK3jvKg8"

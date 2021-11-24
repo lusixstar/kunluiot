@@ -43,63 +43,67 @@
 
         <activity
             android:name=".ui.user.LoginActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.user.RegisterActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.user.ForgetActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.user.UserInfoActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.family.FamilyCreateActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.family.FamilySelectActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.family.FamilyListActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.family.FamilyDetailsActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.family.FamilyEditActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.device.DeviceListActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.device.DeviceSetWifiActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.device.DeviceSetWifiDetailsActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.device.DeviceGateWayActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.device.DeviceGateWayDetailsActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.device.DeviceConfigFinishActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.device.DeviceRoomListActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

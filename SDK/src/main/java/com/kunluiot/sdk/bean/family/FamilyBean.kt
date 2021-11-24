@@ -4,9 +4,8 @@ import com.kunluiot.sdk.bean.device.DeviceNewBean
 import kotlinx.serialization.Serializable
 
 /**
- * 创建家庭
+ * 家庭信息
  * */
-
 @Serializable
 data class FamilyBean(
     val contact: String = "",
@@ -21,6 +20,10 @@ data class FamilyBean(
     val uid: String = "",
     var current: Boolean = false,
 )
+
+
+
+// ------------------------------------
 
 @Serializable
 data class FolderBean(

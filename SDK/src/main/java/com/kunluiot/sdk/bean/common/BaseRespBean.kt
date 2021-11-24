@@ -2,7 +2,7 @@ package com.kunluiot.sdk.bean.common
 
 import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class BaseRespBean<T>(
     var status: Int = 0,
     var message: String = "",
@@ -12,12 +12,14 @@ data class BaseRespBean<T>(
     var timestamp: String = "",
 )
 
+
 data class BaseSocketBean(
     var msgId: Int = 0,
     var action: String = "",
     var code: Int = 0,
 )
 
+@Serializable
 data class CommonProblemBean(
     val content: List<CommonProblemContent> = listOf(),
     val first: Boolean = false,
@@ -30,6 +32,7 @@ data class CommonProblemBean(
     val totalPages: Int = 0,
 )
 
+@Serializable
 data class CommonProblemContent(
     val content: String = "",
     val id: String = "",
@@ -40,6 +43,7 @@ data class CommonProblemContent(
     val updateTime: Long = 0,
 )
 
+@Serializable
 data class CommonMessageListBean(
     val last: Boolean = false,
     val totalPages: Int = 0,
@@ -53,6 +57,7 @@ data class CommonMessageListBean(
     val sort: List<CommonMsgSortBean> = listOf(),
 )
 
+@Serializable
 data class CommonMsgContentBean(
     val id: String = "",
     val title: String = "",
@@ -64,6 +69,7 @@ data class CommonMsgContentBean(
     val image: String = "",
 )
 
+@Serializable
 data class CommonMsgSortBean(
     val direction: String = "",
     val property: String = "",

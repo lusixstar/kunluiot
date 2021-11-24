@@ -4,17 +4,52 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+
+/**
+ * 删除设备
+ * */
+@Serializable
+data class DeviceDeleteBean(
+    val randomKey: String = "",
+    val randomToken: String = "",
+)
+
+/**
+ * 设备网关配网
+ * */
+@Serializable
+data class DeviceConfigGateWayBean(
+    val results: List<DeviceConfigGateWayItemBean> = listOf(),
+    val success: Int = 0,
+    val failure: Int = 0,
+)
+
+/**
+ * 设备网关配网子项
+ * */
+@Serializable
+data class DeviceConfigGateWayItemBean(
+    val ctrlKey: String = "",
+    val subDevTid: String = "",
+    val result: String = "",
+)
+
+// --------------------------------------------
+
+@Serializable
 data class DeviceWifiBean(
     var name: String = "",
     var password: String = "",
 )
 
+@Serializable
 data class ConfigWifiBean(
     val action: String = "",
     val params: ConfigWifiParamsBean = ConfigWifiParamsBean(),
     val ip: String = "",
 )
 
+@Serializable
 data class ConfigWifiParamsBean(
     val devTid: String = "",
     val STEP: Int = 0,
@@ -28,10 +63,12 @@ data class ConfigWifiParamsBean(
     val binVer: String = "",
 )
 
+@Serializable
 data class ConfigZigBeeBean(
     val params: ConfigZigBeeParamsBean = ConfigZigBeeParamsBean(),
 )
 
+@Serializable
 data class ConfigZigBeeParamsBean(
     val devTid: String = "",
     val subDevTid: String = "",
@@ -39,6 +76,7 @@ data class ConfigZigBeeParamsBean(
     val data: ConfigZigBeeDataBean = ConfigZigBeeDataBean(),
 )
 
+@Serializable
 data class ConfigZigBeeDataBean(
     val cmdId: Int = 0,
     val devStatus: Int = 0,
@@ -47,7 +85,7 @@ data class ConfigZigBeeDataBean(
 
 
 //-------------------
-
+@Serializable
 data class DeviceFrameBean(
     val ctrlKey: String = "",
     val devTid: String = "",
@@ -56,11 +94,13 @@ data class DeviceFrameBean(
     val frameType: Int = 0,
 )
 
+@Serializable
 data class ConfigNetworkBean(
     val ctrlKey: String = "",
     val result: String = "",
 )
 
+@Serializable
 data class DevicePinCodeBean(
     var PINCode: String = "",
     var ssid: String = "",
@@ -130,16 +170,23 @@ data class DeviceNewBean(
     val devType: String = "",
     val pid: String = "",
     var registerId: String = "",
+    var parentDevTid: String = "",
+    var parentCtrlKey: String = "",
+    var androidPageZipURL: String = "",
     val deviceName: String = "",
     val ctrlKey: String = "",
+    val bindKey: String = "",
     val bindResultCode: Int = 0,
     var bindResultMsg: String = "",
     val name: String = "",
+    val ownerUid: String = "",
+    val associateGatewayCtrlKey: String = "",
     val online: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),
     val branchNames: List<String> = listOf(),
 ) : Parcelable
 
+@Serializable
 data class DeviceProductDescribeBean(
     val id: String = "",
     val pid: String = "",
@@ -154,12 +201,14 @@ data class DeviceProductDescribeBean(
     val openContent: String = "",
 )
 
+@Serializable
 data class DeviceUpdateBean(
     val devTid: String = "",
     val update: String = "",
     val devFirmwareOTARawRuleVO: DeviceDevFirmwareOTARawRuleVO = DeviceDevFirmwareOTARawRuleVO(),
 )
 
+@Serializable
 data class DeviceDevFirmwareOTARawRuleVO(
     val binUrl: String = "",
     val md5: String = "",
@@ -168,6 +217,7 @@ data class DeviceDevFirmwareOTARawRuleVO(
     val size: Int = 0,
 )
 
+@Serializable
 data class DeviceOperationBean(
     val mid: String = "",
     val pid: String = "",
@@ -180,6 +230,7 @@ data class DeviceOperationBean(
     val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
 )
 
+@Serializable
 data class DeviceOperationProtocolBean(
     val cmdId: Int = 0,
     val cmdTag: String = "",
@@ -191,6 +242,7 @@ data class DeviceOperationProtocolBean(
     val associateProtocol: List<Int> = mutableListOf(),
 )
 
+@Serializable
 data class DeviceOperationFieldsBean(
     val selectedDesc: String = "",
     val selectValue: String = "",
@@ -198,7 +250,4 @@ data class DeviceOperationFieldsBean(
     val selected: Boolean = false,
 )
 
-data class DeviceDeleteBean(
-    val randomKey: String = "",
-    val randomToken: String = "",
-)
+

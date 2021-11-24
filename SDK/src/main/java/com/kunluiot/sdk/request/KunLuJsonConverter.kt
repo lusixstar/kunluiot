@@ -62,7 +62,11 @@ class KunLuJsonConverter(private val mContext: Context) : Converter {
                         }
                         if (obj.has("data")) {
                             if (oStatus == 200) {
-                                succeedData = obj.getString("data").toString() as S
+                                succeedData = if (obj.getString("data").toString() != "null")  {
+                                    obj.getString("data").toString() as S
+                                } else {
+                                    "" as S
+                                }
                             } else {
                                 code = oStatus
                                 failedData = oMsg as F
@@ -86,7 +90,9 @@ class KunLuJsonConverter(private val mContext: Context) : Converter {
                     var oMsg = ""
                     val obj = JSONObject(response.body().string())
                     if (obj.has("status")) oStatus = obj.getInt("status")
+                    if (obj.has("code")) oStatus = obj.getInt("code")
                     if (obj.has("message")) oMsg = obj.getString("message")
+                    if (obj.has("desc")) oMsg = obj.getString("desc")
                     if (oStatus != 0) code = oStatus
                     failedData = oMsg as F
                 } catch (e: Exception) {

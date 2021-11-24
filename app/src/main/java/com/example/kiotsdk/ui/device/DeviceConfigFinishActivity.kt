@@ -24,6 +24,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
     private lateinit var mBinding: ActivityDeviceConfigFinishBinding
 
     private var mDevTid = ""
+    private var mSubDevTid = ""
     private var mMid = ""
     private var mRegisterId = ""
     private var mDeviceName = ""
@@ -45,6 +46,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
 
         intent?.let {
             mDevTid = it.getStringExtra(DEV_TID) ?: ""
+            mSubDevTid = it.getStringExtra(SUB_DEV_TID) ?: ""
             mMid = it.getStringExtra(MID) ?: ""
             mRegisterId = it.getStringExtra(REGISTER_ID) ?: ""
             mDeviceName = it.getStringExtra(DEVICE_NAME) ?: ""
@@ -79,18 +81,12 @@ class DeviceConfigFinishActivity : BaseActivity() {
     }
 
     private fun getFamilyData() {
-        KunLuHomeSdk.familyImpl.getFamilyList(object : IFamilyListCallback {
-            override fun onSuccess(bean: List<FamilyBean>) {
-                if (!bean.isNullOrEmpty()) {
-                    val info = bean.first()
-                    mBinding.family.text = info.familyName
-                    mFamilyId = info.familyId
-                    getRoomData(info.familyId)
-                }
-            }
-
-            override fun onError(code: String, error: String) {
-                toast("code == $code, error == $error")
+        KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, { bean ->
+            if (!bean.isNullOrEmpty()) {
+                val info = bean.first()
+                mBinding.family.text = "当前家庭: ${info.familyName}"
+                mFamilyId = info.familyId
+                getRoomData(info.familyId)
             }
         })
     }
@@ -100,7 +96,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
             override fun onSuccess(bean: List<FolderBean>) {
                 val info = bean.first()
                 mRoomId = info.folderId
-                mBinding.room.text =  if (info.folderName == "root") "默认房间" else info.folderName
+                mBinding.room.text =  if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
             }
 
             override fun onError(code: String, error: String) {
@@ -149,5 +145,6 @@ class DeviceConfigFinishActivity : BaseActivity() {
         const val REGISTER_ID = "registerId"
         const val DEVICE_NAME = "deviceName"
         const val CTRL_KEY = "ctrlKey"
+        const val SUB_DEV_TID = "subDevTid"
     }
 }

@@ -17,6 +17,7 @@ import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.thirdlib.wifi.RNHekrConfigModule
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.util.JsonUtils
+import org.jetbrains.anko.startActivity
 import java.util.*
 
 class DeviceSetWifiDetailsActivity : BaseActivity() {
@@ -83,13 +84,15 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
         when (mRespState) {
             RESP_LOADING -> { }
             RESP_SUCCESS -> {
-                if (mNewDeviceBean.size > 0) {
-//                    startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
-//                        .putExtra("devTid", mNewDeviceResponses.get(0).getDevTid())
-//                        .putExtra("mid", mNewDeviceResponses.get(0).getMid())
-//                        .putExtra("registerId", mNewDeviceResponses.get(0).getRegisterId())
-//                        .putExtra("deviceName", mNewDeviceResponses.get(0).getName())
-//                        .putExtra("ctrlKey", mNewDeviceResponses.get(0).getCtrlKey()))
+                if (mNewDeviceBean.isNotEmpty()) {
+                    val bean = mNewDeviceBean.first()
+                    startActivity<DeviceConfigFinishActivity>(
+                        DeviceConfigFinishActivity.DEV_TID to bean.devTid,
+                        DeviceConfigFinishActivity.MID to bean.mid,
+                        DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
+                        DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
+                        DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+                    )
                     return
                 }
                 mRespState = RESP_FAIL
@@ -220,7 +223,6 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
 
     private val mHandler = Handler(Handler.Callback { msg ->
         val message = msg.data.getString("message")
-        LogUtil.e("message == ,", "$message")
         val configWifiBean = JsonUtils.fromJson(message, ConfigWifiBean::class.java) ?: return@Callback false
         mConfigWifiList.add(mConfigWifiList.size, configWifiBean)
         when (configWifiBean.params.STEP) {

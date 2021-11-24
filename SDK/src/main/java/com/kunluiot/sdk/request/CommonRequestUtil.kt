@@ -12,9 +12,12 @@ import com.kunluiot.sdk.callback.common.ICommonProblemCallback
 import com.kunluiot.sdk.callback.common.ICommonThirdPlatformCallback
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
+import com.kunluiot.sdk.thirdlib.kalle.simple.Callback
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
-import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.util.KotlinSerializationUtils
+import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
+import com.kunluiot.sdk.util.*
+import java.io.File
+import java.lang.Exception
 
 object CommonRequestUtil {
 
@@ -23,19 +26,13 @@ object CommonRequestUtil {
      * */
     fun getCommonProblem(callback: ICommonProblemCallback) {
         Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + CommonApi.KHA_API_COMMON_PROBLEM)
-            .setHeaders(KunLuHelper.getSign())
-            .perform(object : KunLuNetCallback<BaseRespBean<CommonProblemBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<CommonProblemBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<CommonProblemBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -53,16 +50,15 @@ object CommonRequestUtil {
         map["contact"] = contact
         val param = JsonUtils.toJson(map)
         Kalle.post(ReqApi.KHA_CONSOLE_BASE_URL + CommonApi.KHA_API_FEEDBACK)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<BaseRespBean<CommonProblemBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<CommonProblemBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        callback.onSuccess()
+                        KotlinSerializationUtils.getJsonData<CommonProblemBean>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -73,22 +69,16 @@ object CommonRequestUtil {
      * */
     fun getMessagePlatform(page: Int, size: Int, callback: ICommonMsgListCallback) {
         Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + CommonApi.KHA_API_MESSAGE_PLATFORM)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("page", page)
             .param("size", size)
-            .perform(object : KunLuNetCallback<BaseRespBean<CommonMessageListBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<CommonMessageListBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<CommonMessageListBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -99,22 +89,16 @@ object CommonRequestUtil {
      * */
     fun getMessageDevice(page: Int, size: Int, callback: ICommonMsgListCallback) {
         Kalle.get(ReqApi.KHA_WEB_BASE_URL + CommonApi.KHA_API_MESSAGE_DEVICE)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .param("page", page)
             .param("size", size)
-            .perform(object : KunLuNetCallback<BaseRespBean<CommonMessageListBean>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<CommonMessageListBean>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess(data.data)
-                        }
+                        KotlinSerializationUtils.getJsonData<CommonMessageListBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })
@@ -125,20 +109,14 @@ object CommonRequestUtil {
      * */
     fun readMessageDevice(id: String, callback: IResultCallback) {
         Kalle.patch(ReqApi.KHA_WEB_BASE_URL + CommonApi.KHA_API_MESSAGE_DEVICE_READ + "/$id")
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -149,20 +127,14 @@ object CommonRequestUtil {
      * */
     fun allReadMessageDevice(callback: IResultCallback) {
         Kalle.patch(ReqApi.KHA_WEB_BASE_URL + CommonApi.KHA_MESSAGE_DEVICE_ALL_READ)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -173,20 +145,14 @@ object CommonRequestUtil {
      * */
     fun emptyMessageDevice(callback: IResultCallback) {
         Kalle.delete(ReqApi.KHA_WEB_BASE_URL + CommonApi.KHA_API_MESSAGE_DEVICE_EMPTY)
-            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<BaseRespBean<Any>>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<BaseRespBean<Any>, String>) {
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
                     val failed = response.failed()
                     if (!failed.isNullOrEmpty()) {
                         callback.onError(response.code().toString(), failed)
                     } else {
-                        val data = response.succeed()
-                        if (data.status != 200) {
-                            callback.onError(data.status.toString(), data.message)
-                        } else {
-                            callback.onSuccess()
-                        }
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                     }
                 }
             })
@@ -197,7 +163,6 @@ object CommonRequestUtil {
      * */
     fun getBindThirdPlatformList(callback: ICommonThirdPlatformCallback) {
         Kalle.get(ReqApi.KHA_UAA_BASE_URL + CommonApi.KHA_API_BIND_THIRD_PLATFORM_LIST)
-//            .setHeaders(KunLuHelper.getSign())
             .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
             .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
                 override fun onResponse(response: SimpleResponse<String, String>) {
@@ -209,5 +174,30 @@ object CommonRequestUtil {
                     }
                 }
             })
+    }
+
+    /**
+     * 下载文件
+     * */
+    fun downloadsUrlFile(url: String) {
+        if (url.isEmpty()) return
+        val cacheDir = KunLuHomeSdk.instance.getApp().cacheDir.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(url)
+        val indexHtml = cacheDir + File.separator + KunLuHelper.CACHE_INDEX_HTML
+        Kalle.Download.get(url).directory(cacheDir).fileName(KunLuHelper.CACHE_ZIP).perform(object : DownloadCallback(KunLuHomeSdk.instance.getApp()) {
+            override fun onException(message: String) {
+                LogUtil.e("onException", "message == $message")
+            }
+            override fun onFinish(path: String) {
+                LogUtil.e("onFinish", "onFinish == $path")
+                val isOk = ZipUtils.unzipFile(path)
+                if (isOk) {
+                    try {
+//                        FileUtil.insertTextFile(indexHtml, indexHtml, "<script type='text/javascript'>" + js + "</script>", "<script)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        })
     }
 }
