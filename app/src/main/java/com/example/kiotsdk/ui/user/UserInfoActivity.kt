@@ -7,18 +7,12 @@ import com.example.kiotsdk.app.GlideEngine
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityUserInfoBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.user.AvatarBean
 import com.kunluiot.sdk.bean.user.User
-import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.user.IAvatarCallback
-import com.kunluiot.sdk.callback.user.IUserCallback
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.listener.OnResultCallbackListener
-import org.jetbrains.anko.toast
-import java.io.File
 
 
 class UserInfoActivity : BaseActivity() {
@@ -42,15 +36,7 @@ class UserInfoActivity : BaseActivity() {
     }
 
     private fun updateAvatar(filePath: String) {
-        KunLuHomeSdk.userImpl.uploadHeader(filePath, object : IAvatarCallback {
-            override fun onSuccess(avatar: AvatarBean) {
-                toast("update success $avatar")
-            }
-
-            override fun onError(code: String, error: String) {
-                toast("code: $code error: $error")
-            }
-        })
+        KunLuHomeSdk.userImpl.uploadHeader(filePath, { code, err -> toastErrorMsg(code, err) }, { toastMsg("update success $it") })
     }
 
     private fun selectAvatar() {
@@ -69,27 +55,11 @@ class UserInfoActivity : BaseActivity() {
     private fun updateName() {
         val name = mBinding.etName.text.toString()
         if (name.isEmpty()) return
-        KunLuHomeSdk.userImpl.updateUserNick(name, object : IResultCallback {
-            override fun onError(code: String, error: String) {
-                toast("code: $code error: $error")
-            }
-
-            override fun onSuccess() {
-                toast("update success")
-            }
-        })
+        KunLuHomeSdk.userImpl.updateUserNick(name, { code, err -> toastErrorMsg(code, err) }, { toastMsg("update success") })
     }
 
     private fun getUserInfoData() {
-        KunLuHomeSdk.userImpl.getUserInfo(object : IUserCallback {
-            override fun onSuccess(user: User) {
-                setUserInfo(user)
-            }
-
-            override fun onError(code: String, error: String) {
-                toast("code: $code error: $error")
-            }
-        })
+        KunLuHomeSdk.userImpl.getUserInfo({ code, err -> toastErrorMsg(code, err) }, { setUserInfo(it) })
     }
 
     private fun setUserInfo(user: User) {
@@ -97,7 +67,7 @@ class UserInfoActivity : BaseActivity() {
         mBinding.phoneValue.text = user.phoneNumber
         mBinding.emailValue.text = user.email
         mBinding.countryValue.text = user.areaCode
-        user.avatarUrl.small?.let {
+        user.avatarUrl.small.let {
             if (it.isNotEmpty()) {
                 mBinding.imgAvatar.load(user.avatarUrl.small) {
                     transformations(CircleCropTransformation())

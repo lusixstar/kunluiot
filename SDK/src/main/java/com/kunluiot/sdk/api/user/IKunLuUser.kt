@@ -1,96 +1,97 @@
 package com.kunluiot.sdk.api.user
 
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
+import com.kunluiot.sdk.callback.common.OnSuccessStrResult
 import com.kunluiot.sdk.callback.user.*
-import java.io.File
 
 interface IKunLuUser {
 
     /**
      * 刷新登录token
      */
-    fun refreshToken(refreshToken: String, callback: ILoginCallback)
+    fun refreshToken(refreshToken: String, fail: OnFailResult, success: LoginSuccessResult)
 
     /**
-     * 手机号登录
+     * 登录
      */
-    fun login(countryCode: String, phone: String, passwd: String, callback: ILoginCallback)
-
-    /**
-     * 绑定第三方账号
-     */
-    fun bindOtherAccount(bindToken: String, callback: IResultCallback)
-
-    /**
-     * 解绑第三方账号
-     */
-    fun unBindOtherAccount(type: String, callback: IResultCallback)
+    fun login(countryCode: String, phone: String, passwd: String, fail: OnFailResult, success: LoginSuccessResult)
 
     /**
      * 获取图像验证
      */
-    fun getVerifyImageCode(callback: IVerifyImageCallback)
+    fun getVerifyImageCode(fail: OnFailResult, success: VerifyImageSuccessResult)
 
     /**
      * 检测图像验证有效性
      */
-    fun checkVerifyImageCode(rid: String, code: String, callback: ICheckVerifyImageCallback)
+    fun checkVerifyImageCode(rid: String, code: String, fail: OnFailResult, success: CheckVerifyImageSuccessResult)
 
     /**
      * 获取验证码
      * phoneNumber 手机号码
      * type 注册：register 忘记密码：resetPassword 更换手机号码：changePhone
      */
-    fun getVerifyCode(phoneNumber: String, type: String, token: String, callback: IResultCallback)
+    fun getVerifyCode(phoneNumber: String, type: String, token: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 检测验证码有效性
      */
-    fun checkVerifyCode(phoneNumber: String, type: String, areaCode: String, code: String, callback: ICodeCallback)
+    fun checkVerifyCode(phoneNumber: String, type: String, areaCode: String, code: String, fail: OnFailResult, success: VerifyCodeSuccessResult)
 
     /**
      * 注册
      */
-    fun register(account: String, password: String, token: String, callback: IRegisterCallback)
+    fun register(account: String, password: String, token: String, fail: OnFailResult, success: UserSuccessResult)
 
     /**
      * 重置密码
      */
-    fun resetPassword(account: String, password: String, token: String, verifyCode: String, callback: IResultCallback)
-
-    /**
-     * 修改密码
-     */
-    fun changePassword(oldPassword: String, newPassword: String, callback: IResultCallback)
+    fun resetPassword(account: String, password: String, token: String, verifyCode: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 获取用户信息
      */
-    fun getUserInfo(callback: IUserCallback)
-
-    /**
-     * 获取设备数量
-     */
-    fun getDeviceCount(callback: IUserDevicesCallback)
+    fun getUserInfo(fail: OnFailResult, success: UserSuccessResult)
 
     /**
      * 更新用户昵称
      */
-    fun updateUserNick(nick: String, callback: IResultCallback)
+    fun updateUserNick(nick: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 上传用户头像
      * */
-    fun uploadHeader(filePath: String, callback: IAvatarCallback)
+    fun uploadHeader(filePath: String, fail: OnFailResult, success: AvatarSuccessResult)
 
     /**
      * 更新用户头像
      * */
-    fun updateHeader(url: String, callback: IResultCallback)
+    fun updateHeader(url: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 修改密码
+     */
+    fun changePassword(oldPassword: String, newPassword: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 修改手机号码
      * */
-    fun changePhoneNum(verifyCode: String, token: String, phoneNumber: String, callback: IResultCallback)
+    fun changePhoneNum(verifyCode: String, token: String, phoneNumber: String, fail: OnFailResult, success: OnSuccessResult)
 
+    /**
+     * 获取设备数量
+     */
+    fun getDeviceCount(fail: OnFailResult, success: OnSuccessStrResult)
+
+    /**
+     * 绑定第三方账号
+     */
+    fun bindOtherAccount(bindToken: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 解绑第三方账号
+     */
+    fun unBindOtherAccount(type: String, fail: OnFailResult, success: OnSuccessResult)
 }

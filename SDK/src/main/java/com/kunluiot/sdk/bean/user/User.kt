@@ -4,6 +4,9 @@ package com.kunluiot.sdk.bean.user
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * 登录
+ */
 @Serializable
 data class SessionBean(
     @SerialName("access_token") var accessToken: String = "",
@@ -31,19 +34,6 @@ data class CheckVerifyImageBean(
 )
 
 /**
- * 用户信息
- * */
-@Serializable
-data class User(
-    var name: String = "",
-    var phoneNumber: String = "",
-    var areaCode: String = "",
-    var uid: String = "",
-    var email: String = "",
-    var avatarUrl: UserAvatarInfo = UserAvatarInfo(),
-)
-
-/**
  * 检测验证码
  * */
 @Serializable
@@ -55,6 +45,19 @@ data class VerifyCodeBean(
     var code: Int = 0,
     var message: String = "",
     var desc: String = "",
+)
+
+/**
+ * 用户信息
+ * */
+@Serializable
+data class User(
+    var name: String = "",
+    var phoneNumber: String = "",
+    var areaCode: String = "",
+    var uid: String = "",
+    var email: String = "",
+    var avatarUrl: UserAvatarInfo = UserAvatarInfo(),
 )
 
 /**
@@ -79,3 +82,5 @@ data class AvatarBean(
     var fileName: String = "",
     var uploadTime: Long = 0,
 )
+
+
