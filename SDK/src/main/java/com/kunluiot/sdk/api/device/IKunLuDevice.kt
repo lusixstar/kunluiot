@@ -8,6 +8,10 @@ import com.kunluiot.sdk.callback.device.*
 
 interface IKunLuDevice {
 
+    /**
+     * 设备操作列表
+     */
+    fun getDeviceOperationList(ppk: String, fail: OnFailResult, success: DeviceProtocolResult)
 
     /**
      * 删除设备
@@ -97,11 +101,6 @@ interface IKunLuDevice {
      * 设备详情-更换WiFi
      */
     fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback)
-
-    /**
-     * 设备操作列表
-     */
-    fun getDeviceOperationList(ppk: String, callback: IDeviceOperationCallback)
 
     /**
      * 设备操作模板

@@ -29,10 +29,6 @@ object DemoUtils {
     }
 
     fun getCurrentSSID(context: Context): String {
-        // 在nexus 5x 8.1系统上，且应用的target version提升到27，如果关闭了系统安全性和位置信息中隐私设置的位置信息，那么会获取到<unknown ssid>
-        // 如果关闭本应用的定位权限，也会同样的情况
-        // 但是不同手机的表现不一样
-        // 所以当出现unknown ssid 后需要提醒用户去打开设置
         val wifiManager = context.applicationContext.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
         var currentWifi = ""
         if (wifiManager != null) {

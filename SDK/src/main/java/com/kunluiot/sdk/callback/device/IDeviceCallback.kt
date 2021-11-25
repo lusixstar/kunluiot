@@ -8,6 +8,13 @@ import com.kunluiot.sdk.bean.device.*
 fun interface DeviceConfigGatewayResult {
     fun result(info: DeviceConfigGateWayBean)
 }
+
+/**
+ * 设备协议回调
+ * */
+fun interface DeviceProtocolResult {
+    fun result(info: DeviceOperationBean)
+}
 // ------------------------------------------
 
 /**

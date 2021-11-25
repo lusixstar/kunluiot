@@ -15,4 +15,8 @@ open class BaseActivity : AppCompatActivity() {
     fun toastErrorMsg(code: String, msg: String) {
         toast("code == $code, error == $msg")
     }
+
+    fun toastMsg(msg: String) {
+        toast(msg)
+    }
 }

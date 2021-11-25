@@ -10,6 +10,15 @@ import com.kunluiot.sdk.request.DeviceRequestUtil
 internal class KunLuDeviceImpl : IKunLuDevice {
 
     /**
+     * 设备操作列表
+     */
+    override fun getDeviceOperationList(ppk: String, fail: OnFailResult, success: DeviceProtocolResult) {
+        DeviceRequestUtil.getDeviceOperationList(ppk, fail, success)
+    }
+
+    // ------------------------------------------
+
+    /**
      * 删除设备
      */
     override fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult) {
@@ -124,13 +133,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
      */
     override fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
         DeviceRequestUtil.switchDeviceWifi(ctrlKey, ssid, password, callback)
-    }
-
-    /**
-     * 设备操作列表
-     */
-    override fun getDeviceOperationList(ppk: String, callback: IDeviceOperationCallback) {
-        DeviceRequestUtil.getDeviceOperationList(ppk, callback)
     }
 
     /**

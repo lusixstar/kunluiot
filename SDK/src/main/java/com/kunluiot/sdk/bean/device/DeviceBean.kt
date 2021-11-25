@@ -34,6 +34,39 @@ data class DeviceConfigGateWayItemBean(
     val result: String = "",
 )
 
+@Serializable
+data class DeviceOperationBean(
+    val mid: String = "",
+    val pid: String = "",
+    val createTime: Long = 0,
+    val workModeType: String = "",
+    val fixedLength: Boolean = false,
+    val statistics: Boolean = false,
+    val accessProtocol: Int = 0,
+    val protocol: Map<String, DeviceOperationProtocolBean> = mutableMapOf(),
+    val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
+)
+
+@Serializable
+data class DeviceOperationProtocolBean(
+    val cmdId: Int = 0,
+    val cmdTag: String = "",
+    val desc: String = "",
+    val frameType: Int = 0,
+    val usedForIFTTT: Boolean = false,
+    val tags: List<String> = mutableListOf(),
+    val fields: List<DeviceOperationFieldsBean> = mutableListOf(),
+    val associateProtocol: List<Int> = mutableListOf(),
+)
+
+@Serializable
+data class DeviceOperationFieldsBean(
+    val selectedDesc: String = "",
+    val selectValue: String = "",
+    val operator: String = "",
+    val selected: Boolean = false,
+)
+
 // --------------------------------------------
 
 @Serializable
@@ -165,23 +198,28 @@ data class DeviceProductsBean(
 @Parcelize
 @Serializable
 data class DeviceNewBean(
-    val devTid: String = "",
+    var devTid: String = "",
     val mid: String = "",
     val devType: String = "",
     val pid: String = "",
     var registerId: String = "",
+    var subDevTid: String = "",
     var parentDevTid: String = "",
     var parentCtrlKey: String = "",
     var androidPageZipURL: String = "",
+    var androidH5Page: String = "",
+    var productPublicKey: String = "",
+    var virtual: Boolean = false,
     val deviceName: String = "",
-    val ctrlKey: String = "",
+    val workModeType: String = "",
+    var ctrlKey: String = "",
     val bindKey: String = "",
     val bindResultCode: Int = 0,
     var bindResultMsg: String = "",
     val name: String = "",
     val ownerUid: String = "",
     val associateGatewayCtrlKey: String = "",
-    val online: Boolean = false,
+    var online: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),
     val branchNames: List<String> = listOf(),
 ) : Parcelable
@@ -215,39 +253,6 @@ data class DeviceDevFirmwareOTARawRuleVO(
     val latestBinType: String = "",
     val latestBinVer: String = "",
     val size: Int = 0,
-)
-
-@Serializable
-data class DeviceOperationBean(
-    val mid: String = "",
-    val pid: String = "",
-    val createTime: Long = 0,
-    val workModeType: String = "",
-    val fixedLength: Boolean = false,
-    val statistics: Boolean = false,
-    val accessProtocol: Int = 0,
-    val protocol: Map<String, DeviceOperationProtocolBean> = mutableMapOf(),
-    val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
-)
-
-@Serializable
-data class DeviceOperationProtocolBean(
-    val cmdId: Int = 0,
-    val cmdTag: String = "",
-    val desc: String = "",
-    val frameType: Int = 0,
-    val usedForIFTTT: Boolean = false,
-    val tags: List<String> = mutableListOf(),
-    val fields: List<DeviceOperationFieldsBean> = mutableListOf(),
-    val associateProtocol: List<Int> = mutableListOf(),
-)
-
-@Serializable
-data class DeviceOperationFieldsBean(
-    val selectedDesc: String = "",
-    val selectValue: String = "",
-    val operator: String = "",
-    val selected: Boolean = false,
 )
 
 

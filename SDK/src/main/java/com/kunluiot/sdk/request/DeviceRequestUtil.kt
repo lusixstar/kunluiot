@@ -16,6 +16,28 @@ import java.util.*
 
 object DeviceRequestUtil {
 
+    /**
+     * 设备操作列表
+     */
+    fun getDeviceOperationList(ppk: String, fail: OnFailResult, success: DeviceProtocolResult) {
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_OPERATION_LIST)
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .param("ppk", ppk)
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+                override fun onResponse(response: SimpleResponse<String, String>) {
+                    val failed = response.failed()
+                    if (!failed.isNullOrEmpty()) {
+                        fail.fail(response.code().toString(), failed)
+                    } else {
+                        KotlinSerializationUtils.getJsonData<DeviceOperationBean>(response.succeed()).let { success.result(it) }
+                    }
+                }
+            })
+    }
+
+
+    // -------------------------------------
+
 
     /**
      * 删除设备
@@ -386,25 +408,6 @@ object DeviceRequestUtil {
                         callback.onError(response.code().toString(), failed)
                     } else {
                         KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-                    }
-                }
-            })
-    }
-
-    /**
-     * 设备操作列表
-     */
-    fun getDeviceOperationList(ppk: String, callback: IDeviceOperationCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_OPERATION_LIST)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("ppk", ppk)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DeviceOperationBean>(response.succeed()).let { callback.onSuccess(it) }
                     }
                 }
             })

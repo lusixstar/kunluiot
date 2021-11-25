@@ -1,7 +1,6 @@
 package com.example.kiotsdk.ui.device
 
 import android.os.Bundle
-import android.service.controls.DeviceTypes
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.kiotsdk.adapter.device.DeviceRoomListAdapter
 import com.example.kiotsdk.adapter.diff.DiffRoomListCallback
@@ -12,10 +11,12 @@ import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
-import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
+import com.kunluiot.sdk.ui.web.DeviceWebControlActivity
+import com.kunluiot.sdk.util.log.KunLuLog
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
+import org.jetbrains.anko.startActivity
 
 
 class DeviceRoomListActivity : BaseActivity() {
@@ -49,10 +50,12 @@ class DeviceRoomListActivity : BaseActivity() {
         mBinding.list.adapter = mRoomAdapter
     }
 
-    private fun gotoNext(it: DeviceNewBean) {
-        LogUtil.e("gotoNext", "$it")
-        it.androidPageZipURL.let {
-            KunLuHomeSdk.commonImpl.downloadsUrlFile(it)
+    private fun gotoNext(bean: DeviceNewBean) {
+        LogUtil.e("gotoNext", "$bean")
+        if (bean.androidPageZipURL.isNotEmpty()) {
+            startActivity<DeviceWebControlActivity>(DeviceWebControlActivity.BEAN to bean)
+        } else {
+            toastMsg("androidPageZipURL is empty")
         }
     }
 
@@ -85,6 +88,7 @@ class DeviceRoomListActivity : BaseActivity() {
             val listName = mFamilyList.map { it.familyName }
             selector(title = "选择家庭", items = listName) { dialog, index ->
                 mBinding.title.text = "当前选择家庭是:${mFamilyList[index].familyName}"
+                getRoomsDevice(mFamilyList[index].familyId)
                 dialog.dismiss()
             }
         } else {
@@ -97,6 +101,7 @@ class DeviceRoomListActivity : BaseActivity() {
     }
 
     private fun setFamilyData(list: List<FamilyBean>) {
+        KunLuLog.e("list == $list")
         if (!list.isNullOrEmpty()) {
             mFamilyList.clear()
             mFamilyList.addAll(list)

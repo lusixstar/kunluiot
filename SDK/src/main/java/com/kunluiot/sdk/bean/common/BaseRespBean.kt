@@ -91,3 +91,20 @@ data class CommonThirdPlatformBean(
     val first: Boolean = false,
     val content: List<String> = listOf(),
 )
+
+
+data class WebBridgeBean(
+    val name: String = "",
+    val parameters: Any? = null,
+)
+
+data class WebBridgeParametersBean(
+    val url: String = "",
+    val command: WebBridgeCommandBean = WebBridgeCommandBean(),
+)
+
+data class WebBridgeCommandBean(
+    val raw: String = "",
+    val params: String = "",
+)
+
