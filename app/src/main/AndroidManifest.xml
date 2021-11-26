@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.kiotsdk">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -28,7 +29,8 @@
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -103,6 +105,18 @@
 
         <activity
             android:name=".ui.device.DeviceRoomListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneManagerActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneOneKeyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneLinkedActivity"
             android:screenOrientation="portrait" />
 
     </application>

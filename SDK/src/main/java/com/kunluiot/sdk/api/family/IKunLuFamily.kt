@@ -18,9 +18,6 @@ interface IKunLuFamily {
     fun getRoomsDevice(familyId: String, filterFlag: Boolean, page: Int, size: Int, fail: OnFailResult, success: RoomListResult)
 
 
-
-
-
     //-----------------------------------------------------
 
     /**

@@ -13,7 +13,6 @@ import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.ui.web.DeviceWebControlActivity
-import com.kunluiot.sdk.util.log.KunLuLog
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.startActivity
@@ -101,7 +100,6 @@ class DeviceRoomListActivity : BaseActivity() {
     }
 
     private fun setFamilyData(list: List<FamilyBean>) {
-        KunLuLog.e("list == $list")
         if (!list.isNullOrEmpty()) {
             mFamilyList.clear()
             mFamilyList.addAll(list)

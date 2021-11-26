@@ -1,11 +1,11 @@
 package com.kunluiot.sdk.ui.web
 
 import android.webkit.JavascriptInterface
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.bean.common.WebBridgeBean
 import com.kunluiot.sdk.callback.common.OnWebControlSyncCall
 import com.kunluiot.sdk.callback.common.OnWebControlVoidCall
 import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.util.log.KunLuLog
 
 class JSBridge {
 
@@ -19,14 +19,14 @@ class JSBridge {
 
     @JavascriptInterface
     fun __syncCall(message: String): String {
-        KunLuLog.e("__syncCall---->$message")
+        XLog.e("__syncCall---->$message")
         val bean: WebBridgeBean = JsonUtils.fromJson(message, WebBridgeBean::class.java)
         return sync?.call(bean) ?: ""
     }
 
     @JavascriptInterface
     fun __voidCall(message: String) {
-        KunLuLog.e("__voidCall---->$message")
+        XLog.e("__voidCall---->$message")
         val bean: WebBridgeBean = JsonUtils.fromJson(message, WebBridgeBean::class.java)
         void?.call(bean)
     }

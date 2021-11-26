@@ -1,6 +1,8 @@
 package com.kunluiot.sdk
 
 import android.app.Application
+import com.elvishew.xlog.LogLevel
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.api.common.IKunLuCommon
 import com.kunluiot.sdk.api.common.KunLuCommonImpl
 import com.kunluiot.sdk.api.device.IKunLuDevice
@@ -33,6 +35,7 @@ class KunLuHomeSdk {
     private var msgId = 1
 
     private fun setKalle() {
+        XLog.init(LogLevel.ALL)
         val build = KalleConfig.newBuilder().network(BroadcastNetwork(app)).addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(KunLuJsonConverter(app))
         if (ReqApi.IS_NEW_TEST) {
             build.addHeaders(KunLuHelper.getSign())

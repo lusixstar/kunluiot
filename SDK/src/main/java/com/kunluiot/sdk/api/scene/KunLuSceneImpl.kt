@@ -4,9 +4,11 @@ import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
 import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
 import com.kunluiot.sdk.callback.scene.ISceneListCallback
 import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
+import com.kunluiot.sdk.callback.scene.SceneListResult
 import com.kunluiot.sdk.request.SceneRequestUtil
 
 internal class KunLuSceneImpl : IKunLuScene {
@@ -14,9 +16,19 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 手动场景列表
      */
-    override fun getOneKeySceneList(callback: ISceneListCallback) {
-        SceneRequestUtil.getOneKeySceneList(callback)
+    override fun getOneKeySceneList(fail: OnFailResult, success: SceneListResult) {
+        SceneRequestUtil.getOneKeySceneList(fail, success)
     }
+
+    /**
+     * 获取预设情景面板
+     */
+    override fun getSceneTemplate(fail: OnFailResult, success: SceneListResult) {
+        SceneRequestUtil.getSceneTemplate(fail, success)
+    }
+
+    // -----------------------------------------------------------------
+
 
     /**
      * 新增手动场景

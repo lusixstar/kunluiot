@@ -3,28 +3,71 @@ package com.kunluiot.sdk.bean.scene
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class SceneOneKeyBean(
+    val createTime: Long = 0,
+    val id: SceneOneKeyIdBean = SceneOneKeyIdBean(),
+    val name: String = "",
+    val pid: String = "",
+    val uid: String = "",
+    val sceneId: String = "",
+    var sceneName: String = "",
+    val icon: String = "",
+    val showType: String = "",
+    val sceneTaskList: List<SceneOneKeySceneTask> = listOf(),
+    val templateId: String = "",
+    val updateTime: Long = 0,
+    //0、表示普通 1、表示回家 2、表示离家 3、表示智能厨房
+    var oneKeyType: Int = 0
+)
+
+@Serializable
+data class SceneOneKeyIdBean(
+    val counter: Int = 0,
+    val date: Long = 0,
+    val machineIdentifier: Int = 0,
+    val processIdentifier: Int = 0,
+    val time: Long = 0,
+    val timeSecond: Int = 0,
+    val timestamp: Int = 0,
+)
+
+@Serializable
+data class SceneOneKeySceneTask(
+    val cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
+    val ctrlKey: String = "",
+    val customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
+    val desc: String = "",
+    val devTid: String = "",
+    val fix: String = "",
+    val subDevTid: String = "",
+    val taskId: String = "",
+)
+
+@Serializable
+data class SceneOneKeyCmdArgs(
+    val cmdId: Int = 0,
+    val sw1: Int = 0,
+)
+
+@Serializable
+data class SceneOneKeyCustomParam(
+    val icon: String = "",
+    val mid: String = "",
+    val name: String = "",
+)
+
+
+// ------------------------------------------
+
+@Serializable
 data class SceneListBean(
-    val objectId: SceneObjectIdBean = SceneObjectIdBean(),
     val sceneId: String = "",
     val sceneName: String = "",
     val uid: String = "",
-    val pid: String = "",
     val desc: String = "",
     val showType: String = "",
-    val sceneSort: Int = 0,
-    val createTime: Long = 0,
-    val updateTime: String = "",
     val templateId: String = "",
     val name: String = "",
-    val sceneTaskList: List<SceneAddOneKeyBean> = listOf(),
-    val conditionList: List<SceneAddOneKeyBean> = listOf(),
-    val iftttTasks: List<SceneAddOneKeyBean> = listOf(),
-    val icon: String = "",
-    val oneKeyType: Int = 0,
-    val triggerDevTid: String = "",
-    val triggerCtrlKey: String = "",
-    val taskDevTid: String = "",
-    val taskCtrlKey: String = "",
 )
 
 @Serializable

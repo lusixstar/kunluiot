@@ -4,16 +4,25 @@ import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
 import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
 import com.kunluiot.sdk.callback.scene.ISceneListCallback
 import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
+import com.kunluiot.sdk.callback.scene.SceneListResult
 
 interface IKunLuScene {
 
     /**
      * 手动场景列表
      */
-    fun getOneKeySceneList(callback: ISceneListCallback)
+    fun getOneKeySceneList(fail: OnFailResult, success: SceneListResult)
+
+    /**
+     * 获取预设情景面板
+     */
+    fun getSceneTemplate(fail: OnFailResult, success: SceneListResult)
+
+    // ----------------------------------------------------
 
     /**
      * 新增手动场景

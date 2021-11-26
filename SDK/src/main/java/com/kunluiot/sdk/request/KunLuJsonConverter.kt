@@ -16,12 +16,12 @@
 package com.kunluiot.sdk.request
 
 import android.content.Context
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.BuildConfig
 import com.kunluiot.sdk.R
 import com.kunluiot.sdk.thirdlib.kalle.Response
 import com.kunluiot.sdk.thirdlib.kalle.simple.Converter
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
-import com.kunluiot.sdk.util.log.KunLuLog
 import org.json.JSONObject
 import java.lang.reflect.Type
 
@@ -34,8 +34,8 @@ class KunLuJsonConverter(private val mContext: Context) : Converter {
         var code = response.code()
         val serverJson = response.body().string()
 
-        if (BuildConfig.DEBUG) KunLuLog.i("Server Code: $code")
-        if (BuildConfig.DEBUG) KunLuLog.i("Server Data: $serverJson")
+        if (BuildConfig.DEBUG) XLog.d("Server Code: $code")
+        if (BuildConfig.DEBUG) XLog.json(serverJson)
 
         when (code) {
             in 200..299 -> { // Http is successful.

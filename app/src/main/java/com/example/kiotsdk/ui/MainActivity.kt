@@ -11,6 +11,7 @@ import com.example.kiotsdk.ui.device.DeviceRoomListActivity
 import com.example.kiotsdk.ui.family.FamilyCreateActivity
 import com.example.kiotsdk.ui.family.FamilyListActivity
 import com.example.kiotsdk.ui.family.FamilySelectActivity
+import com.example.kiotsdk.ui.scene.SceneManagerActivity
 import com.example.kiotsdk.ui.user.UserInfoActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
@@ -54,6 +55,7 @@ class MainActivity : BaseActivity() {
         mBinding.deviceQrMode.setOnClickListener { gotoQrLaunch.launch(Intent(this, QRCodeActivity::class.java)) }
 
         mBinding.deviceList.setOnClickListener { startActivity<DeviceRoomListActivity>() }
+        mBinding.sceneManager.setOnClickListener { startActivity<SceneManagerActivity>() }
 
         getData()
     }

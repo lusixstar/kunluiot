@@ -60,4 +60,7 @@ dependencies {
     api 'androidx.camera:camera-camera2:1.0.1'
     api 'androidx.camera:camera-lifecycle:1.0.1'
     api 'androidx.camera:camera-view:1.0.0-alpha28'
+
+    //log
+    api 'com.elvishew:xlog:1.10.1'
 }

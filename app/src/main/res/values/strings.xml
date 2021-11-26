@@ -22,6 +22,10 @@
     <string name="home_select">选择家庭</string>
     <string name="home_list">家庭列表</string>
     <string name="device_manager">设备管理</string>
+    <string name="scene_one_key">一键控制</string>
+    <string name="scene_linked">智能联动</string>
+    <string name="scene">场景</string>
+    <string name="scene_manager">场景管理</string>
     <string name="device_list">设备列表</string>
     <string name="device_set_net">设备配网</string>
     <string name="device_set_net_finish">完成配网</string>

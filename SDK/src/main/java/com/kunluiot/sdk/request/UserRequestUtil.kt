@@ -1,5 +1,6 @@
 package com.kunluiot.sdk.request
 
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.user.*
 import com.kunluiot.sdk.callback.common.OnFailResult
@@ -15,7 +16,6 @@ import com.kunluiot.sdk.thirdlib.ws.WebsocketUtil
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.KotlinSerializationUtils
 import com.kunluiot.sdk.util.SPUtil
-import com.kunluiot.sdk.util.log.KunLuLog
 import java.io.File
 
 object UserRequestUtil {
@@ -56,6 +56,7 @@ object UserRequestUtil {
         kalle.param("password", passwd)
         kalle.param("clientType", "ANDROID")
         kalle.param("areaCode", countryCode)
+        kalle.param("pid", "00000000000")
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
@@ -236,7 +237,7 @@ object UserRequestUtil {
         val binary = FileBinary(File(filePath))
         val formBody: FormBody = FormBody.newBuilder().boundary(boundary).binary("file", binary).build()
 
-        formBody.onProgress { _, progress -> KunLuLog.d("formBody progress == $progress") }
+        formBody.onProgress { _, progress -> XLog.d("formBody progress == $progress") }
 
         val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_UPDATE_PHOTO)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)

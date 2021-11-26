@@ -3,6 +3,17 @@ package com.kunluiot.sdk.callback.scene
 import com.kunluiot.sdk.bean.scene.SceneDeleteBean
 import com.kunluiot.sdk.bean.scene.SceneListBean
 import com.kunluiot.sdk.bean.scene.SceneNewPlayBean
+import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
+
+/**
+ * 场景列表
+ * */
+fun interface SceneListResult {
+    fun success(bean: List<SceneOneKeyBean>)
+}
+
+
+// -------------------------------------
 
 /**
  * 场景列表

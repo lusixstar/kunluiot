@@ -9,6 +9,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.R
 import com.kunluiot.sdk.api.device.KunLuDeviceType
@@ -24,7 +25,6 @@ import com.kunluiot.sdk.util.CacheUtils
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.MD5Util
 import com.kunluiot.sdk.util.Tools
-import com.kunluiot.sdk.util.log.KunLuLog
 import java.io.File
 import java.util.*
 
@@ -162,7 +162,7 @@ class DeviceWebControlActivity : AppCompatActivity() {
             val indexHtml = cacheDir + File.separator + KunLuHelper.CACHE_INDEX_HTML
             val isOk = isFileExist(indexHtml)
             if (!isOk) {
-                KunLuHomeSdk.commonImpl.downloadsUrlFile(mBean.androidPageZipURL, { code, msg -> KunLuLog.e("code == $code, msg == $msg") }, {
+                KunLuHomeSdk.commonImpl.downloadsUrlFile(mBean.androidPageZipURL, { code, msg -> XLog.e("code == $code, msg == $msg") }, {
                     mUrl = KunLuHelper.LOCAL_FILE_PRE + it
                     initWebView()
                 })
@@ -186,7 +186,7 @@ class DeviceWebControlActivity : AppCompatActivity() {
                 mProtocolMap = stateResult.protocol
                 getZipUrl()
             }
-            KunLuHomeSdk.deviceImpl.getDeviceOperationList(mBean.productPublicKey, { code, msg -> KunLuLog.e("code == $code, msg == $msg") }, {
+            KunLuHomeSdk.deviceImpl.getDeviceOperationList(mBean.productPublicKey, { code, msg -> XLog.e("code == $code, msg == $msg") }, {
                 mProtocolBean = it
                 mProtocolMap = it.protocol
                 val json = JsonUtils.toJson(mProtocolBean)
