@@ -2,27 +2,22 @@ package com.example.kiotsdk.ui.scene
 
 import android.os.Bundle
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.example.kiotsdk.adapter.device.DeviceRoomListAdapter
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.diff.DiffRoomListCallback
+import com.example.kiotsdk.adapter.scene.SceneSelectDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneSelectDevicesBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.api.device.KunLuDeviceType
-import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
-import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
-import com.kunluiot.sdk.ui.web.DeviceWebControlActivity
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
-import org.jetbrains.anko.startActivity
 
 
 class SceneSelectDevicesActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivitySceneSelectDevicesBinding
 
-    private lateinit var mRoomAdapter: DeviceRoomListAdapter
+    private lateinit var mRoomAdapter: SceneSelectDeviceListAdapter
 
     private var mFamilyList = mutableListOf<FamilyBean>()
 
@@ -43,43 +38,12 @@ class SceneSelectDevicesActivity : BaseActivity() {
     }
 
     private fun initAdapter() {
-        mRoomAdapter = DeviceRoomListAdapter(mutableListOf()) { gotoNext(it) }
+        mRoomAdapter = SceneSelectDeviceListAdapter(mutableListOf()) {
+            XLog.e("it == $it")
+        }
         mRoomAdapter.setDiffCallback(DiffRoomListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.list.adapter = mRoomAdapter
-    }
-
-    private fun gotoNext(bean: DeviceNewBean) {
-        LogUtil.e("gotoNext", "$bean")
-        if (bean.androidPageZipURL.isNotEmpty()) {
-            startActivity<DeviceWebControlActivity>(DeviceWebControlActivity.BEAN to bean)
-        } else {
-            toastMsg("androidPageZipURL is empty")
-        }
-    }
-
-    private fun gotoDelete(it: DeviceNewBean) {
-        val userId = KunLuHomeSdk.instance.getSessionBean()?.user ?: ""
-        LogUtil.e("delete", "$it")
-        LogUtil.e("userId", userId)
-        alert("是否删除设备") {
-            positiveButton("确定") { dialog ->
-                if (it.devType == KunLuDeviceType.DEVICE_SUB) {
-                    KunLuHomeSdk.deviceImpl.deletesSubDevice(it.parentDevTid, it.parentCtrlKey, it.devTid, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
-                } else {
-                    if (userId == it.ownerUid) {
-                        KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, "", false, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
-                    } else {
-                        //删除授权设备
-//            KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, "", false, { code, msg -> toastErrorMsg(code, msg) }, {
-//                LogUtil.e("delete", "$it")
-//            })
-                    }
-                }
-                dialog.dismiss()
-            }
-            negativeButton("取消") { dialog -> dialog.dismiss() }
-        }.show()
     }
 
     private fun selectFamily() {
