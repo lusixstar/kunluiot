@@ -2,13 +2,14 @@ package com.example.kiotsdk.ui.scene
 
 import android.os.Bundle
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.elvishew.xlog.XLog
+import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffOneKeyListCallback
 import com.example.kiotsdk.adapter.scene.SceneOneKeyListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneOneKeyBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
+import org.jetbrains.anko.startActivity
 
 /**
  * User: Chris
@@ -31,30 +32,18 @@ class SceneOneKeyActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
+        mBinding.add.setOnClickListener { startActivity<SceneOneKeyAddOrEditActivity>(SceneOneKeyAddOrEditActivity.IS_ADD to true) }
+
         initAdapter()
         getData()
     }
 
     private fun getData() {
-        KunLuHomeSdk.sceneImpl.getOneKeySceneList({ _, _ -> getTemplate() }, { getTemplate(it) })
+        KunLuHomeSdk.sceneImpl.getOneKeySceneList({ code, msg -> toastErrorMsg(code, msg) }, { setData(it) })
     }
 
-    private fun getTemplate(list: List<SceneOneKeyBean> = listOf()) {
-        KunLuHomeSdk.sceneImpl.getSceneTemplate({ _, _ -> setData(list) }, { setData(list, it) })
-    }
-
-    private fun setData(list: List<SceneOneKeyBean> = listOf(), templateList: List<SceneOneKeyBean> = listOf()) {
-
-        val ids = mutableListOf<String>()
-        val allList = mutableListOf<SceneOneKeyBean>()
-
-        list.forEach {
-            XLog.e("list name == ${it.name}  ${it.templateId}")
-            allList.add(it)
-            ids.add(it.templateId)
-        }
-
-        mAdapter.setDiffNewData(allList)
+    private fun setData(list: List<SceneOneKeyBean> = listOf()) {
+        mAdapter.setDiffNewData(list as MutableList<SceneOneKeyBean>)
     }
 
     private fun initAdapter() {
@@ -62,5 +51,17 @@ class SceneOneKeyActivity : BaseActivity() {
         mAdapter.setDiffCallback(DiffOneKeyListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.list.adapter = mAdapter
+        mAdapter.addChildClickViewIds(R.id.edit, R.id.play)
+        mAdapter.setOnItemChildClickListener { adapter, view, position ->
+            val bean = adapter.getItem(position) as SceneOneKeyBean
+            when (view.id) {
+                R.id.edit -> {
+                    startActivity<SceneOneKeyAddOrEditActivity>(SceneOneKeyAddOrEditActivity.BEAN to bean)
+                }
+                R.id.play -> {
+                    toastMsg("play")
+                }
+            }
+        }
     }
 }

@@ -119,6 +119,34 @@
             android:name=".ui.scene.SceneLinkedActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.scene.SceneOneKeyAddOrEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneOneKeyNameEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneOneKeyIconEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneOneKeyAddDevicesActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SelectExecutionActionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneSelectDevicesActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SelectSceneActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

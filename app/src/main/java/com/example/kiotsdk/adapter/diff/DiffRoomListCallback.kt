@@ -2,6 +2,7 @@ package com.example.kiotsdk.adapter.diff
 
 import androidx.recyclerview.widget.DiffUtil
 import com.kunluiot.sdk.bean.family.FolderBean
+import com.kunluiot.sdk.bean.scene.SceneLinkBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
 
 class DiffRoomListCallback : DiffUtil.ItemCallback<FolderBean>() {
@@ -23,5 +24,16 @@ class DiffOneKeyListCallback : DiffUtil.ItemCallback<SceneOneKeyBean>() {
 
     override fun areContentsTheSame(oldItem: SceneOneKeyBean, newItem: SceneOneKeyBean): Boolean {
         return oldItem.sceneId == newItem.sceneId
+    }
+}
+
+class DiffSceneLinkedListCallback : DiffUtil.ItemCallback<SceneLinkBean>() {
+
+    override fun areItemsTheSame(oldItem: SceneLinkBean, newItem: SceneLinkBean): Boolean {
+        return oldItem.pid == newItem.pid
+    }
+
+    override fun areContentsTheSame(oldItem: SceneLinkBean, newItem: SceneLinkBean): Boolean {
+        return oldItem.pid == newItem.pid
     }
 }

@@ -5,10 +5,7 @@ import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
-import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
-import com.kunluiot.sdk.callback.scene.ISceneListCallback
-import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
-import com.kunluiot.sdk.callback.scene.SceneListResult
+import com.kunluiot.sdk.callback.scene.*
 
 interface IKunLuScene {
 
@@ -47,7 +44,7 @@ interface IKunLuScene {
     /**
      * 联动场景列表
      */
-    fun getLinkageSceneList(page: Int, size: Int, callback: ISceneListCallback)
+    fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult)
 
     /**
      * 新增联动场景

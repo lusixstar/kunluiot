@@ -23,8 +23,12 @@
     <string name="home_list">家庭列表</string>
     <string name="device_manager">设备管理</string>
     <string name="scene_one_key">一键控制</string>
+    <string name="scene_one_key_scene">一键场景</string>
+    <string name="scene_name">场景名称</string>
+    <string name="scene_icon">场景图标</string>
     <string name="scene_linked">智能联动</string>
     <string name="scene">场景</string>
+    <string name="scene_name_hint">请填写名称</string>
     <string name="scene_manager">场景管理</string>
     <string name="device_list">设备列表</string>
     <string name="device_set_net">设备配网</string>
@@ -53,6 +57,7 @@
     <string name="device_set_wifi">设置Wifi</string>
     <string name="device_set_wifi_hint">请连接Wi-Fi并输入Wi-Fi</string>
     <string name="please_select_a_wifi_network">请选择一个WiFi网络</string>
+    <string name="click_one_button_control_to_perform_the_following_equipment_operation">点击“一键控制”后就执行以下设备操作</string>
 
 
     <string name="city">城市</string>
@@ -64,7 +69,19 @@
     <string name="finish">完成</string>
     <string name="back">返回</string>
     <string name="retry_">重试</string>
+    <string name="name_">名称</string>
+    <string name="icon_">图标</string>
+    <string name="cancel_">取消</string>
+    <string name="sure_">确认</string>
+    <string name="open_">开启</string>
+    <string name="close">关闭</string>
 
+
+    <string name="select_delay">选择延时</string>
+    <string name="select_delay_time">选择延时时间</string>
+    <string name="select_device">选择设备</string>
+    <string name="select_scene">选择场景</string>
+    <string name="delayed">延时</string>
 
     <string name="countdown_of_distribution_network">配网倒计时</string>
     <string name="routers_mobile_phones_and_devices_should_be_as_close_as_possible">路由器、手机和设备尽量靠近</string>
@@ -93,6 +110,9 @@
     <string name="select_gateway">选择网关</string>
     <string name="add_device">添加设备</string>
     <string name="gateway_offline">网关不在线!</string>
+    <string name="select_execution_action">选择执行动作</string>
+    <string name="delay_cannot_be_0">延时不能为0</string>
+
 
     <string name="_gateway_enters_add_mode">1.网关进入添加模式</string>
     <string name="search_for_sub_devices">2.搜索子设备</string>
@@ -101,6 +121,8 @@
     <string name="please_follow_the_equipment_distribution_network_operation_instructions_and_make_the_sub_equipment_and_gateway_as_close_as_possible">请按照设备配网操作说明进行操作，并使子设备和网关尽量靠近</string>
     <string name="gateway_has_found_this_type_of_sub_device">网关已搜索到此类型子设备</string>
     <string name="the_gateway_did_not_search_for_this_type_of_sub_device">网关未搜索到此类型子设备</string>
+
+    <string name="please_select_the_scene_icon">请选择场景图标</string>
 
 
 </resources>

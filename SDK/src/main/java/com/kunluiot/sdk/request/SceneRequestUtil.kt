@@ -5,8 +5,8 @@ import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
-import com.kunluiot.sdk.callback.scene.ISceneListCallback
 import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
+import com.kunluiot.sdk.callback.scene.SceneLinkedListResult
 import com.kunluiot.sdk.callback.scene.SceneListResult
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
@@ -200,16 +200,19 @@ object SceneRequestUtil {
     }
 
     /**
-     * 删除使用中的手动场景
+     * 获取联动场景列表
      * */
-    fun getLinkageSceneList(page: Int, size: Int, callback: ISceneListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST).setHeaders(KunLuHelper.getSign()).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("page", page).param("size", size).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+    fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult) {
+        val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.param("page", page).param("size", size)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess(it) }
+                    KotlinSerializationUtils.getJsonData<List<SceneLinkBean>>(response.succeed()).let { success.success(it) }
                 }
             }
         })
