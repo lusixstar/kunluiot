@@ -129,11 +129,11 @@ data class SceneOneKeyBean(
     var sceneName: String = "",
     val icon: String = "",
     val showType: String = "",
-    val sceneTaskList: List<SceneOneKeySceneTask> = listOf(),
+    val sceneTaskList: List<SceneLinkedBean> = listOf(),
     val templateId: String = "",
     val updateTime: Long = 0,
     //0、表示普通 1、表示回家 2、表示离家 3、表示智能厨房
-    var oneKeyType: Int = 0
+    var oneKeyType: Int = 0,
 ) : Parcelable
 
 @Parcelize
@@ -146,40 +146,40 @@ data class SceneOneKeyIdBean(
     val time: Long = 0,
     val timeSecond: Int = 0,
     val timestamp: Int = 0,
-): Parcelable
+) : Parcelable
 
-@Parcelize
-@Serializable
-data class SceneOneKeySceneTask(
-    val cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
-    val ctrlKey: String = "",
-    val customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
-    val desc: String = "",
-    val devTid: String = "",
-    val fix: String = "",
-    val subDevTid: String = "",
-    val taskId: String = "",
-): Parcelable
+//@Parcelize
+//@Serializable
+//data class SceneOneKeySceneTask(
+//    val cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
+//    val ctrlKey: String = "",
+//    val customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
+//    val desc: String = "",
+//    val devTid: String = "",
+//    val fix: String = "",
+//    val subDevTid: String = "",
+//    val taskId: String = "",
+//) : Parcelable
 
 @Parcelize
 @Serializable
 data class SceneOneKeyCmdArgs(
     val cmdId: Int = 0,
     val sw1: Int = 0,
-): Parcelable
+) : Parcelable
 
 @Parcelize
 @Serializable
 data class SceneOneKeyCustomParam(
     var icon: String = "",
-    val mid: String = "",
+    var mid: String = "",
     var name: String = "",
-    val family_folder: String = "",
+    var family_folder: String = "",
     val taskId: String = "",
     val disPlayName: String = "",
     val devName: String = "",
     val desc: String = "",
-): Parcelable
+) : Parcelable
 
 @Parcelize
 @Serializable
@@ -193,14 +193,13 @@ data class SceneLinkedBean(
     var subDevTid: String = "",
     var thirdPid: String = "",
     var newDesc: String = "",
-     var desc: String = "",
+    var desc: String = "",
     var cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
     var customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
-): Parcelable
+) : Parcelable
 
 
 // ------------------------------------------
-
 
 
 @Serializable

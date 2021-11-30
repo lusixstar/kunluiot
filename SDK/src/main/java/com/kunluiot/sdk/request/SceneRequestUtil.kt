@@ -61,7 +61,7 @@ object SceneRequestUtil {
     /**
      * 手动场景列表
      * */
-    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
+    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
         val map = HashMap<String, Any>()
         map["sceneName"] = sceneName
         map["templateId"] = templateId
@@ -101,13 +101,15 @@ object SceneRequestUtil {
             e.printStackTrace()
         }
 
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(json)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
+            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+            .body(JsonBody(json)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                 }
             }
         })
@@ -116,7 +118,7 @@ object SceneRequestUtil {
     /**
      * 编辑手动场景
      * */
-    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, callback: IResultCallback) {
+    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback) {
         val map = HashMap<String, Any>()
         map["sceneId"] = sceneId
         map["sceneName"] = sceneName
@@ -161,7 +163,7 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<List<SceneListBean>>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                 }
             }
         })

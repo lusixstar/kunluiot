@@ -147,6 +147,14 @@
             android:name=".ui.scene.SelectSceneActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.operation.OperationListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.operation.OperationFieldsListActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

@@ -37,6 +37,8 @@
     <string name="device_ap_mode">AP兼容模式配网</string>
     <string name="device_zigbee_mode">Zigbee Gateway</string>
     <string name="device_qr_mode">QR 配网</string>
+    <string name="action_list">操作列表</string>
+
 
     <string name="user_avatar">用户头像</string>
     <string name="user_name">用户名称</string>

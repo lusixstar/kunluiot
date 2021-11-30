@@ -7,11 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySelectExecutionActionBinding
+import com.example.kiotsdk.ui.operation.OperationListActivity
 import com.example.kiotsdk.util.DemoUtils
 import com.example.kiotsdk.widget.SelectTimeDialog
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeyCustomParam
-import org.jetbrains.anko.startActivity
 
 /**
  * User: Chris
@@ -33,8 +33,19 @@ class SelectExecutionActionActivity : BaseActivity() {
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         mBinding.delay.setOnClickListener { showSeekBarBottomDialog() }
-        mBinding.device.setOnClickListener { startActivity<SceneSelectDevicesActivity>() }
+        mBinding.device.setOnClickListener { gotoAddDevice.launch(Intent(this, SceneSelectDevicesActivity::class.java)) }
         mBinding.scene.setOnClickListener { gotoAddScene.launch(Intent(this, SelectSceneActivity::class.java)) }
+    }
+
+    private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val device = it.data?.getStringExtra(OperationListActivity.DEVICE) ?: ""
+            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneLinkedBean()
+            if (device == OperationListActivity.DEVICE) {
+                setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
+                finish()
+            }
+        }
     }
 
     private val gotoAddScene = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -93,5 +104,8 @@ class SelectExecutionActionActivity : BaseActivity() {
 
         const val SCENE = "scene"
         const val SCENE_BEAN = "scene_bean"
+
+        const val DEVICE = "device"
+        const val DEVICE_BEAN = "device_bean"
     }
 }

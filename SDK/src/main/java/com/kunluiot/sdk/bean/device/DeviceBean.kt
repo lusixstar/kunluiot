@@ -34,6 +34,7 @@ data class DeviceConfigGateWayItemBean(
     val result: String = "",
 )
 
+@Parcelize
 @Serializable
 data class DeviceOperationBean(
     val mid: String = "",
@@ -45,8 +46,9 @@ data class DeviceOperationBean(
     val accessProtocol: Int = 0,
     val protocol: Map<String, DeviceOperationProtocolBean> = mutableMapOf(),
     val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
-)
+) : Parcelable
 
+@Parcelize
 @Serializable
 data class DeviceOperationProtocolBean(
     val cmdId: Int = 0,
@@ -57,15 +59,40 @@ data class DeviceOperationProtocolBean(
     val tags: List<String> = mutableListOf(),
     val fields: List<DeviceOperationFieldsBean> = mutableListOf(),
     val associateProtocol: List<Int> = mutableListOf(),
-)
+) : Parcelable
 
+@Parcelize
 @Serializable
 data class DeviceOperationFieldsBean(
     val selectedDesc: String = "",
     val selectValue: String = "",
     val operator: String = "",
     val selected: Boolean = false,
-)
+    val dataType: String = "",
+    val name: String = "",
+    val desc: String = "",
+    val dataLength: Int = 0,
+    val available: Boolean = false,
+    val frameType: String = "",
+    val baseField: Boolean = false,
+    val usedForIFTTT: Boolean = false,
+    val aggregation: Boolean = false,
+    val select: Boolean = false,
+    val order: Int = 0,
+    val dp: Int = 0,
+    val maxValue: Long = 0,
+    val minValue: Int = 0,
+//    val maxValueMean: String = "",
+//    val minValueMean: String = "",
+    val enumeration: List<DeviceOperationEnumerationBean> = listOf(),
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class DeviceOperationEnumerationBean(
+    var value: Int = 0,
+    var desc: String = "",
+) : Parcelable
 
 // --------------------------------------------
 
@@ -211,6 +238,7 @@ data class DeviceNewBean(
     var productPublicKey: String = "",
     var virtual: Boolean = false,
     val deviceName: String = "",
+    val logo: String = "",
     val workModeType: String = "",
     var ctrlKey: String = "",
     val bindKey: String = "",
@@ -218,6 +246,8 @@ data class DeviceNewBean(
     var bindResultMsg: String = "",
     val name: String = "",
     val ownerUid: String = "",
+    val familyName: String = "",
+    val folderName: String = "",
     val associateGatewayCtrlKey: String = "",
     var online: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),

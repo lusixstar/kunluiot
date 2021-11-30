@@ -1,16 +1,24 @@
 package com.example.kiotsdk.ui.scene
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.diff.DiffRoomListCallback
 import com.example.kiotsdk.adapter.scene.SceneSelectDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneSelectDevicesBinding
+import com.example.kiotsdk.ui.operation.OperationListActivity
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
+import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import org.jetbrains.anko.selector
+import org.jetbrains.anko.startActivity
 
 
 class SceneSelectDevicesActivity : BaseActivity() {
@@ -37,9 +45,22 @@ class SceneSelectDevicesActivity : BaseActivity() {
         getFamilyData()
     }
 
+    private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val device = it.data?.getStringExtra(OperationListActivity.DEVICE) ?: ""
+            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneLinkedBean()
+            if (device == OperationListActivity.DEVICE) {
+                setResult(Activity.RESULT_OK, intent.putExtra(OperationListActivity.DEVICE, OperationListActivity.DEVICE).putExtra(OperationListActivity.DEVICE_BEAN, deviceBean))
+                finish()
+            }
+        }
+    }
+
     private fun initAdapter() {
-        mRoomAdapter = SceneSelectDeviceListAdapter(mutableListOf()) {
-            XLog.e("it == $it")
+        mRoomAdapter = SceneSelectDeviceListAdapter(mutableListOf()) { protocol, bean ->
+            val list = arrayListOf<DeviceOperationProtocolBean>()
+            protocol.forEach { (_, u) -> run { if (!u.fields.isNullOrEmpty()) list.add(u) } }
+            gotoAddDevice.launch(Intent(this, OperationListActivity::class.java).putExtra(OperationListActivity.LIST_BEAN, list).putExtra(OperationListActivity.DEVICE_BEAN, bean))
         }
         mRoomAdapter.setDiffCallback(DiffRoomListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false

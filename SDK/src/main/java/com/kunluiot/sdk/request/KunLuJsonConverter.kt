@@ -94,6 +94,7 @@ class KunLuJsonConverter(private val mContext: Context) : Converter {
                     if (obj.has("message")) oMsg = obj.getString("message")
                     if (obj.has("desc")) oMsg = obj.getString("desc")
                     if (oStatus != 0) code = oStatus
+                    if (oMsg.isEmpty()) oMsg = "error"
                     failedData = oMsg as F
                 } catch (e: Exception) {
                     failedData = mContext.getString(R.string.http_unknow_error) as F

@@ -2,6 +2,7 @@ package com.kunluiot.sdk.api.scene
 
 import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
 import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
+import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
@@ -24,12 +25,12 @@ interface IKunLuScene {
     /**
      * 新增手动场景
      */
-    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback)
+    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback)
 
     /**
      * 编辑手动场景
      */
-    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, callback: IResultCallback)
+    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback)
 
     /**
      * 删除手动场景

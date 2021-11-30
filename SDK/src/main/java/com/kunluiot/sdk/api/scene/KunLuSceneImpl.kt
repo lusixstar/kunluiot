@@ -2,6 +2,7 @@ package com.kunluiot.sdk.api.scene
 
 import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
 import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
+import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
@@ -30,14 +31,14 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 新增手动场景
      */
-    override fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
+    override fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
         SceneRequestUtil.addOneKeyScene(oneKeyType, icon, sceneName, sceneTaskList, preset, templateId, callback)
     }
 
     /**
      * 编辑手动场景
      */
-    override fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, callback: IResultCallback) {
+    override fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback) {
         SceneRequestUtil.updateOneKeyScene(sceneId, oneKeyType, icon, sceneName, sceneTaskList, preset, callback)
     }
 
