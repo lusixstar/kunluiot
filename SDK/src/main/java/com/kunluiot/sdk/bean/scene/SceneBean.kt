@@ -3,7 +3,6 @@ package com.kunluiot.sdk.bean.scene
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import java.util.*
 
 
 @Parcelize
@@ -200,6 +199,22 @@ data class SceneLinkedBean(
     var customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
 ) : Parcelable
 
+@Parcelize
+@Serializable
+data class TimeConditionBean(
+    var isOn: Boolean = false,
+    val time: String = "",
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class AddTimeConditionEvent(
+    var triggerType: String? = null,
+    var desc: String? = null,
+    var cronExpr: String? = null,
+    var conditionBean: SceneConditionListParam? = null,
+    var timeList: List<TimeConditionBean>? = null,
+) : Parcelable
 
 // ------------------------------------------
 

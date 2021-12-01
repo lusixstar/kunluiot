@@ -86,6 +86,22 @@
     <string name="select_device">选择设备</string>
     <string name="select_scene">选择场景</string>
     <string name="delayed">延时</string>
+    <string name="time">时间</string>
+    <string name="repeat_set">重复设置</string>
+    <string name="every_day">每天</string>
+    <string name="working_day">工作日</string>
+    <string name="weekend">周末</string>
+    <string name="custom">自定义</string>
+    <string name="please_select_the_time_">请选择时间</string>
+    <string name="select_the_time">选择时间</string>
+    <string name="please_select_duplicate_setting">请选择重复设置！</string>
+    <string name="rest_day">休息日</string>
+    <string name="all_day">全天</string>
+    <string name="timing_trigger">定时触发</string>
+    <string name="effective_period">生效时间段</string>
+    <string name="by_the_next_day">到第二天</string>
+    <string name="reach">到</string>
+
 
     <string name="countdown_of_distribution_network">配网倒计时</string>
     <string name="routers_mobile_phones_and_devices_should_be_as_close_as_possible">路由器、手机和设备尽量靠近</string>
@@ -113,6 +129,7 @@
 
     <string name="select_gateway">选择网关</string>
     <string name="add_device">添加设备</string>
+    <string name="add_condition">添加条件</string>
     <string name="gateway_offline">网关不在线!</string>
     <string name="select_execution_action">选择执行动作</string>
     <string name="delay_cannot_be_0">延时不能为0</string>
@@ -127,6 +144,11 @@
     <string name="the_gateway_did_not_search_for_this_type_of_sub_device">网关未搜索到此类型子设备</string>
 
     <string name="please_select_the_scene_icon">请选择场景图标</string>
+    <string name="at_a_certain_time">在某个时间</string>
+    <string name="for_example_every_night_at_8_oclock">例如：每天晚上8点</string>
+    <string name="a_device">某个设备</string>
+    <string name="for_example_air_conditioning_temperature_30">例如：空调温度30°</string>
+
 
 
 </resources>

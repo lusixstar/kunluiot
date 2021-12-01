@@ -9,11 +9,8 @@ import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.scene.SceneDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneLinkedEditOrAddBinding
-import com.example.kiotsdk.util.DemoUtils
-import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.scene.AddTimeConditionEvent
 import com.kunluiot.sdk.bean.scene.SceneLinkBean
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import com.kunluiot.sdk.callback.IResultCallback
 
 /**
  * User: Chris
@@ -29,7 +26,11 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
     private var mBean: SceneLinkBean = SceneLinkBean()
 
     private var mSceneName = ""
+
+    //判断触发类型 定时触发：SCHEDULER  设备触发：REPORT
     private var mTriggerType = ""
+    private var selectedWeekDay = ""
+
 
     private lateinit var mAdapter: SceneDeviceListAdapter
 
@@ -46,77 +47,52 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         getIntentData()
 
         mBinding.titleLayout.setOnClickListener { gotoEditName.launch(Intent(this, SceneNameEditActivity::class.java).putExtra(SceneNameEditActivity.NAME, mSceneName)) }
-//        mBinding.iconLayout.setOnClickListener { if (mOneKeyType == 0) gotoEditIcon.launch(Intent(this, SceneOneKeyIconEditActivity::class.java)) }
-//        mBinding.addDevices.setOnClickListener { gotoAddDevices.launch(Intent(this, SelectExecutionActionActivity::class.java)) }
-//        mBinding.next.setOnClickListener { gotoSave() }
-
-        initAdapter()
-    }
-
-    private fun gotoSave() {
-        if (mSceneName.isEmpty()) {
-            toastMsg("scene name is empty")
-            return
-        }
-        if (mAdapter.data.isNullOrEmpty()) {
-            toastMsg("please add one control action")
-            return
-        }
-        if (mIsAdd) {
-//            KunLuHomeSdk.sceneImpl.addOneKeyScene(mOneKeyType, mSelectIcon, mSceneName, mAdapter.data.toList(), mapOf(), "", object : IResultCallback {
-//                override fun onError(code: String, error: String) {
-//                    toastErrorMsg(code, error)
-//                }
-//
-//                override fun onSuccess() {
-//
-//                }
-//            })
-        } else {
-//            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mOneKeyType, mSelectIcon, mSceneName, mAdapter.data.toList(), mapOf(),  object : IResultCallback {
-//                override fun onError(code: String, error: String) {
-//                    toastErrorMsg(code, error)
-//                }
-//
-//                override fun onSuccess() {
-//
-//                }
-//            })
-        }
-    }
-
-    private fun initAdapter() {
-//        mAdapter = SceneDeviceListAdapter(mBean.sceneTaskList.toMutableList())
-//        mBinding.list.adapter = mAdapter
-    }
-
-    private val gotoAddDevices = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val delay = it.data?.getStringExtra(SelectExecutionActionActivity.DELAY) ?: ""
-            if (delay.isNotEmpty()) {
-                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneLinkedBean()
-                mAdapter.data.add(0, bean)
-                mAdapter.notifyItemInserted(0)
-            }
-            val scene = it.data?.getStringExtra(SelectExecutionActionActivity.SCENE) ?: ""
-            if (scene.isNotEmpty()) {
-                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_BEAN) ?: SceneLinkedBean()
-                mAdapter.data.add(0, bean)
-                mAdapter.notifyItemInserted(0)
-            }
-            val device = it.data?.getStringExtra(SelectExecutionActionActivity.DEVICE) ?: ""
-            if (device.isNotEmpty()) {
-                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneLinkedBean()
-                mAdapter.data.add(0, bean)
-                mAdapter.notifyItemInserted(0)
-            }
-        }
+        mBinding.addCondition.setOnClickListener { gotoAddCondition.launch(Intent(this, SceneAddConditionActivity::class.java)) }
+        mBinding.timeLayout.setOnClickListener { gotoTime.launch(Intent(this, SceneAddTimeConditionActivity::class.java)) }
+        mBinding.dateLayout.setOnClickListener { gotoDate.launch(Intent(this, SceneAddTimeConditionActivity::class.java).putExtra(SceneAddTimeConditionActivity.TIME_SLOT, true)) }
     }
 
     private val gotoEditName = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             mSceneName = it.data?.getStringExtra(SceneNameEditActivity.NAME) ?: ""
-            mBinding.titleValue.text = "${mSceneName}   >"
+            mBinding.titleValue.text = "${mSceneName}"
+        }
+    }
+
+    private val gotoTime = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val bean = it.data?.getParcelableExtra(SceneAddTimeConditionActivity.TIME_BEAN) ?: AddTimeConditionEvent()
+            mTriggerType = bean.triggerType ?: ""
+            selectedWeekDay = ""
+            val timeTrigger = if (mTriggerType == "SCHEDULER") bean.conditionBean?.conDesc else ""
+            mBinding.timeValue.text = timeTrigger
+        }
+    }
+
+    private val gotoDate = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val bean = it.data?.getParcelableExtra(SceneAddTimeConditionActivity.TIME_BEAN) ?: AddTimeConditionEvent()
+            mTriggerType = bean.triggerType ?: ""
+            selectedWeekDay = ""
+            val deviceTrigger = if (mTriggerType == "SCHEDULER") "" else bean.desc
+            mBinding.dateValue.text = deviceTrigger
+        }
+    }
+
+    private val gotoAddCondition = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val time = it.data?.getStringExtra(SceneAddConditionActivity.TIME) ?: ""
+            if (time == SceneAddConditionActivity.TIME) {
+                val bean = it.data?.getParcelableExtra(SceneAddConditionActivity.TIME_BEAN) ?: AddTimeConditionEvent()
+                mTriggerType = bean.triggerType ?: ""
+                selectedWeekDay = ""
+                val timeTrigger = if (mTriggerType == "SCHEDULER") bean.conditionBean?.conDesc else ""
+                val deviceTrigger = if (mTriggerType == "SCHEDULER") "" else bean.desc
+                mBinding.timeValue.text = timeTrigger
+                XLog.e("bean == $bean")
+                XLog.e("timeTrigger == $timeTrigger")
+                XLog.e("deviceTrigger == $deviceTrigger")
+            }
         }
     }
 

@@ -9,6 +9,9 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneLinkedBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneLinkBean
+import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
+import com.kunluiot.sdk.callback.IResultCallback
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 
 /**
@@ -63,5 +66,28 @@ class SceneLinkedActivity : BaseActivity() {
                 }
             }
         }
+        mAdapter.setOnItemLongClickListener { adapter, _, position ->
+            val bean = adapter.getItem(position) as SceneLinkBean
+            gotoDelete(bean)
+            false
+        }
+    }
+
+    private fun gotoDelete(bean: SceneLinkBean) {
+        alert(message = "是否删除") {
+            positiveButton("确定") { dialog ->
+                KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, object : IResultCallback {
+                    override fun onSuccess() {
+                        getData()
+                    }
+
+                    override fun onError(code: String, error: String) {
+                        toastErrorMsg(code, error)
+                    }
+                })
+                dialog.dismiss()
+            }
+            negativeButton("取消") { dialog -> dialog.dismiss() }
+        }.show()
     }
 }

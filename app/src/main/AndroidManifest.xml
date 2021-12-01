@@ -132,10 +132,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.scene.SceneOneKeyAddDevicesActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".ui.scene.SelectExecutionActionActivity"
             android:screenOrientation="portrait" />
 
@@ -149,6 +145,14 @@
 
         <activity
             android:name=".ui.scene.SceneLinkedAddOrEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneAddConditionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.scene.SceneAddTimeConditionActivity"
             android:screenOrientation="portrait" />
 
         <activity

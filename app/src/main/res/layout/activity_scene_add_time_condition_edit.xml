@@ -14,10 +14,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:title="@string/scene_one_key" />
+        app:title="@string/add_condition" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/title_layout"
+        android:id="@+id/time_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -26,54 +26,11 @@
         app:layout_constraintTop_toBottomOf="@id/tool_bar">
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="@string/name_"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/title_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/title_next"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/title_next"
-            android:layout_width="11dp"
-            android:layout_height="11dp"
-            android:layout_marginEnd="15dp"
-            android:src="@mipmap/ic_next"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/time_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_layout">
-
-        <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="@string/timing_trigger"
+            android:text="@string/time"
             android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -84,19 +41,66 @@
             android:id="@+id/time_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="15dp"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/time_next"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/img_next"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="time_value" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/time_next"
+            android:id="@+id/img_next"
             android:layout_width="11dp"
             android:layout_height="11dp"
             android:layout_marginEnd="15dp"
             android:src="@mipmap/ic_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/repeat_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="@string/repeat_set"
+        android:textColor="@color/picture_color_light_grey"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/everyday_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/repeat_hint">
+
+        <TextView
+            android:id="@+id/everyday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/every_day"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/everyday_next"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/ic_scene_check"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -104,117 +108,112 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/date_layout"
+        android:id="@+id/working_day_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/time_layout">
+        app:layout_constraintTop_toBottomOf="@id/everyday_layout">
 
         <TextView
-            android:id="@+id/date"
+            android:id="@+id/working_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="@string/effective_period"
+            android:text="@string/working_day"
             android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/date_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/date_next"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/date_next"
-            android:layout_width="11dp"
-            android:layout_height="11dp"
+            android:id="@+id/working_day_next"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
             android:layout_marginEnd="15dp"
-            android:src="@mipmap/ic_next"
+            android:src="@mipmap/ic_scene_check"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/weekend_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/working_day_layout">
 
-    <TextView
-        android:id="@+id/condition_hint"
+        <TextView
+            android:id="@+id/weekend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/weekend"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/weekend_next"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/ic_scene_check"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/custom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weekend_layout">
+
+        <TextView
+            android:id="@+id/custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/custom"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/custom_next"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/ic_scene_check"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/date_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="@string/when_the_following_conditions_are_met"
-        android:textColor="@color/picture_color_grey"
-        android:textSize="13sp"
-        app:layout_constraintTop_toBottomOf="@id/date_layout" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/condition_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/condition_hint"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/add_condition"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/add_condition"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/condition_list" />
-
-
-    <TextView
-        android:id="@+id/device_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="@string/perform_the_following_equipment_operations"
-        android:textColor="@color/picture_color_grey"
-        android:textSize="13sp"
-        app:layout_constraintTop_toBottomOf="@id/add_condition" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/device_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/device_hint"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/add_devices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="@string/add_device"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/device_list" />
+        app:layout_constraintTop_toBottomOf="@id/custom_layout" />
 
     <Button
         android:id="@+id/next"
@@ -226,7 +225,7 @@
         android:text="@string/finish"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_devices" />
+        app:layout_constraintTop_toBottomOf="@id/date_list" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

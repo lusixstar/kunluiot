@@ -58,7 +58,7 @@ abstract class BasicWorker<T extends SimpleRequest, Succeed, Failed>
 
     @Override
     public final SimpleResponse<Succeed, Failed> call() throws Exception {
-        Log.e("BasicWorker", "SimpleResponse start");
+        Log.d("BasicWorker", "SimpleResponse start");
         Response response = tryReadCacheBefore();
         if (response != null) return buildSimpleResponse(response, true);
 
