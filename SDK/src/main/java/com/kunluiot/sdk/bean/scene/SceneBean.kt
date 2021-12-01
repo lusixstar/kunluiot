@@ -128,7 +128,7 @@ data class SceneOneKeyBean(
     val uid: String = "",
     val sceneId: String = "",
     var sceneName: String = "",
-    val icon: String = "",
+    var icon: String = "",
     val showType: String = "",
     val sceneTaskList: List<SceneLinkedBean> = listOf(),
     val templateId: String = "",
@@ -195,8 +195,8 @@ data class SceneLinkedBean(
     var thirdPid: String = "",
     var newDesc: String = "",
     var desc: String = "",
-    var cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
-    var cmdArgsM: Map<String, Int> = mapOf(),
+    var cmdArgs: Map<String, Int> = mapOf(),
+//    var cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
     var customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
 ) : Parcelable
 

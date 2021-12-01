@@ -102,7 +102,7 @@ class SceneOneKeyActivity : BaseActivity() {
             val bean = adapter.getItem(position) as SceneOneKeyBean
             when (view.id) {
                 R.id.edit -> {
-                    startActivity<SceneOneKeyAddOrEditActivity>(SceneOneKeyAddOrEditActivity.BEAN to bean)
+                    gotoOneKey.launch(Intent(this, SceneOneKeyAddOrEditActivity::class.java).putExtra(SceneOneKeyAddOrEditActivity.BEAN, bean))
                 }
                 R.id.play -> {
                     sendSceneOperation(bean.sceneId, bean.uid)

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.R
+import com.example.kiotsdk.adapter.diff.DiffSceneLinkedDeviceListCallback
 import com.example.kiotsdk.adapter.scene.SceneDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneOneKeyEditOrAddBinding
@@ -13,8 +14,8 @@ import com.example.kiotsdk.util.DemoUtils
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
-import com.kunluiot.sdk.bean.scene.SceneStackClassBean
 import com.kunluiot.sdk.callback.IResultCallback
+import org.jetbrains.anko.alert
 
 /**
  * User: Chris
@@ -81,13 +82,15 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
                 }
             })
         } else {
-            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mOneKeyType, mSelectIcon, mSceneName, mAdapter.data.toList(), mapOf(),  object : IResultCallback {
+            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mOneKeyType, mSelectIcon, mSceneName, mAdapter.data.toList(), mapOf(), object : IResultCallback {
                 override fun onError(code: String, error: String) {
                     toastErrorMsg(code, error)
                 }
 
                 override fun onSuccess() {
-
+                    toastMsg("success")
+                    setResult(Activity.RESULT_OK)
+                    finish()
                 }
             })
         }
@@ -95,7 +98,20 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
 
     private fun initAdapter() {
         mAdapter = SceneDeviceListAdapter(arrayListOf())
+        mAdapter.setDiffCallback(DiffSceneLinkedDeviceListCallback())
         mBinding.list.adapter = mAdapter
+        if (!mIsAdd) {
+            mAdapter.setDiffNewData(mBean.sceneTaskList.toMutableList())
+        }
+        mAdapter.setOnItemClickListener { _, _, position ->
+            alert("是否删除") {
+                positiveButton("确定") { dialog ->
+                    mAdapter.data.removeAt(position)
+                    mAdapter.notifyItemChanged(position)
+                    dialog.dismiss()
+                }
+            }.show()
+        }
     }
 
     private val gotoAddDevices = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

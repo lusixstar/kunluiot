@@ -80,7 +80,7 @@ object SceneRequestUtil {
                 if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
                 if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
                 bean.newDesc = it.newDesc
-                bean.cmdArgs = it.cmdArgsM
+                bean.cmdArgs = it.cmdArgs
             }
             bean.customParam = item
             bean.desc = it.desc
@@ -91,7 +91,7 @@ object SceneRequestUtil {
         map["sceneName"] = sceneName
         if (templateId.isNotEmpty()) map["templateId"] = templateId
         map["sceneTaskList"] = list
-        if (templateId.isNotEmpty()) map["icon"] = icon
+        if (icon.isNotEmpty()) map["icon"] = icon
         if (oneKeyType != 0) map["oneKeyType"] = oneKeyType
         if (!preset.isNullOrEmpty()) {
             preset.forEach { (t, u) -> map[t] = u }
@@ -116,51 +116,54 @@ object SceneRequestUtil {
      * 编辑手动场景
      * */
     fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback) {
+
+        val list = mutableListOf<SceneStackClassBean>()
+        sceneTaskList.forEach {
+            val bean = SceneStackClassBean()
+            val item = SceneStackCustomParam()
+            item.name = it.customParam.name
+            item.icon = it.customParam.icon
+            if (it.time != 0 && it.customParam.name.isNotEmpty()) {
+                bean.time = it.time
+            } else if (it.iftttId.isNotEmpty() && it.customParam.name.isNotEmpty()) {
+                bean.enable = it.enable
+                bean.iftttId = it.iftttId
+            } else {
+                item.mid = it.customParam.mid
+                item.family_folder = it.customParam.family_folder
+                if (it.devTid.isNotEmpty()) bean.devTid = it.devTid
+                if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
+                if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
+                bean.newDesc = it.newDesc
+                bean.cmdArgs = it.cmdArgs
+            }
+            bean.customParam = item
+            bean.desc = it.desc
+            list.add(bean)
+        }
+
         val map = HashMap<String, Any>()
         map["sceneId"] = sceneId
         map["sceneName"] = sceneName
-        map["sceneTaskList"] = sceneTaskList
-        map["icon"] = icon
-        map["oneKeyType"] = oneKeyType
+        if (icon.isNotEmpty()) map["icon"] = icon
+        if (oneKeyType != 0) map["oneKeyType"] = oneKeyType
+        map["sceneTaskList"] = list
 
         if (!preset.isNullOrEmpty()) {
             preset.forEach { (t, u) -> map[t] = u }
         }
-        var json: String = JsonUtils.toJson(map)
-        try {
-            val jsonObject = JSONObject(json)
-            val sceneTaskLists = jsonObject.getJSONArray("sceneTaskList")
-            val sceneTaskLists2 = JSONArray()
-            for (i in 0 until sceneTaskLists.length()) {
-                val jb = sceneTaskLists.getJSONObject(i)
-                val cmdArgs = jb.getJSONObject("cmdArgs")
-                val cmdArgs2 = JSONObject()
-                val keys = cmdArgs.keys()
-                while (keys.hasNext()) {
-                    val key = keys.next()
-                    val value = cmdArgs[key].toString()
-                    if (value.matches(Regex("^[0-9]*$"))) {
-                        cmdArgs2.put(key, value.toInt())
-                    } else {
-                        cmdArgs2.put(key, value)
-                    }
-                }
-                jb.put("cmdArgs", cmdArgs2)
-                sceneTaskLists2.put(jb)
-            }
-            jsonObject.put("sceneTaskList", sceneTaskLists2)
-            json = jsonObject.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val json: String = JsonUtils.toJson(map)
 
-        Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(json)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(json))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { callback.onSuccess() }
                 }
             }
         })

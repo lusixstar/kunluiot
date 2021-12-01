@@ -85,7 +85,7 @@ class OperationListFieldsActivity : BaseActivity() {
                 eventData.ctrlKey = mDeviceBean.ctrlKey
             }
         }
-        eventData.cmdArgsM = getCmdArgs()
+        eventData.cmdArgs = getCmdArgs()
         eventData.desc = getDesc()
         eventData.newDesc = getDesc()
         eventData.customParam = customParamBean
