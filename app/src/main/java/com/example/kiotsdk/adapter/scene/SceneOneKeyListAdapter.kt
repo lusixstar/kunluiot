@@ -24,10 +24,10 @@ class SceneOneKeyListAdapter(list: MutableList<SceneOneKeyBean>) : BaseQuickAdap
             if (item.icon.contains(imageBase64)) {
                 img.setImageBitmap(DemoUtils.base64CodeToBitmap(item.icon.substring(imageBase64.length, item.icon.length)))
             } else {
-                img.setImageResource(R.mipmap.ic_launcher)
+                img.setImageResource(R.mipmap.ic_scene_11)
             }
         } else {
-            img.setImageResource(R.mipmap.ic_launcher)
+            img.setImageResource(R.mipmap.ic_scene_11)
         }
     }
 }

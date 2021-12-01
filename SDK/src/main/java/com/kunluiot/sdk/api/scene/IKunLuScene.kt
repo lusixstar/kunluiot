@@ -35,7 +35,7 @@ interface IKunLuScene {
     /**
      * 删除手动场景
      * */
-    fun deleteOneKeyScene(sceneId: String, callback: ISceneDeleteCallback)
+    fun deleteOneKeyScene(sceneId: String, callback: IResultCallback)
 
     /**
      * 删除使用中的手动场景

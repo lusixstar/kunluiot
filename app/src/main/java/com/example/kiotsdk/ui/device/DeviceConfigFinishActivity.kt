@@ -105,38 +105,6 @@ class DeviceConfigFinishActivity : BaseActivity() {
         })
     }
 
-//    private fun getGatewayData() {
-//        KunLuHomeSdk.deviceImpl.getGateway(true, KunLuDeviceType.DEVICE_GATEWAY, gatewayCallback)
-//    }
-//
-//    private val gatewayCallback = object : IDeviceListCallback {
-//
-//        override fun onSuccess(bean: List<DeviceNewBean>) {
-//            if (!bean.isNullOrEmpty()) {
-//                val list = bean.map {
-//                    val online = if (it.online) "     {在线}" else "     {不在线}"
-//                    "${it.deviceName}$online"
-//                }.toTypedArray()
-//                mGatewayBeanList = bean
-//                mGatewayNameArray = list
-//                showGatewayList(list)
-//            }
-//        }
-//
-//        override fun onError(code: String, error: String) {
-//            toast("code == $code, error == $error")
-//        }
-//    }
-
-    private fun showGatewayList(bean: Array<String>) {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle(resources.getString(R.string.select_gateway))
-        builder.setItems(bean) { dialog, which ->
-
-        }
-        builder.create().show()
-    }
-
     companion object {
         const val DEV_TID = "devTid"
         const val BRANCH_NAMES = "branchNames"

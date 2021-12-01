@@ -12,6 +12,7 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneLinkBean
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeyCustomParam
+import org.jetbrains.anko.selector
 
 /**
  * User: Chris
@@ -25,6 +26,8 @@ class SelectSceneActivity : BaseActivity() {
 
     private lateinit var mAdapter: SelectSceneListAdapter
 
+    private var mIsOneKey = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,35 +37,55 @@ class SelectSceneActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
+        intent?.let { mIsOneKey = it.getBooleanExtra(SelectExecutionActionActivity.IS_ONE_KEY, false) }
+
         initAdapter()
         getData()
     }
 
     private fun getData() {
-        KunLuHomeSdk.sceneImpl.getLinkageSceneList(0, 999, { code, msg -> toastErrorMsg(code, msg) }, { mAdapter.setDiffNewData(it as MutableList<SceneLinkBean>) })
+        if (mIsOneKey) {
+            KunLuHomeSdk.sceneImpl.getLinkageSceneList(0, 999, { code, msg -> toastErrorMsg(code, msg) }, { mAdapter.setDiffNewData(it as MutableList<SceneLinkBean>) })
+        } else {
+            KunLuHomeSdk.sceneImpl.getOneKeySceneList({ code, msg -> toastErrorMsg(code, msg) }, {
+//                mAdapter.setDiffNewData(it as MutableList<SceneLinkBean>)
+            })
+        }
     }
 
     private fun initAdapter() {
-        mAdapter = SelectSceneListAdapter(arrayListOf())
-        mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
-        mBinding.list.adapter = mAdapter
-        mAdapter.setOnItemClickListener { adapter, _, position ->
-            val bean = adapter.getItem(position) as SceneLinkBean
-            gotoNext(bean)
+        if (mIsOneKey) {
+            mAdapter = SelectSceneListAdapter(arrayListOf())
+            mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
+            mBinding.list.adapter = mAdapter
+            mAdapter.setOnItemClickListener { adapter, _, position ->
+                val bean = adapter.getItem(position) as SceneLinkBean
+                gotoNext(bean)
+            }
+        } else {
+
         }
     }
 
     private fun gotoNext(bean: SceneLinkBean) {
-        val customParamBean = SceneOneKeyCustomParam()
-        customParamBean.name = bean.ruleName
-        customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_scene)
-        val eventData = SceneLinkedBean()
-        eventData.customParam = customParamBean
-        eventData.desc = resources.getString(R.string.open_)
-        eventData.iftttId = bean.ruleId
-        eventData.enable = "ENABLE"
-        setResult(Activity.RESULT_OK, intent.putExtra(SCENE, SCENE).putExtra(SCENE_BEAN, eventData))
-        finish()
+        selector("场景开关设置", listOf("开启", "关闭")) { dialog, i ->
+            val customParamBean = SceneOneKeyCustomParam()
+            customParamBean.name = bean.ruleName
+            customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_scene)
+            val eventData = SceneLinkedBean()
+            eventData.customParam = customParamBean
+            eventData.iftttId = bean.ruleId
+            if (i == 0) {
+                eventData.desc = "开启"
+                eventData.enable = "ENABLE"
+            } else {
+                eventData.desc = "关闭"
+                eventData.enable = "DISABLE"
+            }
+            setResult(Activity.RESULT_OK, intent.putExtra(SCENE, SCENE).putExtra(SCENE_BEAN, eventData))
+            dialog.dismiss()
+            finish()
+        }
     }
 
     companion object {

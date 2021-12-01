@@ -60,6 +60,8 @@
     <string name="device_set_wifi_hint">请连接Wi-Fi并输入Wi-Fi</string>
     <string name="please_select_a_wifi_network">请选择一个WiFi网络</string>
     <string name="click_one_button_control_to_perform_the_following_equipment_operation">点击“一键控制”后就执行以下设备操作</string>
+    <string name="perform_the_following_equipment_operations">就执行以下设备操作</string>
+    <string name="when_the_following_conditions_are_met">当满足以下条件</string>
 
 
     <string name="city">城市</string>

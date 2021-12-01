@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.scene.SceneDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
@@ -14,6 +13,7 @@ import com.example.kiotsdk.util.DemoUtils
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
+import com.kunluiot.sdk.bean.scene.SceneStackClassBean
 import com.kunluiot.sdk.callback.IResultCallback
 
 /**
@@ -47,9 +47,9 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
 
         getIntentData()
 
-        mBinding.titleLayout.setOnClickListener { if (mOneKeyType == 0) gotoEditName.launch(Intent(this, SceneOneKeyNameEditActivity::class.java).putExtra(SceneOneKeyNameEditActivity.NAME, mSceneName)) }
+        mBinding.titleLayout.setOnClickListener { if (mOneKeyType == 0) gotoEditName.launch(Intent(this, SceneNameEditActivity::class.java).putExtra(SceneNameEditActivity.NAME, mSceneName)) }
         mBinding.iconLayout.setOnClickListener { if (mOneKeyType == 0) gotoEditIcon.launch(Intent(this, SceneOneKeyIconEditActivity::class.java)) }
-        mBinding.addDevices.setOnClickListener { gotoAddDevices.launch(Intent(this, SelectExecutionActionActivity::class.java)) }
+        mBinding.addDevices.setOnClickListener { gotoAddDevices.launch(Intent(this, SelectExecutionActionActivity::class.java).putExtra(SelectExecutionActionActivity.IS_ONE_KEY, true)) }
         mBinding.next.setOnClickListener { gotoSave() }
 
         initAdapter()
@@ -58,6 +58,10 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
     private fun gotoSave() {
         if (mSceneName.isEmpty()) {
             toastMsg("scene name is empty")
+            return
+        }
+        if (mSelectIcon.isEmpty()) {
+            toastMsg("scene icon is empty")
             return
         }
         if (mAdapter.data.isNullOrEmpty()) {
@@ -71,7 +75,9 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
                 }
 
                 override fun onSuccess() {
-
+                    toastMsg("success")
+                    setResult(Activity.RESULT_OK)
+                    finish()
                 }
             })
         } else {
@@ -88,7 +94,7 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
     }
 
     private fun initAdapter() {
-        mAdapter = SceneDeviceListAdapter(mBean.sceneTaskList.toMutableList())
+        mAdapter = SceneDeviceListAdapter(arrayListOf())
         mBinding.list.adapter = mAdapter
     }
 
@@ -117,7 +123,7 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
 
     private val gotoEditName = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
-            mSceneName = it.data?.getStringExtra(SceneOneKeyNameEditActivity.NAME) ?: ""
+            mSceneName = it.data?.getStringExtra(SceneNameEditActivity.NAME) ?: ""
             mBinding.titleValue.text = "${mSceneName}   >"
         }
     }

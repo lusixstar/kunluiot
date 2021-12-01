@@ -23,6 +23,8 @@ class SelectExecutionActionActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivitySelectExecutionActionBinding
 
+    private var mIsOneKey = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,7 +36,9 @@ class SelectExecutionActionActivity : BaseActivity() {
 
         mBinding.delay.setOnClickListener { showSeekBarBottomDialog() }
         mBinding.device.setOnClickListener { gotoAddDevice.launch(Intent(this, SceneSelectDevicesActivity::class.java)) }
-        mBinding.scene.setOnClickListener { gotoAddScene.launch(Intent(this, SelectSceneActivity::class.java)) }
+        mBinding.scene.setOnClickListener { gotoAddScene.launch(Intent(this, SelectSceneActivity::class.java).putExtra(IS_ONE_KEY, mIsOneKey)) }
+
+        intent?.let { mIsOneKey = it.getBooleanExtra(IS_ONE_KEY, false) }
     }
 
     private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -93,7 +97,7 @@ class SelectExecutionActionActivity : BaseActivity() {
         val eventData = SceneLinkedBean()
         eventData.customParam = customParamBean
         eventData.desc = desc
-        eventData.time = time.toString()
+        eventData.time = time
         setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, eventData))
         finish()
     }
@@ -107,5 +111,7 @@ class SelectExecutionActionActivity : BaseActivity() {
 
         const val DEVICE = "device"
         const val DEVICE_BEAN = "device_bean"
+
+        const val IS_ONE_KEY = "is_one_key"
     }
 }

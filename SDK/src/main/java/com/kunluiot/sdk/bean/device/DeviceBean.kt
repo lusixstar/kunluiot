@@ -64,8 +64,8 @@ data class DeviceOperationProtocolBean(
 @Parcelize
 @Serializable
 data class DeviceOperationFieldsBean(
-    val selectedDesc: String = "",
-    val selectValue: String = "",
+    var selectedDesc: String = "",
+    var selectValue: String = "",
     val operator: String = "",
     val selected: Boolean = false,
     val dataType: String = "",

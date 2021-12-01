@@ -124,7 +124,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.scene.SceneOneKeyNameEditActivity"
+            android:name=".ui.scene.SceneNameEditActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -148,11 +148,15 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.scene.SceneLinkedAddOrEditActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.operation.OperationListActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.operation.OperationFieldsListActivity"
+            android:name=".ui.operation.OperationListFieldsActivity"
             android:screenOrientation="portrait" />
 
     </application>

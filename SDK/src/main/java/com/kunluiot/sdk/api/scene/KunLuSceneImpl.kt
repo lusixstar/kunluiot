@@ -45,7 +45,7 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 删除手动场景
      * */
-    override fun deleteOneKeyScene(sceneId: String, callback: ISceneDeleteCallback) {
+    override fun deleteOneKeyScene(sceneId: String, callback: IResultCallback) {
         SceneRequestUtil.deleteOneKeyScene(sceneId, callback)
     }
 

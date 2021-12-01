@@ -11,7 +11,7 @@ import com.example.kiotsdk.databinding.ActivitySceneOneKeyNameEditBinding
  * Desc:
  */
 
-class SceneOneKeyNameEditActivity : BaseActivity() {
+class SceneNameEditActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivitySceneOneKeyNameEditBinding
 

@@ -1,16 +1,16 @@
 package com.example.kiotsdk.ui.operation
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.adapter.operation.OperationListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationListBinding
-import com.example.kiotsdk.ui.scene.SelectExecutionActionActivity
 import com.kunluiot.sdk.bean.device.DeviceNewBean
-import com.kunluiot.sdk.bean.device.DeviceOperationEnumerationBean
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeyCustomParam
+import org.jetbrains.anko.startActivity
 
 /**
  * User: Chris
@@ -45,42 +45,23 @@ class OperationListActivity : BaseActivity() {
     }
 
     private fun initAdapter() {
-        val list = mList.filter { it.usedForIFTTT && it.frameType == 2 }
-        mAdapter = OperationListAdapter(list.toMutableList())
+        mAdapter = OperationListAdapter(mList)
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
             val bean = adapter.getItem(position) as DeviceOperationProtocolBean
-            gotoNext(bean)
+            gotoAddDevice.launch(Intent(this, OperationListFieldsActivity::class.java).putExtra(DEVICE, mDeviceBean).putExtra(PROTOCOL_BEAN, bean))
         }
     }
 
-    private fun gotoNext(bean: DeviceOperationProtocolBean) {
-        val customParamBean = SceneOneKeyCustomParam()
-        customParamBean.name = if (mDeviceBean.deviceName.isEmpty()) mDeviceBean.name else mDeviceBean.deviceName
-        customParamBean.icon = mDeviceBean.logo
-        customParamBean.mid = mDeviceBean.mid
-        val foldName = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
-        customParamBean.family_folder = mDeviceBean.familyName + "-" + foldName
-
-        val eventData = SceneLinkedBean()
-        eventData.customParam = customParamBean
-        if (mDeviceBean.devType == "SUB") {
-            //子设备
-            val ctrlKey = mDeviceBean.ctrlKey
-            val devTid = mDeviceBean.parentDevTid
-            eventData.devTid = devTid
-            eventData.subDevTid = mDeviceBean.devTid
-            eventData.ctrlKey = ctrlKey
-        } else {
-            eventData.devTid = mDeviceBean.devTid
-            eventData.ctrlKey = mDeviceBean.ctrlKey
+    private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val device = it.data?.getStringExtra(DEVICE_RESULT) ?: ""
+            val deviceBean = it.data?.getParcelableExtra(DEVICE_BEAN_RESULT) ?: SceneLinkedBean()
+            if (device == DEVICE_RESULT) {
+                setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
+                finish()
+            }
         }
-
-        eventData.desc = bean.desc
-        eventData.newDesc = bean.desc
-        eventData.customParam = customParamBean
-        setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, eventData))
-        finish()
     }
 
     companion object {
@@ -88,5 +69,9 @@ class OperationListActivity : BaseActivity() {
         const val DEVICE_BEAN = "device_bean"
 
         const val DEVICE = "device"
+        const val PROTOCOL_BEAN = "protocol_bean"
+
+        const val DEVICE_RESULT = "device_result"
+        const val DEVICE_BEAN_RESULT = "device_bean_result"
     }
 }

@@ -3,6 +3,7 @@ package com.kunluiot.sdk.bean.scene
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
+import java.util.*
 
 
 @Parcelize
@@ -185,7 +186,7 @@ data class SceneOneKeyCustomParam(
 @Serializable
 data class SceneLinkedBean(
     var taskId: String = "",
-    var time: String = "",
+    var time: Int = 0,
     var iftttId: String = "",
     var enable: String = "",
     var devTid: String = "",
@@ -195,6 +196,7 @@ data class SceneLinkedBean(
     var newDesc: String = "",
     var desc: String = "",
     var cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
+    var cmdArgsM: Map<String, Int> = mapOf(),
     var customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
 ) : Parcelable
 

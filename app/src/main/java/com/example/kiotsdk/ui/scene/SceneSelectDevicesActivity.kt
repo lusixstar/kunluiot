@@ -38,7 +38,6 @@ class SceneSelectDevicesActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-
         mBinding.title.setOnClickListener { selectFamily() }
 
         initAdapter()
@@ -59,8 +58,11 @@ class SceneSelectDevicesActivity : BaseActivity() {
     private fun initAdapter() {
         mRoomAdapter = SceneSelectDeviceListAdapter(mutableListOf()) { protocol, bean ->
             val list = arrayListOf<DeviceOperationProtocolBean>()
+            val fList = arrayListOf<DeviceOperationProtocolBean>()
             protocol.forEach { (_, u) -> run { if (!u.fields.isNullOrEmpty()) list.add(u) } }
-            gotoAddDevice.launch(Intent(this, OperationListActivity::class.java).putExtra(OperationListActivity.LIST_BEAN, list).putExtra(OperationListActivity.DEVICE_BEAN, bean))
+            val l = list.filter { it.usedForIFTTT && it.frameType == 2 }
+            fList.addAll(l)
+            gotoAddDevice.launch(Intent(this, OperationListActivity::class.java).putExtra(OperationListActivity.LIST_BEAN, fList).putExtra(OperationListActivity.DEVICE_BEAN, bean))
         }
         mRoomAdapter.setDiffCallback(DiffRoomListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
