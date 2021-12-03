@@ -16,6 +16,11 @@ data class SceneIconBean(
 data class AddTimeConditionBean(
     var select: Boolean = false,
     val id: Int = 0,
-    val name: String = ""
+    val name: String = "",
 )
 
+data class TriggerModeBean(
+    var key: String = "",
+    var value: String = "",
+    var select: Boolean = false,
+)

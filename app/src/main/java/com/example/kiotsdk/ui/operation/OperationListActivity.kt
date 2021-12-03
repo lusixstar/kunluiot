@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.operation.OperationListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationListBinding
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import org.jetbrains.anko.startActivity
 
 /**
  * User: Chris

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffSceneLinkedDeviceListCallback
 import com.example.kiotsdk.adapter.scene.SceneDeviceListAdapter
@@ -106,8 +107,7 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
         mAdapter.setOnItemClickListener { _, _, position ->
             alert("是否删除") {
                 positiveButton("确定") { dialog ->
-                    mAdapter.data.removeAt(position)
-                    mAdapter.notifyItemChanged(position)
+                    mAdapter.removeAt(position)
                     dialog.dismiss()
                 }
             }.show()
@@ -119,20 +119,23 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
             val delay = it.data?.getStringExtra(SelectExecutionActionActivity.DELAY) ?: ""
             if (delay.isNotEmpty()) {
                 val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneLinkedBean()
-                mAdapter.data.add(0, bean)
-                mAdapter.notifyItemInserted(0)
+                mAdapter.data.add(mAdapter.data.size, bean)
+                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
+                XLog.e("bean == $bean")
             }
             val scene = it.data?.getStringExtra(SelectExecutionActionActivity.SCENE) ?: ""
             if (scene.isNotEmpty()) {
                 val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_BEAN) ?: SceneLinkedBean()
-                mAdapter.data.add(0, bean)
-                mAdapter.notifyItemInserted(0)
+                mAdapter.data.add(mAdapter.data.size, bean)
+                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
+                XLog.e("bean == $bean")
             }
             val device = it.data?.getStringExtra(SelectExecutionActionActivity.DEVICE) ?: ""
             if (device.isNotEmpty()) {
                 val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneLinkedBean()
-                mAdapter.data.add(0, bean)
-                mAdapter.notifyItemInserted(0)
+                mAdapter.data.add(mAdapter.data.size, bean)
+                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
+                XLog.e("bean == $bean")
             }
         }
     }

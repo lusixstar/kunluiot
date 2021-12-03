@@ -56,7 +56,6 @@ object UserRequestUtil {
         kalle.param("password", passwd)
         kalle.param("clientType", "ANDROID")
         kalle.param("areaCode", countryCode)
-        kalle.param("pid", "00000000000")
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()

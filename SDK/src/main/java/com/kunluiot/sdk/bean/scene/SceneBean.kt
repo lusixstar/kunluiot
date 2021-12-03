@@ -8,23 +8,23 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class SceneLinkBean(
-    val conditionList: List<Condition> = listOf(),
-    val conditionLogic: String = "",
+    var conditionList: List<SceneConditionListParam> = listOf(),
+    var conditionLogic: String = "",
     val createTime: Long = 0,
-    val cronExpr: String = "",
-    val desc: String = "",
+    var cronExpr: String = "",
+    var desc: String = "",
     val enabled: Boolean = false,
-    val iftttTasks: List<IftttTask> = listOf(),
-    val iftttType: String = "",
+    var iftttTasks: List<SceneLinkedBean> = listOf(),
+    var iftttType: String = "",
     val intervalTime: Int = 0,
     val objectId: ObjectId = ObjectId(),
     val pid: String = "",
     val pushMsg: PushMsg = PushMsg(),
     val ruleId: String = "",
-    val ruleName: String = "",
+    var ruleName: String = "",
     val ruleSort: Int = 0,
-    val timeZoneOffset: Int = 0,
-    val triggerType: String = "",
+    var timeZoneOffset: Int = 0,
+    var triggerType: String = "",
     val uid: String = "",
     val updateTime: Long = 0,
 ) : Parcelable
@@ -32,12 +32,13 @@ data class SceneLinkBean(
 @Parcelize
 @Serializable
 data class Condition(
-    val conDesc: String = "",
-    val ctrlKey: String = "",
-    val customFields: CustomFields = CustomFields(),
-    val devTid: String = "",
-    val thirdDevice: Boolean = false,
-    val triggerParams: List<TriggerParam> = listOf(),
+    var conDesc: String = "",
+    var ctrlKey: String = "",
+    var relation: String = "",
+    var customFields: CustomFields = CustomFields(),
+    var devTid: String = "",
+    var thirdDevice: Boolean = false,
+    var triggerParams: List<TriggerParam> = listOf(),
 ) : Parcelable
 
 @Parcelize
@@ -78,6 +79,7 @@ data class CustomFields(
     val icon: String = "",
     val mid: String = "",
     val name: String = "",
+    var desc: String = "",
 ) : Parcelable
 
 @Parcelize
@@ -102,7 +104,8 @@ data class CustomParam(
 @Serializable
 data class Params(
     val ctrlKey: String = "",
-    val `data`: Data = Data(),
+    val `data`: Map<String, String> = mapOf(),
+//    val `data`: Data = Data(),
     val devTid: String = "",
     val subDevTid: String = "",
     val time: Int = 0,
@@ -148,26 +151,6 @@ data class SceneOneKeyIdBean(
     val timestamp: Int = 0,
 ) : Parcelable
 
-//@Parcelize
-//@Serializable
-//data class SceneOneKeySceneTask(
-//    val cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
-//    val ctrlKey: String = "",
-//    val customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
-//    val desc: String = "",
-//    val devTid: String = "",
-//    val fix: String = "",
-//    val subDevTid: String = "",
-//    val taskId: String = "",
-//) : Parcelable
-
-@Parcelize
-@Serializable
-data class SceneOneKeyCmdArgs(
-    val cmdId: Int = 0,
-    val sw1: Int = 0,
-) : Parcelable
-
 @Parcelize
 @Serializable
 data class SceneOneKeyCustomParam(
@@ -177,7 +160,7 @@ data class SceneOneKeyCustomParam(
     var family_folder: String = "",
     val taskId: String = "",
     val disPlayName: String = "",
-    val devName: String = "",
+    var devName: String = "",
     val desc: String = "",
 ) : Parcelable
 
@@ -185,6 +168,7 @@ data class SceneOneKeyCustomParam(
 @Serializable
 data class SceneLinkedBean(
     var taskId: String = "",
+    var type: String = "",
     var time: Int = 0,
     var iftttId: String = "",
     var enable: String = "",
@@ -194,10 +178,24 @@ data class SceneLinkedBean(
     var thirdPid: String = "",
     var newDesc: String = "",
     var desc: String = "",
-    var cmdArgs: Map<String, Int> = mapOf(),
+    var params: SceneLinkedParamsBean = SceneLinkedParamsBean(),
+    var cmdArgs: Map<String, String> = mapOf(),
+    var cmdArgsLink: Map<String, String> = mapOf(),
 //    var cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
     var customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
 ) : Parcelable
+
+@Parcelize
+@Serializable
+data class SceneLinkedParamsBean(
+    var ctrlKey: String = "",
+    var subDevTid: String = "",
+    var `data`: Map<String, String> = mapOf(),
+//    var `data`: SceneStackLinkedData? = null,
+    var devTid: String = "",
+    var sceneId: String = "",
+    var time: Int = 0,
+): Parcelable
 
 @Parcelize
 @Serializable

@@ -1,7 +1,11 @@
 package com.example.kiotsdk.ui.scene
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffSceneLinkedListCallback
 import com.example.kiotsdk.adapter.scene.SceneLinkedListAdapter
@@ -9,10 +13,8 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneLinkedBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneLinkBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
 import com.kunluiot.sdk.callback.IResultCallback
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.startActivity
 
 /**
  * User: Chris
@@ -35,10 +37,16 @@ class SceneLinkedActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        mBinding.add.setOnClickListener { startActivity<SceneLinkedAddOrEditActivity>(SceneLinkedAddOrEditActivity.IS_ADD to true) }
+        mBinding.add.setOnClickListener { gotoLinkedAddOrEdit.launch(Intent(this, SceneLinkedAddOrEditActivity::class.java).putExtra(SceneLinkedAddOrEditActivity.IS_ADD, true)) }
 
         initAdapter()
         getData()
+    }
+
+    private val gotoLinkedAddOrEdit = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            getData()
+        }
     }
 
     private fun getData() {
@@ -46,7 +54,8 @@ class SceneLinkedActivity : BaseActivity() {
     }
 
     private fun setData(list: List<SceneLinkBean> = listOf()) {
-        mAdapter.setDiffNewData(list as MutableList<SceneLinkBean>)
+        mAdapter.data.clear()
+        mAdapter.addData(list as MutableList<SceneLinkBean>)
     }
 
     private fun initAdapter() {
@@ -54,15 +63,15 @@ class SceneLinkedActivity : BaseActivity() {
         mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.list.adapter = mAdapter
-        mAdapter.addChildClickViewIds(R.id.edit, R.id.play)
+        mAdapter.addChildClickViewIds(R.id.edit, R.id.off)
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             val bean = adapter.getItem(position) as SceneLinkBean
             when (view.id) {
                 R.id.edit -> {
-                    startActivity<SceneLinkedAddOrEditActivity>(SceneLinkedAddOrEditActivity.BEAN to bean)
+                    gotoLinkedAddOrEdit.launch(Intent(this, SceneLinkedAddOrEditActivity::class.java).putExtra(SceneLinkedAddOrEditActivity.BEAN, bean))
                 }
-                R.id.play -> {
-                    toastMsg("play")
+                R.id.off -> {
+                    KunLuHomeSdk.sceneImpl.updateLinkageScene(bean.ruleId, bean.enabled, bean, { code, msg -> toastErrorMsg(code, msg) }, { getData() })
                 }
             }
         }

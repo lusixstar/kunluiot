@@ -8,6 +8,7 @@ object KotlinSerializationUtils {
     val json = Json {
         coerceInputValues = true
         ignoreUnknownKeys = true
+        isLenient = true
     }
 
     inline fun <reified T> getJsonData(str: String = ""): T {

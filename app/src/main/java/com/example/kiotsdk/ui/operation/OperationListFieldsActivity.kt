@@ -6,7 +6,7 @@ import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.operation.OperationFieldsListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationFieldsListBinding
-import com.example.kiotsdk.ui.scene.SelectExecutionActionActivity
+import com.example.kiotsdk.widget.SeekBarBottomDialog
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceOperationFieldsBean
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
@@ -69,6 +69,7 @@ class OperationListFieldsActivity : BaseActivity() {
     private fun gotoNext() {
         val customParamBean = SceneOneKeyCustomParam()
         customParamBean.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+        customParamBean.devName = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
         customParamBean.icon = mDeviceBean.logo
         customParamBean.mid = mDeviceBean.mid
         val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
@@ -76,16 +77,19 @@ class OperationListFieldsActivity : BaseActivity() {
         val eventData = SceneLinkedBean()
         when (mDeviceBean.devType) {
             "SUB" -> {
+                eventData.type = "APPSUBSEND"
                 eventData.devTid = mDeviceBean.parentDevTid
                 eventData.subDevTid = mDeviceBean.devTid
                 eventData.ctrlKey = mDeviceBean.ctrlKey
             }
             else -> {
+                eventData.type = "APPSEND"
                 eventData.devTid = mDeviceBean.devTid
                 eventData.ctrlKey = mDeviceBean.ctrlKey
             }
         }
         eventData.cmdArgs = getCmdArgs()
+        eventData.cmdArgsLink = getCmdArgsLink()
         eventData.desc = getDesc()
         eventData.newDesc = getDesc()
         eventData.customParam = customParamBean
@@ -107,14 +111,23 @@ class OperationListFieldsActivity : BaseActivity() {
         return desc
     }
 
-    private fun getCmdArgs(): Map<String, Int> {
-        val cmdArgMap: MutableMap<String, Int> = HashMap()
-        cmdArgMap["cmdId"] = mProtocolBean.cmdId
+    private fun getCmdArgs(): Map<String, String> {
+        val cmdArgMap: MutableMap<String, String> = HashMap()
+        cmdArgMap["cmdId"] = mProtocolBean.cmdId.toString()
         for (item in mProtocolBean.fields) {
             val value: String = item.selectValue
             if (value.matches(Regex("^[0-9]*$"))) {
-                cmdArgMap[item.name] = item.selectValue.toInt()
+                cmdArgMap[item.name] = item.selectValue
             }
+        }
+        return cmdArgMap
+    }
+
+    private fun getCmdArgsLink(): Map<String, String> {
+        val cmdArgMap: MutableMap<String, String> = HashMap()
+        cmdArgMap["cmdId"] = mProtocolBean.cmdId.toString()
+        for (item in mProtocolBean.fields) {
+            cmdArgMap[item.name] = item.selectValue
         }
         return cmdArgMap
     }
@@ -129,6 +142,24 @@ class OperationListFieldsActivity : BaseActivity() {
                 dialog.dismiss()
                 gotoNext()
             }
+        } else {
+            val dialog = SeekBarBottomDialog(this)
+            dialog.show()
+            dialog.setTitleName(mProtocolBean.desc)
+            dialog.setTitleSubName(bean.desc)
+            dialog.setCurrProgress(bean.selectValue.toInt())
+            dialog.setMaxProgress(bean.maxValue.toInt())
+            dialog.setMinProgress(bean.minValue)
+            dialog.setOnDialogClickListener(object : SeekBarBottomDialog.OnDialogClickListener {
+                override fun onFinishClick(selectProgress: Int) {
+                    bean.selectValue = selectProgress.toString()
+                    bean.selectedDesc = selectProgress.toString()
+                    gotoNext()
+                }
+
+                override fun onDismissClick() {
+                }
+            })
         }
     }
 }

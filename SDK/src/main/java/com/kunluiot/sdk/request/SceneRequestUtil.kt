@@ -1,9 +1,11 @@
 package com.kunluiot.sdk.request
 
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
 import com.kunluiot.sdk.callback.scene.SceneLinkedListResult
 import com.kunluiot.sdk.callback.scene.SceneListResult
@@ -12,8 +14,6 @@ import com.kunluiot.sdk.thirdlib.kalle.Kalle
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.KotlinSerializationUtils
-import org.json.JSONArray
-import org.json.JSONObject
 import java.util.*
 
 object SceneRequestUtil {
@@ -80,7 +80,11 @@ object SceneRequestUtil {
                 if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
                 if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
                 bean.newDesc = it.newDesc
-                bean.cmdArgs = it.cmdArgs
+                val map = mutableMapOf<String, Long>()
+                it.cmdArgs.forEach { (t, u) ->
+                    map[t] = u.toLong()
+                }
+                if (map.isNullOrEmpty()) bean.cmdArgs = map
             }
             bean.customParam = item
             bean.desc = it.desc
@@ -97,6 +101,7 @@ object SceneRequestUtil {
             preset.forEach { (t, u) -> map[t] = u }
         }
         val json: String = JsonUtils.toJson(map)
+
         val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.body(JsonBody(json))
@@ -135,7 +140,11 @@ object SceneRequestUtil {
                 if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
                 if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
                 bean.newDesc = it.newDesc
-                bean.cmdArgs = it.cmdArgs
+                val map = mutableMapOf<String, Long>()
+                it.cmdArgs.forEach { (t, u) ->
+                    map[t] = u.toLong()
+                }
+                if (map.isNullOrEmpty()) bean.cmdArgs = map
             }
             bean.customParam = item
             bean.desc = it.desc
@@ -153,7 +162,6 @@ object SceneRequestUtil {
             preset.forEach { (t, u) -> map[t] = u }
         }
         val json: String = JsonUtils.toJson(map)
-
         val kalle = Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId")
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.body(JsonBody(json))
@@ -173,7 +181,9 @@ object SceneRequestUtil {
      * 删除手动场景
      * */
     fun deleteOneKeyScene(sceneId: String, callback: IResultCallback) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
@@ -223,41 +233,92 @@ object SceneRequestUtil {
     /**
      * 新增联动场景
      * */
-    fun addLinkageScene(bean: SceneAddOneKeyBean, callback: IResultCallback) {
+    fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
 
-        var json = JsonUtils.toJson(bean)
-        try {
-            val jsonObject = JSONObject(json)
-            val conditionList = jsonObject.getJSONArray("conditionList")
-            val conditionList1 = JSONArray()
-            for (k in 0 until conditionList.length()) {
-                val obj = conditionList.getJSONObject(k)
-                val jsonArray = obj.getJSONArray("triggerParams")
-                val jsonArray1 = JSONArray()
-                for (i in 0 until jsonArray.length()) {
-                    val jb = jsonArray.getJSONObject(i)
-                    val right = jb.getString("right")
-                    if (right.matches(Regex("^[0-9]*$"))) {
-                        jb.put("right", right.toInt())
-                    }
-                    jsonArray1.put(jb)
+        val info = SceneStackLinkedBean()
+        info.timeZoneOffset = bean.timeZoneOffset
+        info.ruleName = bean.ruleName
+        info.iftttType = bean.iftttType
+        info.enabled = bean.enabled
+        info.conditionLogic = bean.conditionLogic
+        info.cronExpr = bean.cronExpr
+        info.desc = bean.desc
+        info.triggerType = bean.triggerType
+
+        if (!bean.iftttTasks.isNullOrEmpty()) {
+            val iftttTasks = mutableListOf<SceneStackLinkedIftttTask>()
+            bean.iftttTasks.forEach { ifttt ->
+                val cp = SceneStackLinkedCustomParam()
+                if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
+                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+                if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
+                if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
+                if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
+                val p = SceneStackLinkedParams()
+                if (ifttt.time != 0) p.time = ifttt.time
+                if (ifttt.iftttId.isNotEmpty()) p.sceneId = ifttt.iftttId
+                if (ifttt.devTid.isNotEmpty()) p.devTid = ifttt.devTid
+                if (ifttt.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.ctrlKey
+                if (ifttt.subDevTid.isNotEmpty()) p.subDevTid = ifttt.subDevTid
+                if (!ifttt.cmdArgsLink.isNullOrEmpty()) {
+                    val da = mutableMapOf<String, Long>()
+                    ifttt.cmdArgsLink.forEach { (t, u) -> da[t] = u.toLong() }
+                    p.data = da
                 }
-                obj.put("triggerParams", jsonArray1)
-                conditionList1.put(obj)
+                val b = SceneStackLinkedIftttTask()
+                b.desc = ifttt.desc
+                b.customParam = cp
+                b.params = p
+                b.type = ifttt.type
+                iftttTasks.add(b)
             }
-            jsonObject.put("conditionList", conditionList1)
-            json = jsonObject.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            info.iftttTasks = iftttTasks
         }
 
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(json)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        if (!bean.conditionList.isNullOrEmpty()) {
+            val conditionList = mutableListOf<SceneStackLinkedCondition>()
+            bean.conditionList.forEach { cond ->
+                val sct = SceneStackLinkedCondition()
+                cond.devTid?.let { sct.devTid = cond.devTid }
+                cond.ctrlKey?.let { sct.ctrlKey = cond.ctrlKey }
+                cond.conDesc?.let { sct.conDesc = cond.conDesc }
+                cond.relation?.let { sct.relation = cond.relation }
+                val cf = SceneStackLinkedCustomFields()
+                cond.customFields?.let { condcf ->
+                    if (condcf.name.isNotEmpty()) cf.name = condcf.name
+                    if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
+                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+                    if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
+                }
+                sct.customFields = cf
+                if (!cond.triggerParams.isNullOrEmpty()) {
+                    val stpList = mutableListOf<SceneStackLinkedTriggerParam>()
+                    cond.triggerParams!!.forEach { condstp ->
+                        val stp = SceneStackLinkedTriggerParam()
+                        condstp.left?.let { stp.left = condstp.left }
+                        condstp.right?.let { stp.right = condstp.right }
+                        condstp.operator?.let { stp.operator = condstp.operator }
+                        stpList.add(stp)
+                    }
+                    sct.triggerParams = stpList
+                }
+                conditionList.add(sct)
+            }
+            info.conditionList = conditionList
+        }
+
+        val json: String = JsonUtils.toJson(info)
+
+        val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(json))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -266,41 +327,94 @@ object SceneRequestUtil {
     /**
      * 编辑联动场景
      * */
-    fun updateLinkageScene(ruleId: String, enable: Boolean, bean: SceneAddOneKeyBean, callback: IResultCallback) {
+    fun updateLinkageScene(ruleId: String, enable: Boolean, bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
 
-        var json = JsonUtils.toJson(bean)
-        try {
-            val jsonObject = JSONObject(json)
-            val conditionList = jsonObject.getJSONArray("conditionList")
-            val conditionList1 = JSONArray()
-            for (k in 0 until conditionList.length()) {
-                val obj = conditionList.getJSONObject(k)
-                val jsonArray = obj.getJSONArray("triggerParams")
-                val jsonArray1 = JSONArray()
-                for (i in 0 until jsonArray.length()) {
-                    val jb = jsonArray.getJSONObject(i)
-                    val right = jb.getString("right")
-                    if (right.matches(Regex("^[0-9]*$"))) {
-                        jb.put("right", right.toInt())
-                    }
-                    jsonArray1.put(jb)
+        val info = SceneStackLinkedBean()
+        info.timeZoneOffset = bean.timeZoneOffset
+        info.ruleName = bean.ruleName
+        info.iftttType = bean.iftttType
+        info.enabled = enable
+        info.conditionLogic = bean.conditionLogic
+        info.cronExpr = bean.cronExpr
+        info.desc = bean.desc
+        info.triggerType = bean.triggerType
+
+        if (!bean.iftttTasks.isNullOrEmpty()) {
+            val iftttTasks = mutableListOf<SceneStackLinkedIftttTask>()
+            bean.iftttTasks.forEach { ifttt ->
+                val cp = SceneStackLinkedCustomParam()
+                if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
+//                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+                if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
+                if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
+                if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
+                val p = SceneStackLinkedParams()
+                if (ifttt.params.time != 0) p.time = ifttt.params.time
+                if (ifttt.params.sceneId.isNotEmpty()) p.sceneId = ifttt.params.sceneId
+                if (ifttt.params.devTid.isNotEmpty()) p.devTid = ifttt.params.devTid
+                if (ifttt.params.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.params.ctrlKey
+                if (ifttt.params.subDevTid.isNotEmpty()) p.subDevTid = ifttt.params.subDevTid
+                if (!ifttt.params.data.isNullOrEmpty()) {
+                    val da = mutableMapOf<String, String>()
+                    ifttt.params.data.forEach { (t, u) -> da[t] = u }
+                    p.data = da
                 }
-                obj.put("triggerParams", jsonArray1)
-                conditionList1.put(obj)
+                val b = SceneStackLinkedIftttTask()
+                b.desc = ifttt.desc
+                b.customParam = cp
+                b.params = p
+                b.type = ifttt.type
+                iftttTasks.add(b)
             }
-            jsonObject.put("conditionList", conditionList1)
-            json = jsonObject.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            info.iftttTasks = iftttTasks
         }
 
-        Kalle.put(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ruleId", ruleId).param("enable", enable).body(JsonBody(json)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        if (!bean.conditionList.isNullOrEmpty()) {
+            val conditionList = mutableListOf<SceneStackLinkedCondition>()
+            bean.conditionList.forEach { cond ->
+                val sct = SceneStackLinkedCondition()
+                cond.devTid?.let { sct.devTid = cond.devTid }
+                cond.ctrlKey?.let { sct.ctrlKey = cond.ctrlKey }
+                cond.conDesc?.let { sct.conDesc = cond.conDesc }
+                cond.relation?.let { sct.relation = cond.relation }
+                val cf = SceneStackLinkedCustomFields()
+                cond.customFields?.let { condcf ->
+                    if (condcf.name.isNotEmpty()) cf.name = condcf.name
+                    if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
+//                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+                    if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
+                }
+                sct.customFields = cf
+                if (!cond.triggerParams.isNullOrEmpty()) {
+                    val stpList = mutableListOf<SceneStackLinkedTriggerParam>()
+                    cond.triggerParams!!.forEach { condstp ->
+                        val stp = SceneStackLinkedTriggerParam()
+                        condstp.left?.let { stp.left = condstp.left }
+                        condstp.right?.let { stp.right = condstp.right }
+                        condstp.operator?.let { stp.operator = condstp.operator }
+                        stpList.add(stp)
+                    }
+                    sct.triggerParams = stpList
+                }
+                conditionList.add(sct)
+            }
+            info.conditionList = conditionList
+        }
+
+        val json: String = JsonUtils.toJson(info)
+        XLog.e("bean == $bean")
+        XLog.e("json == $json")
+        val kalle = Kalle.put(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.urlParam("ruleId", ruleId)
+        kalle.body(JsonBody(json))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -310,7 +424,10 @@ object SceneRequestUtil {
      * 删除联动场景
      * */
     fun deleteLinkageScene(ruleId: String, callback: IResultCallback) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_DELETE_LINKAGE_SCENE).setHeaders(KunLuHelper.getSign()).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ruleId", ruleId).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_DELETE_LINKAGE_SCENE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.urlParam("ruleId", ruleId)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {

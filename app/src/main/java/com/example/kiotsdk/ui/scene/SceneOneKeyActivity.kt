@@ -19,7 +19,6 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.util.JsonUtils
 import org.java_websocket.framing.Framedata
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.startActivity
 import java.nio.ByteBuffer
 import java.util.*
 
@@ -89,7 +88,8 @@ class SceneOneKeyActivity : BaseActivity() {
     }
 
     private fun setData(list: List<SceneOneKeyBean> = listOf()) {
-        mAdapter.setDiffNewData(list as MutableList<SceneOneKeyBean>)
+        mAdapter.data.clear()
+        mAdapter.addData(list as MutableList<SceneOneKeyBean>)
     }
 
     private fun initAdapter() {

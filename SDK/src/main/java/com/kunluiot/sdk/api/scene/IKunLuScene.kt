@@ -1,11 +1,9 @@
 package com.kunluiot.sdk.api.scene
 
-import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
-import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
+import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.scene.*
 
 interface IKunLuScene {
@@ -50,12 +48,12 @@ interface IKunLuScene {
     /**
      * 新增联动场景
      * */
-    fun addLinkageScene(bean: SceneAddOneKeyBean, callback: IResultCallback)
+    fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 编辑联动场景
      * */
-    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneAddOneKeyBean, callback: IResultCallback)
+    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除联动场景

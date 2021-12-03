@@ -24,13 +24,16 @@ class SceneSelectDeviceRoomItemAdapter(list: MutableList<DeviceNewBean>, private
 
     private fun getProtocol(productPublicKey: String, text: TextView, next: TextView, itemView: View, item: DeviceNewBean) {
         KunLuHomeSdk.deviceImpl.getDeviceOperationList(productPublicKey, { _, _ -> }, { info ->
+            text.setTextColor(text.context.resources.getColor(R.color.picture_color_light_grey))
+            next.isGone = true
             if (!info.protocol.isNullOrEmpty()) {
-                text.setTextColor(text.context.resources.getColor(R.color.black))
-                next.isGone = false
-                itemView.setOnClickListener { gotoNext.invoke(info.protocol, item) }
-            } else {
-                text.setTextColor(text.context.resources.getColor(R.color.picture_color_light_grey))
-                next.isGone = true
+                info.protocol.forEach { (_, u) ->
+                    if (!u.fields.isNullOrEmpty() && u.usedForIFTTT) {
+                        text.setTextColor(text.context.resources.getColor(R.color.black))
+                        next.isGone = false
+                        itemView.setOnClickListener { gotoNext.invoke(info.protocol, item) }
+                    }
+                }
             }
         })
     }

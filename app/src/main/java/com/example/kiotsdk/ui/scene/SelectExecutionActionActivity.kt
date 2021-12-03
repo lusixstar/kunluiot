@@ -55,9 +55,15 @@ class SelectExecutionActionActivity : BaseActivity() {
     private val gotoAddScene = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val scene = it.data?.getStringExtra(SelectSceneActivity.SCENE) ?: ""
-            val sceneBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_BEAN) ?: SceneLinkedBean()
             if (scene == SelectSceneActivity.SCENE) {
+                val sceneBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_BEAN) ?: SceneLinkedBean()
                 setResult(Activity.RESULT_OK, intent.putExtra(SCENE, SCENE).putExtra(SCENE_BEAN, sceneBean))
+                finish()
+            }
+            val sceneLink = it.data?.getStringExtra(SelectSceneActivity.SCENE_LINK) ?: ""
+            if (sceneLink == SelectSceneActivity.SCENE_LINK) {
+                val sceneLinkBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_LINK_BEAN) ?: SceneLinkedBean()
+                setResult(Activity.RESULT_OK, intent.putExtra(SCENE_LINK, SCENE_LINK).putExtra(SCENE_LINK_BEAN, sceneLinkBean))
                 finish()
             }
         }
@@ -98,6 +104,7 @@ class SelectExecutionActionActivity : BaseActivity() {
         eventData.customParam = customParamBean
         eventData.desc = desc
         eventData.time = time
+        eventData.type = "DALAYTIME"
         setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, eventData))
         finish()
     }
@@ -108,6 +115,9 @@ class SelectExecutionActionActivity : BaseActivity() {
 
         const val SCENE = "scene"
         const val SCENE_BEAN = "scene_bean"
+
+        const val SCENE_LINK = "scene_link"
+        const val SCENE_LINK_BEAN = "scene_link_bean"
 
         const val DEVICE = "device"
         const val DEVICE_BEAN = "device_bean"

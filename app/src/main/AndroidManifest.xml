@@ -156,11 +156,19 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.scene.SceneSelectConditionDevicesActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.operation.OperationListActivity"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.operation.OperationListFieldsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.operation.OperationLinkedListActivity"
             android:screenOrientation="portrait" />
 
     </application>

@@ -14,13 +14,25 @@ class SceneLinkedListAdapter(list: MutableList<SceneLinkBean>) : BaseQuickAdapte
     override fun convert(holder: BaseViewHolder, item: SceneLinkBean) {
 
         holder.setText(R.id.name, item.ruleName)
-        holder.setText(R.id.content, item.desc)
+
+        var desc = ""
+        if (item.triggerType == "SCHEDULER") {
+            for (conditionItem in item.conditionList) {
+                desc = conditionItem.customFields?.name + conditionItem.conDesc
+            }
+        } else {
+            for (conditionItem in item.conditionList) {
+                val subDesc: String = conditionItem.customFields?.desc ?: conditionItem.conDesc ?: ""
+                desc = conditionItem.customFields?.devName + subDesc
+            }
+        }
+        holder.setText(R.id.content, desc)
 
         val img = holder.getView<AppCompatImageView>(R.id.off)
         if (item.enabled) {
             img.setImageResource(R.mipmap.ic_fragment_device_switch_on)
         } else {
-            img.setImageResource(R.mipmap.ic_fragment_device_switch_on)
+            img.setImageResource(R.mipmap.ic_fragment_device_switch_off)
         }
     }
 }

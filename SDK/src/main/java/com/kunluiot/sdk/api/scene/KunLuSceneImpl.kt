@@ -1,11 +1,9 @@
 package com.kunluiot.sdk.api.scene
 
-import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
-import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
+import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.scene.*
 import com.kunluiot.sdk.request.SceneRequestUtil
 
@@ -66,15 +64,15 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 新增联动场景
      * */
-    override fun addLinkageScene(bean: SceneAddOneKeyBean, callback: IResultCallback) {
-        SceneRequestUtil.addLinkageScene(bean, callback)
+    override fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.addLinkageScene(bean, fail, success)
     }
 
     /**
      * 编辑联动场景
      * */
-    override fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneAddOneKeyBean, callback: IResultCallback) {
-        SceneRequestUtil.updateLinkageScene(ruleId, enable, data, callback)
+    override fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.updateLinkageScene(ruleId, enable, data, fail, success)
     }
 
     /**

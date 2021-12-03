@@ -62,6 +62,7 @@
     <string name="click_one_button_control_to_perform_the_following_equipment_operation">点击“一键控制”后就执行以下设备操作</string>
     <string name="perform_the_following_equipment_operations">就执行以下设备操作</string>
     <string name="when_the_following_conditions_are_met">当满足以下条件</string>
+    <string name="gear_setting">档位设置</string>
 
 
     <string name="city">城市</string>
@@ -79,6 +80,12 @@
     <string name="sure_">确认</string>
     <string name="open_">开启</string>
     <string name="close">关闭</string>
+    <string name="greater_than">大于</string>
+    <string name="less_than">小于</string>
+    <string name="in_the_interval">在区间</string>
+    <string name="upper_limit_of_interval">区间上限</string>
+    <string name="lower_limit_of_interval">区间下限</string>
+    <string name="the_upper_limit_of_interval_cannot_be_greater_than_the_lower_limit">区间下限不能大于区间上限</string>
 
 
     <string name="select_delay">选择延时</string>
@@ -101,6 +108,9 @@
     <string name="effective_period">生效时间段</string>
     <string name="by_the_next_day">到第二天</string>
     <string name="reach">到</string>
+    <string name="trigger_mode">触发方式</string>
+    <string name="any_of_the_following_conditions_are_satisfied">满足以下任意条件</string>
+    <string name="all_of_the_following_conditions_are_met">满足以下所有条件</string>
 
 
     <string name="countdown_of_distribution_network">配网倒计时</string>
