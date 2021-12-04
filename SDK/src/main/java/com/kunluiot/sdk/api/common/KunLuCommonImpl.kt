@@ -1,12 +1,21 @@
 package com.kunluiot.sdk.api.common
 
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.common.ICommonMsgListCallback
-import com.kunluiot.sdk.callback.common.ICommonProblemCallback
-import com.kunluiot.sdk.callback.common.ICommonThirdPlatformCallback
+import com.kunluiot.sdk.callback.common.*
 import com.kunluiot.sdk.request.CommonRequestUtil
 
 internal class KunLuCommonImpl : IKunLuCommon {
+
+
+    /**
+     * 下载文件
+     * */
+    override fun downloadsUrlFile(url: String, fail: OnFailResult, success: OnSuccessStrResult) {
+        CommonRequestUtil.downloadsUrlFile(url, fail, success)
+    }
+
+
+    // ----------------------------------------
 
     /**
      * 常见问题列表
@@ -63,6 +72,8 @@ internal class KunLuCommonImpl : IKunLuCommon {
     override fun getBindThirdPlatformList(callback: ICommonThirdPlatformCallback) {
         CommonRequestUtil.getBindThirdPlatformList(callback)
     }
+
+
 
 
 }

@@ -1,12 +1,10 @@
 package com.kunluiot.sdk.api.scene
 
-import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
-import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
+import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
-import com.kunluiot.sdk.callback.scene.ISceneListCallback
-import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
+import com.kunluiot.sdk.callback.scene.*
 import com.kunluiot.sdk.request.SceneRequestUtil
 
 internal class KunLuSceneImpl : IKunLuScene {
@@ -14,28 +12,38 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 手动场景列表
      */
-    override fun getOneKeySceneList(callback: ISceneListCallback) {
-        SceneRequestUtil.getOneKeySceneList(callback)
+    override fun getOneKeySceneList(fail: OnFailResult, success: SceneListResult) {
+        SceneRequestUtil.getOneKeySceneList(fail, success)
     }
+
+    /**
+     * 获取预设情景面板
+     */
+    override fun getSceneTemplate(fail: OnFailResult, success: SceneListResult) {
+        SceneRequestUtil.getSceneTemplate(fail, success)
+    }
+
+    // -----------------------------------------------------------------
+
 
     /**
      * 新增手动场景
      */
-    override fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
+    override fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
         SceneRequestUtil.addOneKeyScene(oneKeyType, icon, sceneName, sceneTaskList, preset, templateId, callback)
     }
 
     /**
      * 编辑手动场景
      */
-    override fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, callback: IResultCallback) {
+    override fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback) {
         SceneRequestUtil.updateOneKeyScene(sceneId, oneKeyType, icon, sceneName, sceneTaskList, preset, callback)
     }
 
     /**
      * 删除手动场景
      * */
-    override fun deleteOneKeyScene(sceneId: String, callback: ISceneDeleteCallback) {
+    override fun deleteOneKeyScene(sceneId: String, callback: IResultCallback) {
         SceneRequestUtil.deleteOneKeyScene(sceneId, callback)
     }
 
@@ -49,22 +57,22 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 联动场景列表
      */
-    override fun getLinkageSceneList(page: Int, size: Int, callback: ISceneListCallback) {
-        SceneRequestUtil.getLinkageSceneList(page, size, callback)
+    override fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult) {
+        SceneRequestUtil.getLinkageSceneList(page, size, fail, success)
     }
 
     /**
      * 新增联动场景
      * */
-    override fun addLinkageScene(bean: SceneAddOneKeyBean, callback: IResultCallback) {
-        SceneRequestUtil.addLinkageScene(bean, callback)
+    override fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.addLinkageScene(bean, fail, success)
     }
 
     /**
      * 编辑联动场景
      * */
-    override fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneAddOneKeyBean, callback: IResultCallback) {
-        SceneRequestUtil.updateLinkageScene(ruleId, enable, data, callback)
+    override fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.updateLinkageScene(ruleId, enable, data, fail, success)
     }
 
     /**

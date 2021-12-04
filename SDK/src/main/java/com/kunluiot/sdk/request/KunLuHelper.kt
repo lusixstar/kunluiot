@@ -1,10 +1,21 @@
 package com.kunluiot.sdk.request
 
+import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.thirdlib.kalle.Headers
+import com.kunluiot.sdk.util.FileUtil
 import com.kunluiot.sdk.util.HMACSHA256
 import java.util.*
 
 internal object KunLuHelper {
+
+    const val CACHE_DIR_NAME = "kunlu"
+    const val CACHE_URL_NAME = "url"
+    const val CACHE_INDEX_HTML = "index.html"
+    const val CACHE_ZIP = "pck.zip"
+
+    const val LOCAL_FILE_PRE = "file://"
+
+    val INJECT_JS = FileUtil.getStringFromAssets(KunLuHomeSdk.instance.getApp(), "inject.js")
 
     private const val lang = "cn"
     private const val accessId = "db96ba0828a146498165f4de8b37dca0"

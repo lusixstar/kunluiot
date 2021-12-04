@@ -15,6 +15,11 @@
  */
 package com.kunluiot.sdk.thirdlib.kalle.simple;
 
+import static com.kunluiot.sdk.thirdlib.kalle.Headers.KEY_IF_MODIFIED_SINCE;
+import static com.kunluiot.sdk.thirdlib.kalle.Headers.KEY_IF_NONE_MATCH;
+
+import android.util.Log;
+
 import com.kunluiot.sdk.thirdlib.kalle.Headers;
 import com.kunluiot.sdk.thirdlib.kalle.Kalle;
 import com.kunluiot.sdk.thirdlib.kalle.Response;
@@ -28,9 +33,6 @@ import com.kunluiot.sdk.thirdlib.kalle.util.IOUtils;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.concurrent.Callable;
-
-import static com.kunluiot.sdk.thirdlib.kalle.Headers.KEY_IF_MODIFIED_SINCE;
-import static com.kunluiot.sdk.thirdlib.kalle.Headers.KEY_IF_NONE_MATCH;
 
 /**
  * Created by Zhenjie Yan on 2018/2/18.
@@ -56,6 +58,7 @@ abstract class BasicWorker<T extends SimpleRequest, Succeed, Failed>
 
     @Override
     public final SimpleResponse<Succeed, Failed> call() throws Exception {
+        Log.d("BasicWorker", "SimpleResponse start");
         Response response = tryReadCacheBefore();
         if (response != null) return buildSimpleResponse(response, true);
 

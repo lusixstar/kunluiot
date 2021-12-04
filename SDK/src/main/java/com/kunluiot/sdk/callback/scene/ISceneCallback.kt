@@ -1,8 +1,23 @@
 package com.kunluiot.sdk.callback.scene
 
-import com.kunluiot.sdk.bean.scene.SceneDeleteBean
-import com.kunluiot.sdk.bean.scene.SceneListBean
-import com.kunluiot.sdk.bean.scene.SceneNewPlayBean
+import com.kunluiot.sdk.bean.scene.*
+
+/**
+ * 场景列表
+ * */
+fun interface SceneListResult {
+    fun success(bean: List<SceneOneKeyBean>)
+}
+
+/**
+ * 场景列表
+ * */
+fun interface SceneLinkedListResult {
+    fun success(bean: List<SceneLinkBean>)
+}
+
+
+// -------------------------------------
 
 /**
  * 场景列表

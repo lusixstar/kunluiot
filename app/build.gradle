@@ -57,5 +57,7 @@ dependencies {
 
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
+
     implementation project(':SDK')
 }

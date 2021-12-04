@@ -1,19 +1,25 @@
 package com.kunluiot.sdk.bean.user
 
-import com.google.gson.annotations.SerializedName
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+/**
+ * 登录
+ */
+@Serializable
 data class SessionBean(
-    @SerializedName("access_token") var accessToken: String = "",
-    @SerializedName("refresh_token") var refreshToken: String = "",
-    @SerializedName("token_type") var tokenType: String = "",
-    @SerializedName("expires_in") var expiresIn: Int = 0,
+    @SerialName("access_token") var accessToken: String = "",
+    @SerialName("refresh_token") var refreshToken: String = "",
+    @SerialName("token_type") var tokenType: String = "",
+    @SerialName("expires_in") var expiresIn: Int = 0,
     var user: String = "",
 )
 
 /**
  * 图像验证
  * */
+@Serializable
 data class VerifyImageBean(
     val rid: String = "",
     val png: String = "",
@@ -22,25 +28,15 @@ data class VerifyImageBean(
 /**
  * 检测图像验证
  * */
+@Serializable
 data class CheckVerifyImageBean(
     val captchaToken: String = "",
 )
 
 /**
- * 用户信息
- * */
-data class User(
-    var name: String = "",
-    var phoneNumber: String = "",
-    var areaCode: String = "",
-    var uid: String = "",
-    var email: String = "",
-    var avatarUrl: UserAvatarInfo = UserAvatarInfo(),
-)
-
-/**
  * 检测验证码
  * */
+@Serializable
 data class VerifyCodeBean(
     var phoneNumber: String = "",
     var verifyCode: String = "",
@@ -52,8 +48,22 @@ data class VerifyCodeBean(
 )
 
 /**
+ * 用户信息
+ * */
+@Serializable
+data class User(
+    var name: String = "",
+    var phoneNumber: String = "",
+    var areaCode: String = "",
+    var uid: String = "",
+    var email: String = "",
+    var avatarUrl: UserAvatarInfo = UserAvatarInfo(),
+)
+
+/**
  * 用户头像
  * */
+@Serializable
 data class UserAvatarInfo(
     var small: String = "",
     var middle: String = "",
@@ -63,6 +73,7 @@ data class UserAvatarInfo(
 /**
  * 上传头像地址
  * */
+@Serializable
 data class AvatarBean(
     var fileSourceUrl: String = "",
     var fileCDNUrl: String = "",
@@ -71,3 +82,5 @@ data class AvatarBean(
     var fileName: String = "",
     var uploadTime: Long = 0,
 )
+
+

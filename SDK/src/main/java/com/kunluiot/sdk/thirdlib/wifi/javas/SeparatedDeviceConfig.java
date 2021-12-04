@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.kunluiot.sdk.thirdlib.wifi.ConfigCallback;
-import com.kunluiot.sdk.util.log.KunLuLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;

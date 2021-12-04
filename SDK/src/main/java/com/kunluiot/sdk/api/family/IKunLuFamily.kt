@@ -2,6 +2,7 @@ package com.kunluiot.sdk.api.family
 
 import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.family.*
 
 interface IKunLuFamily {
@@ -9,7 +10,15 @@ interface IKunLuFamily {
     /**
      * 获取家庭列表
      */
-    fun getFamilyList(callback: IFamilyListCallback)
+    fun getFamilyList(fail: OnFailResult, success: FamilyListResult)
+
+    /**
+     * 房间列表并且返回房间下的所有设备
+     */
+    fun getRoomsDevice(familyId: String, filterFlag: Boolean, page: Int, size: Int, fail: OnFailResult, success: RoomListResult)
+
+
+    //-----------------------------------------------------
 
     /**
      * 获取家庭详情
@@ -55,11 +64,6 @@ interface IKunLuFamily {
      * 房间列表
      */
     fun getRooms(familyId: String, page: Int, size: Int, callback: IFamilyRoomListCallback)
-
-    /**
-     * 房间列表并且返回房间下的所有设备
-     */
-    fun getRoomsDevice(familyId: String, filterFlag: Boolean, page: Int, size: Int, callback: IFamilyRoomListCallback)
 
     /**
      * 添加房间

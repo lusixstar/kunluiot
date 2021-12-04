@@ -5,10 +5,7 @@ import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityLoginBinding
 import com.example.kiotsdk.ui.MainActivity
-import com.example.kiotsdk.util.DemoUtils
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.user.User
-import com.kunluiot.sdk.callback.user.ILoginCallback
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -39,21 +36,12 @@ class LoginActivity : BaseActivity() {
 
     private fun refreshLoginToken() {
         val token = KunLuHomeSdk.instance.getSessionBean()?.refreshToken ?: ""
-        KunLuHomeSdk.userImpl.refreshToken(token, refreshCallback)
-    }
-
-    private val refreshCallback = object : ILoginCallback {
-
-        override fun onSuccess(user: User) {
+        KunLuHomeSdk.userImpl.refreshToken(token, { code, err -> toastErrorMsg(code, err) }, {
             setResult(Activity.RESULT_OK, intent)
             startActivity<MainActivity>()
             finish()
             toast("login success")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        })
     }
 
     private fun gotoNext() {
@@ -68,24 +56,11 @@ class LoginActivity : BaseActivity() {
             toast("password is empty")
             return
         }
-        if (DemoUtils.isEmail(account)) {
-
-        } else {
-            KunLuHomeSdk.userImpl.login(country, account, password, loginCallback)
-        }
-    }
-
-    private val loginCallback = object : ILoginCallback {
-
-        override fun onSuccess(user: User) {
+        KunLuHomeSdk.userImpl.login(country, account, password, { code, err -> toastErrorMsg(code, err) }, {
             setResult(Activity.RESULT_OK, intent)
             startActivity<MainActivity>()
             finish()
             toast("login success")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        })
     }
 }

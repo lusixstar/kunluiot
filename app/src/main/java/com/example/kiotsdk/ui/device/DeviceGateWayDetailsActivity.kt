@@ -17,8 +17,10 @@ import com.kunluiot.sdk.callback.device.IConfigNetworkCallback
 import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
+import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.util.JsonUtils
 import org.java_websocket.framing.Framedata
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.nio.ByteBuffer
 
@@ -120,31 +122,36 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
 
     private fun saveConfigNetwork() {
         when (mRespState) {
-            RESP_LOADING -> { }
+            RESP_LOADING -> {
+            }
             RESP_SUCCESS -> {
-                if (mSubDeviceList.size > 0) {
-                    val devType: String = mSubDeviceList[0].devTid
-                    var deviceName: String = mSubDeviceList[0].name
+                if (mSubDeviceList.isNotEmpty()) {
+                    val bean = mSubDeviceList.first()
+                    val devType: String = bean.devType
+                    var deviceName: String = bean.name
                     if (deviceName.isEmpty()) {
-                        deviceName = mSubDeviceList[0].productName.zh_CN
+                        deviceName = bean.productName.zh_CN
                     }
-//                    if (devType == KunLuDeviceType.DEVICE_SUB) {
-//                        startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
-//                            .putExtra("devTid", mSubDeviceList[0].getParentDevTid())
-//                            .putExtra("branchNames", JsonUtils.toJson(mSubDeviceList[0].getBranchNames()))
-//                            .putExtra("subDevTid", mSubDeviceList[0].getDevTid())
-//                            .putExtra("resisterId", mSubDeviceList[0].getRegisterId())
-//                            .putExtra("mid", mSubDeviceList[0].getMid()).putExtra("deviceName", deviceName)
-//                            .putExtra("ctrlKey", mSubDeviceList[0].getParentCtrlKey()))
-//                    } else {
-//                        startActivity(Intent(this, ConfigNetworkFinishActivity::class.java)
-//                            .putExtra("devTid", mSubDeviceList[0].getDevTid())
-//                            .putExtra("deviceName", deviceName)
-//                            .putExtra("branchNames", JsonUtils.toJson(mSubDeviceList[0].getBranchNames()))
-//                            .putExtra("resisterId", mSubDeviceList[0].getRegisterId())
-//                            .putExtra("mid", mSubDeviceList[0].getMid())
-//                            .putExtra("ctrlKey", mSubDeviceList[0].getCtrlKey()))
-//                    }
+                    if (devType == KunLuDeviceType.DEVICE_SUB) {
+                        startActivity<DeviceConfigFinishActivity>(
+                            DeviceConfigFinishActivity.DEV_TID to bean.parentDevTid,
+                            DeviceConfigFinishActivity.SUB_DEV_TID to bean.devTid,
+                            DeviceConfigFinishActivity.MID to bean.mid,
+                            DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
+                            DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
+                            DeviceConfigFinishActivity.DEVICE_NAME to deviceName,
+                            DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+                        )
+                    } else {
+                        startActivity<DeviceConfigFinishActivity>(
+                            DeviceConfigFinishActivity.DEV_TID to bean.parentDevTid,
+                            DeviceConfigFinishActivity.MID to bean.mid,
+                            DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
+                            DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
+                            DeviceConfigFinishActivity.DEVICE_NAME to deviceName,
+                            DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+                        )
+                    }
                     return
                 }
                 mRespState = RESP_FAIL
@@ -165,7 +172,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
         mBinding.ivThirdStep.visibility = View.GONE
         showConfigNetworkPage(mRespState)
         if (mBean.mid.isNotEmpty() && mGatewayBean.devTid.isNotEmpty() && mGatewayBean.ctrlKey.isNotEmpty()) {
-            KunLuHomeSdk.deviceImpl.deviceControl(95, mBean.mid, mGatewayBean.devTid, mGatewayBean.ctrlKey, controlCallback)
+            KunLuHomeSdk.deviceImpl.deviceControl(95, mBean.mid, mGatewayBean.devTid, mGatewayBean.ctrlKey, { _, _ -> mRespState = RESP_FAIL }, {})
         }
         countDownTimer.start()
     }
@@ -175,7 +182,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
      */
     private fun stopConfig() {
         if (mBean.mid.isNotEmpty() && mGatewayBean.devTid.isNotEmpty() && mGatewayBean.ctrlKey.isNotEmpty()) {
-            KunLuHomeSdk.deviceImpl.deviceControl(0, mBean.mid, mGatewayBean.devTid, mGatewayBean.ctrlKey, controlCallback)
+            KunLuHomeSdk.deviceImpl.deviceControl(0, mBean.mid, mGatewayBean.devTid, mGatewayBean.ctrlKey, { _, _ -> mRespState = RESP_FAIL }, {})
         }
     }
 
@@ -212,17 +219,6 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
         mBinding.llConfigNetwork.visibility = View.GONE
     }
 
-    private val controlCallback = object : IConfigNetworkCallback {
-
-        override fun onSuccess(bean: List<ConfigNetworkBean>) {
-
-        }
-
-        override fun onError(code: String, error: String) {
-            mRespState = RESP_FAIL
-        }
-    }
-
     private val countDownTimer = object : CountDownTimer(((mTotalProgress * mCountDownInterval).toLong()), mCountDownInterval.toLong()) {
         override fun onFinish() {
             mBinding.roundProgressBar.progress = mTotalProgress
@@ -230,6 +226,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
                 mRespState = RESP_FAIL
             }
             showConfigNetworkPage(mRespState)
+            stopConfig()
         }
 
         override fun onTick(millisUntilFinished: Long) {

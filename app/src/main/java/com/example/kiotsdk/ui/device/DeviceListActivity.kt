@@ -50,14 +50,14 @@ class DeviceListActivity : BaseActivity() {
     }
 
     private fun getDeviceList() {
-        val str = SPUtil.get(this, SPUtil.DEVICE_LIST, "") as String
-        if (str.isNotEmpty()) {
-            val list: List<DeviceListProductBean> = Gson().fromJson(str, object : TypeToken<List<DeviceListProductBean>>() {}.type)
-            if (!list.isNullOrEmpty()) {
-                mAllProductList = list
-                setListData(list)
-            }
-        }
+//        val str = SPUtil.get(this, SPUtil.DEVICE_LIST, "") as String
+//        if (str.isNotEmpty()) {
+//            val list: List<DeviceListProductBean> = Gson().fromJson(str, object : TypeToken<List<DeviceListProductBean>>() {}.type)
+//            if (!list.isNullOrEmpty()) {
+//                mAllProductList = list
+//                setListData(list)
+//            }
+//        }
         KunLuHomeSdk.deviceImpl.getDeviceProducts(true, listCallback)
     }
 

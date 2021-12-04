@@ -1,11 +1,16 @@
 package com.kunluiot.sdk.api.common
 
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.common.ICommonMsgListCallback
-import com.kunluiot.sdk.callback.common.ICommonProblemCallback
-import com.kunluiot.sdk.callback.common.ICommonThirdPlatformCallback
+import com.kunluiot.sdk.callback.common.*
 
 interface IKunLuCommon {
+
+    /**
+     * 下载文件
+     * */
+    fun downloadsUrlFile(url: String, fail: OnFailResult, success: OnSuccessStrResult)
+
+    //----------------------------------------------
 
     /**
      * 常见问题列表
@@ -46,4 +51,5 @@ interface IKunLuCommon {
      * 绑定的第三方平台列表
      * */
     fun getBindThirdPlatformList(callback: ICommonThirdPlatformCallback)
+
 }

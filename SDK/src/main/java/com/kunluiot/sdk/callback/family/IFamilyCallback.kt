@@ -5,6 +5,27 @@ import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
 
 /**
+ * 家庭列表
+ * */
+fun interface FamilyListResult {
+    fun result(info: List<FamilyBean>)
+}
+
+/**
+ * 房间列表
+ * */
+fun interface RoomListResult {
+    fun result(info: List<FolderBean>)
+}
+
+
+
+
+
+
+//-----------------------------------------
+
+/**
  * 创建家庭
  * */
 interface ICreateFamilyCallback {

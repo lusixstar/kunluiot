@@ -11,14 +11,7 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityForgetBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.user.KunLuUserType
-import com.kunluiot.sdk.bean.user.CheckVerifyImageBean
-import com.kunluiot.sdk.bean.user.User
 import com.kunluiot.sdk.bean.user.VerifyCodeBean
-import com.kunluiot.sdk.bean.user.VerifyImageBean
-import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.user.ICheckVerifyImageCallback
-import com.kunluiot.sdk.callback.user.ICodeCallback
-import com.kunluiot.sdk.callback.user.IVerifyImageCallback
 import org.jetbrains.anko.toast
 
 class ForgetActivity : BaseActivity() {
@@ -57,33 +50,13 @@ class ForgetActivity : BaseActivity() {
             toast("password is empty")
             return
         }
-        KunLuHomeSdk.userImpl.checkVerifyCode(account, KunLuUserType.SEND_CODE_RESET_PASSWORD, area, code, verifyCallback)
-    }
-
-    private val verifyCallback = object : ICodeCallback {
-        override fun onError(code: String, error: String) {
-            toast("code: $code error: $error")
-        }
-
-        override fun onSuccess(bean: VerifyCodeBean) {
-            finishResetPassword(bean)
-        }
+        KunLuHomeSdk.userImpl.checkVerifyCode(account, KunLuUserType.SEND_CODE_RESET_PASSWORD, area, code, { c, err -> toastErrorMsg(c, err) }, { finishResetPassword(it) })
     }
 
     private fun finishResetPassword(bean: VerifyCodeBean) {
         val password = mBinding.password.text.toString()
         val code = mBinding.verifyCode.text.toString()
-        KunLuHomeSdk.userImpl.resetPassword(bean.phoneNumber, password, bean.token, code, resetPasswordCallback)
-    }
-
-    private val resetPasswordCallback = object : IResultCallback {
-        override fun onError(code: String, error: String) {
-            toast("code: $code error: $error")
-        }
-
-        override fun onSuccess() {
-            toast("resetPassword success")
-        }
+        KunLuHomeSdk.userImpl.resetPassword(bean.phoneNumber, password, bean.token, code, { c, err -> toastErrorMsg(c, err) }, { toastMsg("resetPassword success") })
     }
 
     private fun sendCode() {
@@ -106,58 +79,30 @@ class ForgetActivity : BaseActivity() {
 
     private fun getSMSCode(captchaToken: String) {
         val phone = mBinding.emailPhone.text.toString()
-        KunLuHomeSdk.userImpl.getVerifyCode(phone, KunLuUserType.SEND_CODE_RESET_PASSWORD, captchaToken, getSMSCodeCallback)
+        KunLuHomeSdk.userImpl.getVerifyCode(phone, KunLuUserType.SEND_CODE_RESET_PASSWORD, captchaToken, { code, err -> toastErrorMsg(code, err) }, { toastMsg("send SMS success") })
         countDownTimer.start()
     }
 
-    private val getSMSCodeCallback = object : IResultCallback {
-        override fun onSuccess() {
-            toast("send SMS success")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code: $code error: $error")
-        }
-    }
-
     private fun checkVerifyImage(imageCode: String) {
-        KunLuHomeSdk.userImpl.checkVerifyImageCode(mRid, imageCode, checkVerifyImageCallback)
-    }
-
-    private val checkVerifyImageCallback = object : ICheckVerifyImageCallback {
-        override fun onSuccess(bean: CheckVerifyImageBean) {
-            getSMSCode(bean.captchaToken)
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code: $code error: $error")
-        }
+        KunLuHomeSdk.userImpl.checkVerifyImageCode(mRid, imageCode, { code, err -> toastErrorMsg(code, err) }, { bean -> getSMSCode(bean.captchaToken) })
     }
 
     private fun getVerifyImage() {
-        KunLuHomeSdk.userImpl.getVerifyImageCode(verifyImageCallback)
-    }
-
-    private val verifyImageCallback = object : IVerifyImageCallback {
-        override fun onSuccess(bean: VerifyImageBean) {
+        KunLuHomeSdk.userImpl.getVerifyImageCode({ code, err -> toastErrorMsg(code, err) }, { bean ->
             if (bean.png.isNotEmpty()) {
                 mBinding.verifyImageLayout.visibility = View.VISIBLE
                 mBinding.verifyImage.setImageBitmap(base64CodeToBitmap(bean.png))
                 mRid = bean.rid
             } else {
-                toast("please once click")
+                toastMsg("please once click")
             }
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code: $code error: $error")
-        }
+        })
     }
 
     /**
      * 将Base64字符串形式存储的图片转成Bitmap
      */
-    fun base64CodeToBitmap(base64Code: String): Bitmap? {
+    private fun base64CodeToBitmap(base64Code: String): Bitmap? {
         var bitmap: Bitmap? = null
         try {
             val bitmapArray = Base64.decode(base64Code, Base64.DEFAULT)

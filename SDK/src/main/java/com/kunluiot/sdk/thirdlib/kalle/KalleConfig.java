@@ -224,6 +224,14 @@ public final class KalleConfig {
         }
 
         /**
+         * Add the global headers.
+         */
+        public Builder addHeaders(Headers headers) {
+            mHeaders.add(headers);
+            return this;
+        }
+
+        /**
          * Set the global header.
          */
         public Builder setHeader(String key, String value) {

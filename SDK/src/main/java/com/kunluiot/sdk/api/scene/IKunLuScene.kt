@@ -1,34 +1,39 @@
 package com.kunluiot.sdk.api.scene
 
-import com.kunluiot.sdk.bean.scene.SceneAddOneKeyBean
-import com.kunluiot.sdk.bean.scene.SceneLinkSortBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeySortBean
+import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.scene.ISceneDeleteCallback
-import com.kunluiot.sdk.callback.scene.ISceneListCallback
-import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
+import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
+import com.kunluiot.sdk.callback.scene.*
 
 interface IKunLuScene {
 
     /**
      * 手动场景列表
      */
-    fun getOneKeySceneList(callback: ISceneListCallback)
+    fun getOneKeySceneList(fail: OnFailResult, success: SceneListResult)
+
+    /**
+     * 获取预设情景面板
+     */
+    fun getSceneTemplate(fail: OnFailResult, success: SceneListResult)
+
+    // ----------------------------------------------------
 
     /**
      * 新增手动场景
      */
-    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback)
+    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback)
 
     /**
      * 编辑手动场景
      */
-    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneAddOneKeyBean>, preset: Map<String, String>, callback: IResultCallback)
+    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback)
 
     /**
      * 删除手动场景
      * */
-    fun deleteOneKeyScene(sceneId: String, callback: ISceneDeleteCallback)
+    fun deleteOneKeyScene(sceneId: String, callback: IResultCallback)
 
     /**
      * 删除使用中的手动场景
@@ -38,17 +43,17 @@ interface IKunLuScene {
     /**
      * 联动场景列表
      */
-    fun getLinkageSceneList(page: Int, size: Int, callback: ISceneListCallback)
+    fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult)
 
     /**
      * 新增联动场景
      * */
-    fun addLinkageScene(bean: SceneAddOneKeyBean, callback: IResultCallback)
+    fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 编辑联动场景
      * */
-    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneAddOneKeyBean, callback: IResultCallback)
+    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除联动场景

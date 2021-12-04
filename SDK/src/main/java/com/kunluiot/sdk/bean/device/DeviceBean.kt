@@ -2,18 +2,114 @@ package com.kunluiot.sdk.bean.device
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+
+/**
+ * 删除设备
+ * */
+@Serializable
+data class DeviceDeleteBean(
+    val randomKey: String = "",
+    val randomToken: String = "",
+)
+
+/**
+ * 设备网关配网
+ * */
+@Serializable
+data class DeviceConfigGateWayBean(
+    val results: List<DeviceConfigGateWayItemBean> = listOf(),
+    val success: Int = 0,
+    val failure: Int = 0,
+)
+
+/**
+ * 设备网关配网子项
+ * */
+@Serializable
+data class DeviceConfigGateWayItemBean(
+    val ctrlKey: String = "",
+    val subDevTid: String = "",
+    val result: String = "",
+)
+
+@Parcelize
+@Serializable
+data class DeviceOperationBean(
+    val mid: String = "",
+    val pid: String = "",
+    val createTime: Long = 0,
+    val workModeType: String = "",
+    val fixedLength: Boolean = false,
+    val statistics: Boolean = false,
+    val accessProtocol: Int = 0,
+    val protocol: Map<String, DeviceOperationProtocolBean> = mutableMapOf(),
+    val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class DeviceOperationProtocolBean(
+    val cmdId: Int = 0,
+    val cmdTag: String = "",
+    val desc: String = "",
+    val frameType: Int = 0,
+    val usedForIFTTT: Boolean = false,
+    val tags: List<String> = mutableListOf(),
+    val fields: List<DeviceOperationFieldsBean> = mutableListOf(),
+    val associateProtocol: List<Int> = mutableListOf(),
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class DeviceOperationFieldsBean(
+    var selectedDesc: String = "",
+    var selectValue: String = "",
+    var operator: String = "",
+    val selected: Boolean = false,
+    val dataType: String = "",
+    val name: String = "",
+    val desc: String = "",
+    val dataLength: Int = 0,
+    val available: Boolean = false,
+    val frameType: String = "",
+    val baseField: Boolean = false,
+    val usedForIFTTT: Boolean = false,
+    val aggregation: Boolean = false,
+    var select: Boolean = false,
+    val order: Int = 0,
+    val dp: Int = 0,
+    var maxValue: Long = 0,
+    var minValue: Int = 0,
+//    val maxValueMean: String = "",
+//    val minValueMean: String = "",
+    val enumeration: List<DeviceOperationEnumerationBean> = listOf(),
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class DeviceOperationEnumerationBean(
+    var value: Int = 0,
+    var desc: String = "",
+) : Parcelable
+
+// --------------------------------------------
+
+@Serializable
 data class DeviceWifiBean(
     var name: String = "",
     var password: String = "",
 )
 
+@Serializable
 data class ConfigWifiBean(
     val action: String = "",
     val params: ConfigWifiParamsBean = ConfigWifiParamsBean(),
     val ip: String = "",
 )
 
+@Serializable
 data class ConfigWifiParamsBean(
     val devTid: String = "",
     val STEP: Int = 0,
@@ -27,10 +123,12 @@ data class ConfigWifiParamsBean(
     val binVer: String = "",
 )
 
+@Serializable
 data class ConfigZigBeeBean(
     val params: ConfigZigBeeParamsBean = ConfigZigBeeParamsBean(),
 )
 
+@Serializable
 data class ConfigZigBeeParamsBean(
     val devTid: String = "",
     val subDevTid: String = "",
@@ -38,6 +136,7 @@ data class ConfigZigBeeParamsBean(
     val data: ConfigZigBeeDataBean = ConfigZigBeeDataBean(),
 )
 
+@Serializable
 data class ConfigZigBeeDataBean(
     val cmdId: Int = 0,
     val devStatus: Int = 0,
@@ -46,7 +145,7 @@ data class ConfigZigBeeDataBean(
 
 
 //-------------------
-
+@Serializable
 data class DeviceFrameBean(
     val ctrlKey: String = "",
     val devTid: String = "",
@@ -55,11 +154,13 @@ data class DeviceFrameBean(
     val frameType: Int = 0,
 )
 
-data class  ConfigNetworkBean(
+@Serializable
+data class ConfigNetworkBean(
     val ctrlKey: String = "",
     val result: String = "",
 )
 
+@Serializable
 data class DevicePinCodeBean(
     var PINCode: String = "",
     var ssid: String = "",
@@ -68,6 +169,7 @@ data class DevicePinCodeBean(
 /**
  * 设备产品列表
  * */
+@Serializable
 data class DeviceListProductBean(
     val category: DeviceCategoryBean = DeviceCategoryBean(),
     val categoryName: String = "",
@@ -78,6 +180,7 @@ data class DeviceListProductBean(
     val categorySelfName: String = "",
 )
 
+@Serializable
 data class DeviceCategoryBean(
     val id: String = "",
     val name: DeviceNameBean = DeviceNameBean(),
@@ -86,11 +189,13 @@ data class DeviceCategoryBean(
 )
 
 @Parcelize
+@Serializable
 data class DeviceNameBean(
     val zh_CN: String = "",
     val en_US: String = "",
 ) : Parcelable
 
+@Serializable
 data class DeviceProductTabBean(
     var select: Boolean = false,
     val id: String = "",
@@ -99,6 +204,7 @@ data class DeviceProductTabBean(
 )
 
 @Parcelize
+@Serializable
 data class DeviceProductsBean(
     val mid: String = "",
     val name: String = "",
@@ -117,21 +223,38 @@ data class DeviceProductsBean(
 ) : Parcelable
 
 @Parcelize
+@Serializable
 data class DeviceNewBean(
-    val devTid: String = "",
+    var devTid: String = "",
     val mid: String = "",
     val devType: String = "",
     val pid: String = "",
     var registerId: String = "",
+    var subDevTid: String = "",
+    var parentDevTid: String = "",
+    var parentCtrlKey: String = "",
+    var androidPageZipURL: String = "",
+    var androidH5Page: String = "",
+    var productPublicKey: String = "",
+    var virtual: Boolean = false,
     val deviceName: String = "",
-    val ctrlKey: String = "",
+    val logo: String = "",
+    val workModeType: String = "",
+    var ctrlKey: String = "",
+    val bindKey: String = "",
     val bindResultCode: Int = 0,
     var bindResultMsg: String = "",
     val name: String = "",
-    val online: Boolean = false,
+    val ownerUid: String = "",
+    val familyName: String = "",
+    val folderName: String = "",
+    val associateGatewayCtrlKey: String = "",
+    var online: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),
+    val branchNames: List<String> = listOf(),
 ) : Parcelable
 
+@Serializable
 data class DeviceProductDescribeBean(
     val id: String = "",
     val pid: String = "",
@@ -146,12 +269,14 @@ data class DeviceProductDescribeBean(
     val openContent: String = "",
 )
 
+@Serializable
 data class DeviceUpdateBean(
     val devTid: String = "",
     val update: String = "",
     val devFirmwareOTARawRuleVO: DeviceDevFirmwareOTARawRuleVO = DeviceDevFirmwareOTARawRuleVO(),
 )
 
+@Serializable
 data class DeviceDevFirmwareOTARawRuleVO(
     val binUrl: String = "",
     val md5: String = "",
@@ -160,37 +285,4 @@ data class DeviceDevFirmwareOTARawRuleVO(
     val size: Int = 0,
 )
 
-data class DeviceOperationBean(
-    val mid: String = "",
-    val pid: String = "",
-    val createTime: Long = 0,
-    val workModeType: String = "",
-    val fixedLength: Boolean = false,
-    val statistics: Boolean = false,
-    val accessProtocol: Int = 0,
-    val protocol: Map<String, DeviceOperationProtocolBean> = mutableMapOf(),
-    val fieldMap: Map<String, DeviceOperationFieldsBean> = mutableMapOf(),
-)
 
-data class DeviceOperationProtocolBean(
-    val cmdId: Int = 0,
-    val cmdTag: String = "",
-    val desc: String = "",
-    val frameType: Int = 0,
-    val usedForIFTTT: Boolean = false,
-    val tags: List<String> = mutableListOf(),
-    val fields: List<DeviceOperationFieldsBean> = mutableListOf(),
-    val associateProtocol: List<Int> = mutableListOf(),
-)
-
-data class DeviceOperationFieldsBean(
-    val selectedDesc: String = "",
-    val selectValue: String = "",
-    val operator: String = "",
-    val selected: Boolean = false,
-)
-
-data class DeviceDeleteBean(
-    val randomKey: String = "",
-    val randomToken: String = "",
-)

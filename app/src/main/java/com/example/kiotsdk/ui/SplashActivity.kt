@@ -1,7 +1,6 @@
 package com.example.kiotsdk.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,16 +10,7 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySplashBinding
 import com.example.kiotsdk.ui.user.LoginActivity
 import com.example.kiotsdk.ui.user.RegisterActivity
-import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.common.CommonProblemBean
-import com.kunluiot.sdk.bean.user.User
-import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.common.ICommonProblemCallback
-import com.kunluiot.sdk.callback.user.ILoginCallback
-import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
-import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity() {
@@ -36,23 +26,7 @@ class SplashActivity : BaseActivity() {
         getVersion()
 
         mBinding.login.setOnClickListener { activityResultLauncher.launch(Intent(this, LoginActivity::class.java)) }
-//        mBinding.register.setOnClickListener { testGo() }
         mBinding.register.setOnClickListener { startActivity<RegisterActivity>() }
-    }
-
-    private fun testGo() {
-        KunLuHomeSdk.commonImpl.feedback("test","123","456","","13333333",testCallback)
-    }
-
-    private val testCallback = object : IResultCallback {
-
-        override fun onSuccess() {
-            LogUtils.e("bean == ")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
     }
 
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

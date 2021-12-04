@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -46,6 +47,9 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.9'
     api 'com.github.getActivity:GsonFactory:5.2'
 
+    //kotlinx-serialization-json
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1"
+
 
     //WebSocket
     api 'org.java-websocket:Java-WebSocket:1.5.1'
@@ -56,4 +60,7 @@ dependencies {
     api 'androidx.camera:camera-camera2:1.0.1'
     api 'androidx.camera:camera-lifecycle:1.0.1'
     api 'androidx.camera:camera-view:1.0.0-alpha28'
+
+    //log
+    api 'com.elvishew:xlog:1.10.1'
 }

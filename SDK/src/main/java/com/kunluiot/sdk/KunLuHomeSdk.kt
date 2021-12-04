@@ -1,6 +1,8 @@
 package com.kunluiot.sdk
 
 import android.app.Application
+import com.elvishew.xlog.LogLevel
+import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.api.common.IKunLuCommon
 import com.kunluiot.sdk.api.common.KunLuCommonImpl
 import com.kunluiot.sdk.api.device.IKunLuDevice
@@ -12,7 +14,8 @@ import com.kunluiot.sdk.api.scene.KunLuSceneImpl
 import com.kunluiot.sdk.api.user.IKunLuUser
 import com.kunluiot.sdk.api.user.KunLuUserImpl
 import com.kunluiot.sdk.bean.user.SessionBean
-import com.kunluiot.sdk.request.JsonConverter
+import com.kunluiot.sdk.request.KunLuHelper
+import com.kunluiot.sdk.request.KunLuJsonConverter
 import com.kunluiot.sdk.request.ReqApi
 import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
@@ -32,7 +35,12 @@ class KunLuHomeSdk {
     private var msgId = 1
 
     private fun setKalle() {
-        Kalle.setConfig(KalleConfig.newBuilder().network(BroadcastNetwork(app)).addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(JsonConverter(app)).build())
+        XLog.init(LogLevel.ALL)
+        val build = KalleConfig.newBuilder().network(BroadcastNetwork(app)).addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(KunLuJsonConverter(app))
+        if (ReqApi.IS_NEW_TEST) {
+            build.addHeaders(KunLuHelper.getSign())
+        }
+        Kalle.setConfig(build.build())
     }
 
     /**

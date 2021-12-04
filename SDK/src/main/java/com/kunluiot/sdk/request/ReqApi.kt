@@ -1,5 +1,7 @@
 package com.kunluiot.sdk.request
 
+object ReqApi {
+
     /********************************* 线上地址 start **************** ******************************/
 //    public final static String KHA_DOMAIN = "creoiot.com";
 //    public static String KHA_WEB_SOCKET_URL = "wss://hub." + KHA_DOMAIN + ":186";
@@ -28,12 +30,12 @@ package com.kunluiot.sdk.request
 //    public static String INTERNATIONDOMAIN = "arenlink.com";
     /********************************* 测试地址 end ************************************************/
 
-object ReqApi {
 
     const val KHA_DOMAIN = "creoiot.com"
     const val INTERNATIONDOMAIN = "arenlink.com"
 
     //new-test-url
+    const val IS_NEW_TEST = true
     private const val KHA_TEST_URL = "https://api.kunluiot.com"
     private const val KHA_BASE_URL = KHA_TEST_URL
     const val KHA_UAA_BASE_URL = "$KHA_BASE_URL/uaa"
@@ -42,12 +44,14 @@ object ReqApi {
     const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
 
     //old-test-url
+//    const val IS_NEW_TEST = false
 //    const val KHA_UAA_BASE_URL = "https://uaa-openapi-kl.$KHA_DOMAIN"
 //    const val KHA_WEB_BASE_URL = "https://webapi-openapi-kl.$KHA_DOMAIN"
 //    const val KHA_CONSOLE_BASE_URL = "https://console-openapi-kl.$KHA_DOMAIN"
 //    const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
 
     //now-release-url
+//    const val IS_NEW_TEST = false
 //    const val KHA_UAA_BASE_URL = "https://uaa-openapi.$KHA_DOMAIN"
 //    const val KHA_WEB_BASE_URL = "https://webapi-openapi.$KHA_DOMAIN"
 //    const val KHA_CONSOLE_BASE_URL = "https://console-openapi.$KHA_DOMAIN"
@@ -161,6 +165,9 @@ object UserApi {
 object SceneApi {
     //手动场景列表
     const val KHA_API_ONE_KEY_SCENE_LIST = "/scene"
+
+    //获取预设情景面板
+    const val KHA_API_GET_SCENE_TEMPLATE = "/sceneTemplate"
 
     //联动场景列表
     const val KHA_API_LINKAGE_SCENE_LIST = "/rule/iftttRule_v2"
