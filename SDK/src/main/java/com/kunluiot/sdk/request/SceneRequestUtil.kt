@@ -333,7 +333,7 @@ object SceneRequestUtil {
         info.timeZoneOffset = bean.timeZoneOffset
         info.ruleName = bean.ruleName
         info.iftttType = bean.iftttType
-        info.enabled = enable
+        info.enabled = bean.enabled
         info.conditionLogic = bean.conditionLogic
         info.cronExpr = bean.cronExpr
         info.desc = bean.desc
@@ -344,12 +344,13 @@ object SceneRequestUtil {
             bean.iftttTasks.forEach { ifttt ->
                 val cp = SceneStackLinkedCustomParam()
                 if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
-//                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
                 if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
                 val p = SceneStackLinkedParams()
                 if (ifttt.params.time != 0) p.time = ifttt.params.time
+                if (ifttt.customParam.time != 0) p.time = ifttt.customParam.time
                 if (ifttt.params.sceneId.isNotEmpty()) p.sceneId = ifttt.params.sceneId
                 if (ifttt.params.devTid.isNotEmpty()) p.devTid = ifttt.params.devTid
                 if (ifttt.params.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.params.ctrlKey
@@ -381,7 +382,7 @@ object SceneRequestUtil {
                 cond.customFields?.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
-//                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
                     if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
                 }
                 sct.customFields = cf
@@ -402,11 +403,10 @@ object SceneRequestUtil {
         }
 
         val json: String = JsonUtils.toJson(info)
-        XLog.e("bean == $bean")
-        XLog.e("json == $json")
         val kalle = Kalle.put(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.urlParam("ruleId", ruleId)
+        kalle.urlParam("enable", enable)
         kalle.body(JsonBody(json))
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffSceneLinkedListCallback
 import com.example.kiotsdk.adapter.scene.SceneLinkedListAdapter
@@ -71,7 +70,7 @@ class SceneLinkedActivity : BaseActivity() {
                     gotoLinkedAddOrEdit.launch(Intent(this, SceneLinkedAddOrEditActivity::class.java).putExtra(SceneLinkedAddOrEditActivity.BEAN, bean))
                 }
                 R.id.off -> {
-                    KunLuHomeSdk.sceneImpl.updateLinkageScene(bean.ruleId, bean.enabled, bean, { code, msg -> toastErrorMsg(code, msg) }, { getData() })
+                    KunLuHomeSdk.sceneImpl.updateLinkageScene(bean.ruleId, !bean.enabled, bean, { code, msg -> toastErrorMsg(code, msg) }, { getData() })
                 }
             }
         }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffSceneLinkedConditionListCallback
 import com.example.kiotsdk.adapter.diff.DiffSceneLinkedDeviceListCallback

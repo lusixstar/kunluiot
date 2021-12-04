@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySelectExecutionActionBinding
@@ -99,6 +100,7 @@ class SelectExecutionActionActivity : BaseActivity() {
         desc = desc + second + "s"
         val customParamBean = SceneOneKeyCustomParam()
         customParamBean.name = resources.getString(R.string.delayed)
+        customParamBean.time = time
         customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
         val eventData = SceneLinkedBean()
         eventData.customParam = customParamBean

@@ -157,6 +157,7 @@ data class SceneOneKeyCustomParam(
     var icon: String = "",
     var mid: String = "",
     var name: String = "",
+    var time: Int = 0,
     var family_folder: String = "",
     val taskId: String = "",
     val disPlayName: String = "",
