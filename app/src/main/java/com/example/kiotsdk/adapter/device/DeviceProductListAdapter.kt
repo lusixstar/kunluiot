@@ -6,7 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.kiotsdk.R
 import com.example.kiotsdk.ui.device.DeviceGateWayActivity
-import com.example.kiotsdk.ui.device.DeviceListActivity
+import com.example.kiotsdk.ui.device.DeviceProductListActivity
 import com.example.kiotsdk.ui.device.DeviceSetWifiActivity
 import com.kunluiot.sdk.bean.device.DeviceListProductBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
@@ -30,7 +30,7 @@ class DeviceProductListAdapter(list: MutableList<DeviceListProductBean>) : BaseQ
 
         adapter.setOnItemClickListener { ada, _, position ->
             val bean = ada.data[position] as DeviceProductsBean
-            if (bean.bindType == DeviceListActivity.NET_TYPE_WIFI) {
+            if (bean.bindType == DeviceProductListActivity.NET_TYPE_WIFI) {
                 listView.context.startActivity<DeviceSetWifiActivity>(DeviceSetWifiActivity.BEAN to bean, DeviceSetWifiActivity.NET_TYPE_AP to mApModel)
             } else {
                 listView.context.startActivity<DeviceGateWayActivity>(DeviceGateWayActivity.BEAN to bean)

@@ -1,63 +1,42 @@
-package com.example.kiotsdk.ui
+package com.example.kiotsdk.ui.device
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
-import com.example.kiotsdk.databinding.ActivityMainBinding
-import com.example.kiotsdk.ui.device.DeviceConfigFinishActivity
-import com.example.kiotsdk.ui.device.DeviceProductListActivity
-import com.example.kiotsdk.ui.device.DeviceManagerActivity
-import com.example.kiotsdk.ui.family.FamilyCreateActivity
-import com.example.kiotsdk.ui.family.FamilyListActivity
-import com.example.kiotsdk.ui.family.FamilySelectActivity
-import com.example.kiotsdk.ui.scene.SceneManagerActivity
-import com.example.kiotsdk.ui.user.UserInfoActivity
+import com.example.kiotsdk.databinding.ActivityDeviceGotoBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
-import com.kunluiot.sdk.request.UserApi
 import com.kunluiot.sdk.thirdlib.qrcode.CameraScan
 import com.kunluiot.sdk.thirdlib.qrcode.QRCodeActivity
 import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.util.SPUtil
 import com.kunluiot.sdk.util.Tools
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
-class MainActivity : BaseActivity() {
+/**
+ * User: Chris
+ * Date: 2021/12/4
+ * Desc:
+ */
 
-    private lateinit var mBinding: ActivityMainBinding
+class DeviceGotoActivity : BaseActivity() {
 
-    private var mCurrentFamilyName = ""
+    private lateinit var mBinding: ActivityDeviceGotoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        mBinding = ActivityDeviceGotoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        mBinding.userInfo.setOnClickListener { startActivity<UserInfoActivity>() }
-        mBinding.logout.setOnClickListener { logout() }
-
-        mBinding.homeCreate.setOnClickListener { startActivity<FamilyCreateActivity>() }
-        mBinding.homeSelect.setOnClickListener { selectFamily.launch(Intent(this, FamilySelectActivity::class.java)) }
-        mBinding.homeList.setOnClickListener { startActivity<FamilyListActivity>() }
-        mBinding.homeList.setOnClickListener { startActivity<FamilyListActivity>() }
+        setSupportActionBar(mBinding.toolBar)
+        mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         mBinding.deviceWifiMode.setOnClickListener { startActivity<DeviceProductListActivity>(DeviceProductListActivity.NET_TYPE to DeviceProductListActivity.NET_TYPE_WIFI) }
         mBinding.deviceApMode.setOnClickListener { startActivity<DeviceProductListActivity>(DeviceProductListActivity.NET_TYPE to DeviceProductListActivity.NET_TYPE_WIFI, DeviceProductListActivity.NET_TYPE_AP to true) }
         mBinding.deviceZigbeeMode.setOnClickListener { startActivity<DeviceProductListActivity>(DeviceProductListActivity.NET_TYPE to DeviceProductListActivity.NET_TYPE_ZIG_BEE) }
         mBinding.deviceQrMode.setOnClickListener { gotoQrLaunch.launch(Intent(this, QRCodeActivity::class.java)) }
-
-        mBinding.deviceList.setOnClickListener { startActivity<DeviceManagerActivity>() }
-        mBinding.sceneManager.setOnClickListener { startActivity<SceneManagerActivity>() }
-
-        getData()
-    }
-
-    private fun getData() {
-        KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, { info -> mBinding.homeManagerValue.text = "当前家庭：${info.first().familyName}" })
     }
 
     private val gotoQrLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -93,31 +72,5 @@ class MainActivity : BaseActivity() {
             DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
             DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
         )
-    }
-
-    private val selectFamily = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            mCurrentFamilyName = it.data?.getStringExtra(FamilySelectActivity.CURRENT_FAMILY).toString()
-            mBinding.homeManagerValue.text = "当前家庭：$mCurrentFamilyName"
-        }
-    }
-
-    private fun logout() {
-        // logout
-        toast("logout")
-        SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, "")
-        KunLuHomeSdk.instance.webSocketDisConnect()
-        startActivity<SplashActivity>()
-        finish()
-    }
-
-    private var cacheMills: Long = 0L
-    override fun onBackPressed() {
-        if (System.currentTimeMillis() - cacheMills > 1000L) {
-            cacheMills = System.currentTimeMillis()
-            toast("连按两次退出app")
-        } else {
-            finish()
-        }
     }
 }

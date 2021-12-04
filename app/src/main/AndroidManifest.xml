@@ -39,6 +39,18 @@
 
         </activity>
 
+
+        <activity android:name=".ui.MainNewActivity" />
+        <activity android:name=".ui.device.DeviceGotoActivity" />
+        <activity android:name=".ui.user.MineManagerActivity" />
+        <activity android:name=".ui.user.UserEditNameActivity" />
+        <activity android:name=".ui.user.UserEditPhoneActivity" />
+        <activity android:name=".ui.user.VerifyPhoneNumActivity" />
+        <activity android:name=".ui.user.BindNewPhoneNumActivity" />
+        <activity android:name=".ui.user.BindSocialAccountActivity" />
+        <activity android:name=".ui.user.ChangeAccountPasswordActivity" />
+
+
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait" />
@@ -80,7 +92,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.device.DeviceListActivity"
+            android:name=".ui.device.DeviceProductListActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -104,7 +116,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.device.DeviceRoomListActivity"
+            android:name=".ui.device.DeviceManagerActivity"
             android:screenOrientation="portrait" />
 
         <activity

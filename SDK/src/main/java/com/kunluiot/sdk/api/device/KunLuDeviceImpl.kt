@@ -16,8 +16,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.getDeviceOperationList(ppk, fail, success)
     }
 
-    // ------------------------------------------
-
     /**
      * 删除设备
      */
@@ -37,6 +35,13 @@ internal class KunLuDeviceImpl : IKunLuDevice {
      */
     override fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceConfigGatewayResult) {
         DeviceRequestUtil.deviceControl(overtime, mid, devTid, ctrlKey, fail, success)
+    }
+
+    /**
+     *  扫码添加设备
+     */
+    override fun scanCodeDevice(bindKey: String, devTid: String, fail: OnFailResult, success: DeviceOneResult) {
+        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, fail, success)
     }
 
     //-----------------------------------------------
@@ -102,8 +107,8 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 设备产品列表
      */
-    override fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback) {
-        DeviceRequestUtil.getDeviceProducts(filterFlag, callback)
+    override fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult) {
+        DeviceRequestUtil.getDeviceProducts(filterFlag, fail, success)
     }
 
     /**
@@ -114,12 +119,7 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     }
 
 
-    /**
-     *  扫码添加设备
-     */
-    override fun scanCodeDevice(bindKey: String, devTid: String, callback: IDeviceOneCallback) {
-        DeviceRequestUtil.scanCodeDevice(bindKey, devTid, callback)
-    }
+
 
     /**
      * 检查设备固件是否需要升级

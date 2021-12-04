@@ -20,65 +20,81 @@ object DeviceRequestUtil {
      * 设备操作列表
      */
     fun getDeviceOperationList(ppk: String, fail: OnFailResult, success: DeviceProtocolResult) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_OPERATION_LIST)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("ppk", ppk)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        fail.fail(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DeviceOperationBean>(response.succeed()).let { success.result(it) }
-                    }
+        val kalle = Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_OPERATION_LIST)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.param("ppk", ppk)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DeviceOperationBean>(response.succeed()).let { success.success(it) }
                 }
-            })
+            }
+        })
     }
 
-
-    // -------------------------------------
-
+    /**
+     * 扫码添加设备
+     */
+    fun scanCodeDevice(bindKey: String, devTid: String, fail: OnFailResult, success: DeviceOneResult) {
+        val map = mutableMapOf<String, String>()
+        map["bindKey"] = bindKey
+        map["devTid"] = devTid
+        val param = JsonUtils.toJson(map)
+        val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DeviceNewBean>(response.succeed()).let { success.success(it) }
+                }
+            }
+        })
+    }
 
     /**
      * 删除设备
      */
     fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$delDevTid")
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .urlParam("bindKey", bindKey)
-//            .urlParam("randomToken", randomToken)
-            .urlParam("bluetooth", bluetooth)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        fail.fail(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
-                    }
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$delDevTid")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.urlParam("bindKey", bindKey)
+        kalle.urlParam("bluetooth", bluetooth)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 删除子设备
      */
     fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_SUB_DEVICE)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .urlParam("devTid", devTid)
-            .urlParam("ctrlKey", ctrlKey)
-            .urlParam("subDevTid", subDevTid)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        fail.fail(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
-                    }
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_SUB_DEVICE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.urlParam("devTid", devTid).urlParam("ctrlKey", ctrlKey).urlParam("subDevTid", subDevTid)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
-            })
+            }
+        })
     }
 
     /**
@@ -102,22 +118,39 @@ object DeviceRequestUtil {
         map["deviceList"] = deviceList
 
         val param = JsonUtils.toJson(map)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE_CONTROL)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        fail.fail(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DeviceConfigGateWayBean>(response.succeed()).let { success.result(it) }
-                    }
+        val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE_CONTROL)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DeviceConfigGateWayBean>(response.succeed()).let { success.success(it) }
                 }
-            })
+            }
+        })
     }
 
-
+    /**
+     * 设备产品列表
+     */
+    fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult) {
+        val kalle = Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.param("filterFlag", filterFlag)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceListProductBean>>(response.succeed()).let { success.success(it) }
+                }
+            }
+        })
+    }
     //------------------------------------------------------------
 
 
@@ -125,81 +158,64 @@ object DeviceRequestUtil {
      * 所有设备
      * */
     fun getAllDevicesAct(quickOperation: Boolean, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("quickOperation", quickOperation)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("quickOperation", quickOperation).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 房间中设备列表
      * */
     fun getRoomsDevices(folderId: String, quickOperation: Boolean, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICES)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("quickOperation", quickOperation)
-            .param("folderId", folderId)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICES).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("quickOperation", quickOperation).param("folderId", folderId).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 获取网关
      */
     fun getGateway(quickOperation: Boolean, type: String, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("quickOperation", quickOperation)
-            .param("type", type)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("quickOperation", quickOperation).param("type", type).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 获取子设备信息
      */
     fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("ctrlKey", ctrlKey)
-            .param("subDevTid", subDevTid)
-            .param("type", type)
-            .param("quickOperation", quickOperation)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ctrlKey", ctrlKey).param("subDevTid", subDevTid).param("type", type).param("quickOperation", quickOperation).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
     /**
@@ -216,19 +232,16 @@ object DeviceRequestUtil {
             map["anotherNames"] = anotherNames
         }
         val param = JsonUtils.toJson(map)
-        Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid")
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-                    }
+        Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                 }
-            })
+            }
+        })
     }
 
     /**
@@ -245,120 +258,67 @@ object DeviceRequestUtil {
             map["anotherNames"] = anotherNames
         }
         val param = JsonUtils.toJson(map)
-        Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid/$subDevTid")
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-                    }
+        Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid/$subDevTid").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 设备列表
      */
     fun getPINCode(ssid: String, callback: IPinCodeCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_PIN_CODE)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("ssid", ssid)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DevicePinCodeBean>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_PIN_CODE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ssid", ssid).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DevicePinCodeBean>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 获取新配上的设备列表
      */
     fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("ssid", ssid)
-            .param("pinCode", pinCode)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ssid", ssid).param("pinCode", pinCode).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
-    /**
-     * 设备产品列表
-     */
-    fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("filterFlag", filterFlag)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceListProductBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
-                }
-            })
-    }
 
     /**
      * 产品说明子页面列表
      */
     fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_PRODUCT_DESCRIBE)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("category", category)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<List<DeviceProductDescribeBean>>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_PRODUCT_DESCRIBE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("category", category).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceProductDescribeBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
-    /**
-     * 扫码添加设备
-     */
-    fun scanCodeDevice(bindKey: String, devTid: String, callback: IDeviceOneCallback) {
-        val map = mutableMapOf<String, String>()
-        map["bindKey"] = bindKey
-        map["devTid"] = devTid
-        val param = JsonUtils.toJson(map)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DeviceNewBean>(response.succeed()).let { callback.onSuccess(it) }
-                    }
-                }
-            })
-    }
 
     /**
      * 检查设备固件是否需要升级
@@ -374,19 +334,16 @@ object DeviceRequestUtil {
         val maps: MutableList<MutableMap<String, String>> = ArrayList()
         maps.add(map)
         val param = JsonUtils.toJson(maps)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DeviceUpdateBean>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DeviceUpdateBean>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
 
     /**
@@ -397,83 +354,65 @@ object DeviceRequestUtil {
         map["ssid"] = ssid
         map["password"] = password
         val param = JsonUtils.toJson(map)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$ctrlKey/wifi")
-            .setHeaders(KunLuHelper.getSign())
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .body(JsonBody(param))
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-                    }
+        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$ctrlKey/wifi").setHeaders(KunLuHelper.getSign()).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                 }
-            })
+            }
+        })
     }
 
     /**
      * 设备操作模板
      */
     fun getDeviceProtocolTemplate(ppk: String, callback: IResultStringCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_PROTOCOL_LIST)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .addHeader("X-Hekr-ProdPubKey", ppk)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<Map<String, Any>>(response.succeed()).let { callback.onSuccess(JsonUtils.toJson(it)) }
-                    }
+        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICE_PROTOCOL_LIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).addHeader("X-Hekr-ProdPubKey", ppk).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<Map<String, Any>>(response.succeed()).let { callback.onSuccess(JsonUtils.toJson(it)) }
                 }
-            })
+            }
+        })
     }
-
 
 
     /**
      * 删除授权设备
      */
     fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .param("grantor", grantor)
-            .param("ctrlKey", ctrlKey)
-            .param("grantee", grantee)
-            .param("devTid", devTid)
-            .param("randomToken", randomToken)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { callback.onSuccess(it) }
-                    }
+        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("grantor", grantor).param("ctrlKey", ctrlKey).param("grantee", grantee).param("devTid", devTid).param("randomToken", randomToken).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { callback.onSuccess(it) }
                 }
-            })
+            }
+        })
     }
-
 
 
     /**
      * 获取群控
      */
     fun getGroupsAct(callback: IResultCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GROUP_ACT)
-            .addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-                override fun onResponse(response: SimpleResponse<String, String>) {
-                    val failed = response.failed()
-                    if (!failed.isNullOrEmpty()) {
-                        callback.onError(response.code().toString(), failed)
-                    } else {
-                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-                    }
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GROUP_ACT).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    callback.onError(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
                 }
-            })
+            }
+        })
     }
 }

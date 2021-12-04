@@ -6,15 +6,30 @@ import com.kunluiot.sdk.bean.device.*
  * 设备网关配网
  * */
 fun interface DeviceConfigGatewayResult {
-    fun result(info: DeviceConfigGateWayBean)
+    fun success(info: DeviceConfigGateWayBean)
 }
 
 /**
  * 设备协议回调
  * */
 fun interface DeviceProtocolResult {
-    fun result(info: DeviceOperationBean)
+    fun success(info: DeviceOperationBean)
 }
+
+/**
+ * 单个设备信息
+ * */
+fun interface DeviceOneResult {
+    fun success(info: DeviceNewBean)
+}
+
+/**
+ * 设备产品列表信息
+ * */
+fun interface DeviceProductListResult {
+    fun success(info: List<DeviceListProductBean>)
+}
+
 // ------------------------------------------
 
 /**

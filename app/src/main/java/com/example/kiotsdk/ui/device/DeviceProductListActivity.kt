@@ -7,18 +7,15 @@ import com.example.kiotsdk.adapter.device.DeviceTabListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceListBinding
 import com.example.kiotsdk.util.DemoUtils
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceListProductBean
 import com.kunluiot.sdk.bean.device.DeviceProductTabBean
-import com.kunluiot.sdk.callback.device.IDeviceListProductCallback
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.toast
 
 
-class DeviceListActivity : BaseActivity() {
+class DeviceProductListActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityDeviceListBinding
 
@@ -50,15 +47,7 @@ class DeviceListActivity : BaseActivity() {
     }
 
     private fun getDeviceList() {
-//        val str = SPUtil.get(this, SPUtil.DEVICE_LIST, "") as String
-//        if (str.isNotEmpty()) {
-//            val list: List<DeviceListProductBean> = Gson().fromJson(str, object : TypeToken<List<DeviceListProductBean>>() {}.type)
-//            if (!list.isNullOrEmpty()) {
-//                mAllProductList = list
-//                setListData(list)
-//            }
-//        }
-        KunLuHomeSdk.deviceImpl.getDeviceProducts(true, listCallback)
+        KunLuHomeSdk.deviceImpl.getDeviceProducts(true, { code, msg -> toastErrorMsg(code, msg) }, { setListData(it) })
     }
 
     private fun initAdapter() {
@@ -124,17 +113,6 @@ class DeviceListActivity : BaseActivity() {
             }
             mProductAdapter.data.clear()
             mProductAdapter.addData(list)
-        }
-    }
-
-    private val listCallback = object : IDeviceListProductCallback {
-
-        override fun onSuccess(bean: List<DeviceListProductBean>) {
-            setListData(bean)
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
         }
     }
 

@@ -1,6 +1,8 @@
 package com.example.kiotsdk.ui.user
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.kiotsdk.app.GlideEngine
@@ -13,11 +15,15 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.listener.OnResultCallbackListener
+import org.jetbrains.anko.startActivity
 
 
 class UserInfoActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityUserInfoBinding
+
+    private var mName = ""
+    private var mPhone = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +34,25 @@ class UserInfoActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-
-        mBinding.update.setOnClickListener { updateName() }
-        mBinding.avatarUpdate.setOnClickListener { selectAvatar() }
+        mBinding.avatarLayout.setOnClickListener { selectAvatar() }
+        mBinding.nameLayout.setOnClickListener { gotoName.launch(Intent(this, UserEditNameActivity::class.java).putExtra(UserEditNameActivity.NAME, mName)) }
+        mBinding.phoneLayout.setOnClickListener { gotoPhone.launch(Intent(this, UserEditPhoneActivity::class.java).putExtra(UserEditPhoneActivity.PHONE, mPhone)) }
+        mBinding.changeLayout.setOnClickListener { startActivity<ChangeAccountPasswordActivity>() }
+//        mBinding.otherAccountLayout.setOnClickListener { startActivity<BindSocialAccountActivity>() }
 
         getUserInfoData()
+    }
+
+    private val gotoName = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            getUserInfoData()
+        }
+    }
+
+    private val gotoPhone = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            getUserInfoData()
+        }
     }
 
     private fun updateAvatar(filePath: String) {
@@ -52,21 +72,15 @@ class UserInfoActivity : BaseActivity() {
         })
     }
 
-    private fun updateName() {
-        val name = mBinding.etName.text.toString()
-        if (name.isEmpty()) return
-        KunLuHomeSdk.userImpl.updateUserNick(name, { code, err -> toastErrorMsg(code, err) }, { toastMsg("update success") })
-    }
-
     private fun getUserInfoData() {
         KunLuHomeSdk.userImpl.getUserInfo({ code, err -> toastErrorMsg(code, err) }, { setUserInfo(it) })
     }
 
     private fun setUserInfo(user: User) {
-        mBinding.etName.setText(user.name)
+        mName = user.name
+        mPhone = user.phoneNumber
+        mBinding.nameValue.text = user.name
         mBinding.phoneValue.text = user.phoneNumber
-        mBinding.emailValue.text = user.email
-        mBinding.countryValue.text = user.areaCode
         user.avatarUrl.small.let {
             if (it.isNotEmpty()) {
                 mBinding.imgAvatar.load(user.avatarUrl.small) {

@@ -28,6 +28,16 @@ interface IKunLuDevice {
      */
     fun deviceControl(overtime: Int, mid: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceConfigGatewayResult)
 
+    /**
+     *  扫码添加设备
+     */
+    fun scanCodeDevice(bindKey: String, devTid: String, fail: OnFailResult, success: DeviceOneResult)
+
+    /**
+     * 设备产品列表
+     */
+    fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult)
+
     // ------------------------------------------------
 
     /**
@@ -77,20 +87,13 @@ interface IKunLuDevice {
      */
     fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback)
 
-    /**
-     * 设备产品列表
-     */
-    fun getDeviceProducts(filterFlag: Boolean, callback: IDeviceListProductCallback)
+
 
     /**
      * 产品说明子页面列表
      */
     fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback)
 
-    /**
-     *  扫码添加设备
-     */
-    fun scanCodeDevice(bindKey: String, devTid: String, callback: IDeviceOneCallback)
 
     /**
      * 检查设备固件是否需要升级
@@ -106,8 +109,6 @@ interface IKunLuDevice {
      * 设备操作模板
      */
     fun getDeviceProtocolTemplate(ppk: String, callback: IResultStringCallback)
-
-
 
 
     /**

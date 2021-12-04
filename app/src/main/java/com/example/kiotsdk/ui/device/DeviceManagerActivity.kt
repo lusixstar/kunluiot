@@ -18,7 +18,7 @@ import org.jetbrains.anko.selector
 import org.jetbrains.anko.startActivity
 
 
-class DeviceRoomListActivity : BaseActivity() {
+class DeviceManagerActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityDeviceRoomListBinding
 
@@ -50,7 +50,6 @@ class DeviceRoomListActivity : BaseActivity() {
     }
 
     private fun gotoNext(bean: DeviceNewBean) {
-        LogUtil.e("gotoNext", "$bean")
         if (bean.androidPageZipURL.isNotEmpty()) {
             startActivity<DeviceWebControlActivity>(DeviceWebControlActivity.BEAN to bean)
         } else {
@@ -60,8 +59,6 @@ class DeviceRoomListActivity : BaseActivity() {
 
     private fun gotoDelete(it: DeviceNewBean) {
         val userId = KunLuHomeSdk.instance.getSessionBean()?.user ?: ""
-        LogUtil.e("delete", "$it")
-        LogUtil.e("userId", userId)
         alert("是否删除设备") {
             positiveButton("确定") { dialog ->
                 if (it.devType == KunLuDeviceType.DEVICE_SUB) {
