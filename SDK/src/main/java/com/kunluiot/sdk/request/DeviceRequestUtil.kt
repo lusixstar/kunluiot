@@ -151,6 +151,27 @@ object DeviceRequestUtil {
             }
         })
     }
+
+    /**
+     * 房间中设备列表
+     * */
+    fun getRoomsDevices(folderId: String, quickOperation: Boolean, fail: OnFailResult, success: DeviceListResult) {
+        val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.param("quickOperation", quickOperation).param("folderId", folderId)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { success.success(it) }
+                }
+            }
+        })
+    }
+
+
     //------------------------------------------------------------
 
 
@@ -170,21 +191,6 @@ object DeviceRequestUtil {
         })
     }
 
-    /**
-     * 房间中设备列表
-     * */
-    fun getRoomsDevices(folderId: String, quickOperation: Boolean, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_DEVICES).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("quickOperation", quickOperation).param("folderId", folderId).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
-                }
-            }
-        })
-    }
 
     /**
      * 获取网关

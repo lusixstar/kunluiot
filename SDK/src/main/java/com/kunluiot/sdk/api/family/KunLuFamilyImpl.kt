@@ -87,30 +87,30 @@ internal class KunLuFamilyImpl : IKunLuFamily {
         FamilyRequestUtil.moveRoomDevice(folderId, devTid, ctrlKey, subDevTid, fail, success)
     }
 
-
-    //-----------------------------------------------------
-
-
     /**
      * 添加家庭成员
      */
-    override fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, callback: IResultCallback) {
-        FamilyRequestUtil.addFamilyMember(familyId, phoneNumber, name, gender, type, callback)
+    override fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, fail: OnFailResult, success: OnSuccessResult) {
+        FamilyRequestUtil.addFamilyMember(familyId, phoneNumber, name, gender, type, fail, success)
     }
 
     /**
      * 删除家庭成员
      */
-    override fun deleteFamilyMember(familyId: String, uid: String, callback: IResultCallback) {
-        FamilyRequestUtil.deleteFamilyMember(familyId, uid, callback)
+    override fun deleteFamilyMember(familyId: String, uid: String, fail: OnFailResult, success: OnSuccessResult) {
+        FamilyRequestUtil.deleteFamilyMember(familyId, uid, fail, success)
     }
 
     /**
      * 修改家庭成员名称和头像
      */
-    override fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, callback: IResultCallback) {
-        FamilyRequestUtil.updateFamilyMemberInfo(familyId, name, gender, uid, callback)
+    override fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, fail: OnFailResult, success: OnSuccessResult) {
+        FamilyRequestUtil.updateFamilyMemberInfo(familyId, name, gender, uid, fail, success)
     }
+
+
+    //-----------------------------------------------------
+
 
     /**
      * 家庭成员设备授权

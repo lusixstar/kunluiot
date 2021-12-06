@@ -38,6 +38,11 @@ interface IKunLuDevice {
      */
     fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult)
 
+    /**
+     * 房间中设备列表
+     * */
+    fun getRoomsDevices(folderId: String, quickOperation: Boolean, fail: OnFailResult, success: DeviceListResult)
+
     // ------------------------------------------------
 
     /**
@@ -51,11 +56,6 @@ interface IKunLuDevice {
      * */
     fun getAllDevicesAct(quickOperation: Boolean, callback: IDeviceListCallback)
 
-
-    /**
-     * 房间中设备列表
-     * */
-    fun getRoomsDevices(folderId: String, quickOperation: Boolean, callback: IDeviceListCallback)
 
     /**
      * 获取网关
@@ -86,7 +86,6 @@ interface IKunLuDevice {
      * 获取新配上的设备列表
      */
     fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback)
-
 
 
     /**

@@ -24,6 +24,13 @@ fun interface DeviceOneResult {
 }
 
 /**
+ * 设备列表信息
+ * */
+fun interface DeviceListResult {
+    fun success(info: List<DeviceNewBean>)
+}
+
+/**
  * 设备产品列表信息
  * */
 fun interface DeviceProductListResult {

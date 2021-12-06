@@ -4,6 +4,7 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceFrameBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
+import com.kunluiot.sdk.bean.family.MemberAddBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.common.OnSuccessResult
@@ -242,27 +243,26 @@ object FamilyRequestUtil {
         })
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * 添加家庭成员
      */
-    fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, callback: IResultCallback) {
+    fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, fail: OnFailResult, success: OnSuccessResult) {
         val map = mutableMapOf<String, String>()
         map["phoneNumber"] = phoneNumber
         map["name"] = name
         map["gender"] = gender
         map["type"] = type
         val param = JsonUtils.toJson(map)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/${familyId}/member").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/${familyId}/member")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<MemberAddBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -271,14 +271,17 @@ object FamilyRequestUtil {
     /**
      * 删除家庭成员
      */
-    fun deleteFamilyMember(familyId: String, uid: String, callback: IResultCallback) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/$familyId/member").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("uid", uid).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+    fun deleteFamilyMember(familyId: String, uid: String, fail: OnFailResult, success: OnSuccessResult) {
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/$familyId/member")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.urlParam("uid", uid)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -287,23 +290,30 @@ object FamilyRequestUtil {
     /**
      *  修改家庭成员名称和头像
      */
-    fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, callback: IResultCallback) {
+    fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, fail: OnFailResult, success: OnSuccessResult) {
         val map = mutableMapOf<String, String>()
         map["name"] = name
         map["gender"] = gender
         map["uid"] = uid
         val param = JsonUtils.toJson(map)
-        Kalle.put(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/$familyId/member/info").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.put(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/$familyId/member/info")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
             }
         })
     }
+
+
+    //--------------------------------------------------------------------
+
 
     /**
      *  家庭成员设备授权

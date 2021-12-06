@@ -84,6 +84,7 @@ class FamilyRoomListActivity : BaseActivity() {
             val roomId = mRoomIds[i]
             KunLuHomeSdk.familyImpl.moveRoomDevice(roomId, devTid, ctrlKey, subDevTid, { c, m -> toastErrorMsg(c, m) }, {
                 getRoomData()
+                setResult(Activity.RESULT_OK)
             })
             dialog.dismiss()
         }
@@ -94,6 +95,7 @@ class FamilyRoomListActivity : BaseActivity() {
             positiveButton("确定") { dialog ->
                 KunLuHomeSdk.familyImpl.deleteRoom(bean.folderId, { c, m -> toastErrorMsg(c, m) }, {
                     getRoomData()
+                    setResult(Activity.RESULT_OK)
                 })
                 dialog.dismiss()
             }
@@ -116,6 +118,7 @@ class FamilyRoomListActivity : BaseActivity() {
     private val gotoAdd = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
             getRoomData()
+            setResult(Activity.RESULT_OK)
         }
     }
 

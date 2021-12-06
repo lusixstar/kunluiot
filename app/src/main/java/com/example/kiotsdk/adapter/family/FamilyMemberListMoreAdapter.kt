@@ -6,7 +6,7 @@ import com.example.kiotsdk.R
 import com.kunluiot.sdk.bean.family.FamilyMemberMapBean
 
 
-class FamilyMemberListAdapter(list: MutableList<FamilyMemberMapBean>) : BaseQuickAdapter<FamilyMemberMapBean, BaseViewHolder>(R.layout.item_family_member_list, list) {
+class FamilyMemberListMoreAdapter(list: MutableList<FamilyMemberMapBean>) : BaseQuickAdapter<FamilyMemberMapBean, BaseViewHolder>(R.layout.item_family_member_more_list, list) {
 
     override fun convert(holder: BaseViewHolder, item: FamilyMemberMapBean) {
         holder.setText(R.id.name, item.name)

@@ -63,23 +63,24 @@ interface IKunLuFamily {
      */
     fun moveRoomDevice(folderId: String, devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult)
 
-    //-----------------------------------------------------
-
-
     /**
      * 添加家庭成员
      */
-    fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, callback: IResultCallback)
+    fun addFamilyMember(familyId: String, phoneNumber: String, name: String, gender: String, type: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除家庭成员
      */
-    fun deleteFamilyMember(familyId: String, uid: String, callback: IResultCallback)
+    fun deleteFamilyMember(familyId: String, uid: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 修改家庭成员名称和头像
      */
-    fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, callback: IResultCallback)
+    fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, fail: OnFailResult, success: OnSuccessResult)
+
+
+    //-----------------------------------------------------
+
 
     /**
      * 家庭成员设备授权

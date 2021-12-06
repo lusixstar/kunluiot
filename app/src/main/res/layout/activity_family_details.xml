@@ -226,6 +226,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_member" />
+        app:layout_constraintTop_toBottomOf="@id/layout_visitor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

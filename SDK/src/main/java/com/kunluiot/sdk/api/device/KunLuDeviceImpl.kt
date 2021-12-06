@@ -44,6 +44,13 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.scanCodeDevice(bindKey, devTid, fail, success)
     }
 
+    /**
+     * 房间中设备列表
+     * */
+    override fun getRoomsDevices(folderId: String, quickOperation: Boolean, fail: OnFailResult, success: DeviceListResult) {
+        DeviceRequestUtil.getRoomsDevices(folderId, quickOperation, fail, success)
+    }
+
     //-----------------------------------------------
 
     /**
@@ -53,12 +60,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.getAllDevicesAct(quickOperation, callback)
     }
 
-    /**
-     * 房间中设备列表
-     * */
-    override fun getRoomsDevices(folderId: String, quickOperation: Boolean, callback: IDeviceListCallback) {
-        DeviceRequestUtil.getRoomsDevices(folderId, quickOperation, callback)
-    }
 
     /**
      * 获取网关
@@ -73,7 +74,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     override fun getSubDevice(ctrlKey: String, subDevTid: String, type: String, quickOperation: Boolean, callback: IDeviceListCallback) {
         DeviceRequestUtil.getSubDevice(ctrlKey, subDevTid, type, quickOperation, callback)
     }
-
 
 
     /**
@@ -117,8 +117,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     override fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback) {
         DeviceRequestUtil.getProductDescribe(category, callback)
     }
-
-
 
 
     /**
