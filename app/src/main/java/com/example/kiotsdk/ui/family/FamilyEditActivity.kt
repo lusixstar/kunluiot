@@ -37,19 +37,11 @@ class FamilyEditActivity : BaseActivity() {
             toast("name is empty")
             return
         }
-        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.update(mFamilyId, name, city, updateCallback)
-    }
-
-    private val updateCallback = object : IResultCallback {
-
-        override fun onSuccess() {
+        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.update(mFamilyId, name, city, { code, msg -> toastErrorMsg(code, msg) }, {
             setResult(Activity.RESULT_OK)
             toast("update success")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+            finish()
+        })
     }
 
     private fun setFamilyData(bean: FamilyBean) {
@@ -59,18 +51,7 @@ class FamilyEditActivity : BaseActivity() {
 
     private fun getFamilyDetails() {
         mFamilyId = intent.getStringExtra(FamilyDetailsActivity.FAMILY_ID) ?: ""
-        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getFamilyDetails(mFamilyId, detailsCallback)
-    }
-
-    private val detailsCallback = object : IFamilyDetailsCallback {
-
-        override fun onSuccess(bean: FamilyBean) {
-            setFamilyData(bean)
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getFamilyDetails(mFamilyId, { code, msg -> toastErrorMsg(code, msg) }, { setFamilyData(it) })
     }
 
     companion object {

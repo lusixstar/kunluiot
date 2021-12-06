@@ -47,6 +47,9 @@
     <string name="user_avatar_update">更换头像</string>
 
     <string name="family_create">创建家庭</string>
+    <string name="room_create">创建房间</string>
+    <string name="room_name">房间名称</string>
+    <string name="room_manager">房间管理</string>
     <string name="family_select">选择家庭</string>
     <string name="family_list">家庭列表</string>
     <string name="family_details">家庭详情</string>

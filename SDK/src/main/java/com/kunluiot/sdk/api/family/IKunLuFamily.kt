@@ -3,6 +3,7 @@ package com.kunluiot.sdk.api.family
 import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
+import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.family.*
 
 interface IKunLuFamily {
@@ -17,28 +18,53 @@ interface IKunLuFamily {
      */
     fun getRoomsDevice(familyId: String, filterFlag: Boolean, page: Int, size: Int, fail: OnFailResult, success: RoomListResult)
 
-
-    //-----------------------------------------------------
-
-    /**
-     * 获取家庭详情
-     */
-    fun getFamilyDetails(familyId: String, callback: IFamilyDetailsCallback)
-
     /**
      * 删除家庭
      */
-    fun delete(familyId: String, callback: IResultCallback)
-
-    /**
-     * 更新家庭信息
-     */
-    fun update(familyId: String, name: String, city: String, callback: IResultCallback)
+    fun delete(familyId: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 添加家庭
      */
-    fun addFamily(name: String, area: String, callback: ICreateFamilyCallback)
+    fun addFamily(name: String, area: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 获取家庭详情
+     */
+    fun getFamilyDetails(familyId: String, fail: OnFailResult, success: FamilyOneResult)
+
+    /**
+     * 更新家庭信息
+     */
+    fun update(familyId: String, name: String, city: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 添加房间
+     */
+    fun addRooms(familyId: String, folderName: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 房间列表
+     */
+    fun getRooms(familyId: String, page: Int, size: Int, fail: OnFailResult, success: RoomListResult)
+
+    /**
+     * 删除房间
+     */
+    fun deleteRoom(folderId: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 修改房间信息
+     */
+    fun updateRoomInfo(folderId: String, folderName: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 移动房间设备
+     */
+    fun moveRoomDevice(folderId: String, devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult)
+
+    //-----------------------------------------------------
+
 
     /**
      * 添加家庭成员
@@ -60,30 +86,6 @@ interface IKunLuFamily {
      */
     fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, callback: IResultCallback)
 
-    /**
-     * 房间列表
-     */
-    fun getRooms(familyId: String, page: Int, size: Int, callback: IFamilyRoomListCallback)
-
-    /**
-     * 添加房间
-     */
-    fun addRooms(familyId: String, folderName: String, callback: IResultCallback)
-
-    /**
-     * 修改房间信息
-     */
-    fun updateRoomInfo(folderId: String, folderName: String, callback: IResultCallback)
-
-    /**
-     * 删除房间
-     */
-    fun deleteRoom(folderId: String, callback: IResultCallback)
-
-    /**
-     * 移动房间设备
-     */
-    fun moveRoomDevice(folderId: String, devTid: String, ctrlKey: String, subDevTid: String, callback: IResultCallback)
 
     /**
      * 房间排序

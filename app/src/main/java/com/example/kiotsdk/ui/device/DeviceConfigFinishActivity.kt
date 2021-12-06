@@ -92,17 +92,23 @@ class DeviceConfigFinishActivity : BaseActivity() {
     }
 
     private fun getRoomData(familyId: String) {
-        KunLuHomeSdk.familyImpl.getRooms(familyId, 0, 20, object : IFamilyRoomListCallback {
-            override fun onSuccess(bean: List<FolderBean>) {
-                val info = bean.first()
-                mRoomId = info.folderId
-                mBinding.room.text =  if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
-            }
-
-            override fun onError(code: String, error: String) {
-                toast("code == $code, error == $error")
-            }
-        })
+        KunLuHomeSdk.familyImpl.getRooms(familyId, 0, 20, { c, m -> toastErrorMsg(c, m) }, { bean ->
+            val info = bean.first()
+            mRoomId = info.folderId
+            mBinding.room.text = if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
+        }
+//            object : IFamilyRoomListCallback {
+//            override fun onSuccess(bean: List<FolderBean>) {
+//                val info = bean.first()
+//                mRoomId = info.folderId
+//                mBinding.room.text =  if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
+//            }
+//
+//            override fun onError(code: String, error: String) {
+//                toast("code == $code, error == $error")
+//            }
+//        }
+        )
     }
 
     companion object {

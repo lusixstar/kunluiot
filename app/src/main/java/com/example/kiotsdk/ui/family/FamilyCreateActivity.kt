@@ -1,14 +1,13 @@
 package com.example.kiotsdk.ui.family
 
+import android.app.Activity
 import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyCreateBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.family.FamilyBean
-import com.kunluiot.sdk.callback.family.ICreateFamilyCallback
 import org.jetbrains.anko.toast
 
-class FamilyCreateActivity :BaseActivity() {
+class FamilyCreateActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityFamilyCreateBinding
 
@@ -31,17 +30,9 @@ class FamilyCreateActivity :BaseActivity() {
             toast("name is empty")
             return
         }
-        KunLuHomeSdk.familyImpl.addFamily(name, city, createCallback)
-    }
-
-    private val createCallback = object : ICreateFamilyCallback {
-
-        override fun onSuccess(bean: FamilyBean) {
-            toast("create success name: ${bean.familyName}")
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        KunLuHomeSdk.familyImpl.addFamily(name, city, { code, msg -> toastErrorMsg(code, msg) }, {
+            setResult(Activity.RESULT_OK)
+            finish()
+        })
     }
 }

@@ -8,18 +8,23 @@ import com.kunluiot.sdk.bean.family.FolderBean
  * 家庭列表
  * */
 fun interface FamilyListResult {
-    fun result(info: List<FamilyBean>)
+    fun success(info: List<FamilyBean>)
 }
 
 /**
  * 房间列表
  * */
 fun interface RoomListResult {
-    fun result(info: List<FolderBean>)
+    fun success(info: List<FolderBean>)
 }
 
 
-
+/**
+ * 家庭详情
+ * */
+fun interface FamilyOneResult {
+    fun success(info: FamilyBean)
+}
 
 
 

@@ -1,16 +1,15 @@
 package com.example.kiotsdk.ui.family
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kiotsdk.adapter.family.FamilyMemberListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyDetailsBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.family.FamilyBean
-import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.startActivity
 
 class FamilyDetailsActivity : BaseActivity() {
 
@@ -19,6 +18,9 @@ class FamilyDetailsActivity : BaseActivity() {
     private var mFamilyId = ""
 
     private var mFamilyBean: FamilyBean = FamilyBean()
+
+    private lateinit var mAdapterMember: FamilyMemberListAdapter
+    private lateinit var mAdapterVisitor: FamilyMemberListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,62 +31,52 @@ class FamilyDetailsActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        mBinding.edit.setOnClickListener { gotoEdit() }
-        mBinding.delete.setOnClickListener { deleteFamily() }
+        mBinding.layoutName.setOnClickListener { gotoEdit.launch(Intent(this, FamilyEditActivity::class.java).putExtra(FamilyEditActivity.FAMILY_ID, mFamilyId)) }
+        mBinding.layoutAddress.setOnClickListener { gotoEdit.launch(Intent(this, FamilyEditActivity::class.java).putExtra(FamilyEditActivity.FAMILY_ID, mFamilyId)) }
+        mBinding.layoutRoom.setOnClickListener {
+            gotoEdit.launch(Intent(this, FamilyRoomListActivity::class.java).putExtra(FamilyRoomListActivity.FAMILY_ID, mFamilyId))
+        }
+//        mBinding.delete.setOnClickListener { deleteFamily() }
 
+        initAdapter()
         getFamilyDetails()
     }
 
-    private fun gotoEdit() {
-        val intent = Intent(this, FamilyEditActivity::class.java)
-        intent.putExtra(FamilyEditActivity.FAMILY_ID, mFamilyId)
-        gotoUpdateLaunch.launch(intent)
+    private fun initAdapter() {
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        mAdapterMember = FamilyMemberListAdapter(arrayListOf())
+        mBinding.listMember.layoutManager = layoutManager
+        mBinding.listMember.adapter = mAdapterMember
+
+//        mAdapterVisitor = FamilyMemberListAdapter(arrayListOf())
+//        mBinding.listVisitor.layoutManager = layoutManager
+//        mBinding.listVisitor.adapter = mAdapterVisitor
+
     }
 
-    private val gotoUpdateLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private val gotoEdit = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
-            setResult(Activity.RESULT_OK)
-            finish()
+            getFamilyDetails()
         }
     }
 
-    private fun deleteFamily() {
-        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.delete(mFamilyId, deleteCallback)
-    }
-
-    private val deleteCallback = object : IResultCallback {
-
-        override fun onSuccess() {
-            setResult(Activity.RESULT_OK)
-            finish()
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
+    private val gotoRoom = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            getFamilyDetails()
         }
     }
 
     private fun setFamilyData(bean: FamilyBean) {
         mFamilyBean = bean
-        mBinding.id.text = bean.familyId
-        mBinding.name.text = bean.familyName
-        mBinding.city.text = bean.detailAddress
+        mBinding.nameValue.text = bean.familyName
+        mBinding.addressValue.text = bean.detailAddress
+        mBinding.roomValue.text = "共${bean.folderList.size}房间"
     }
 
     private fun getFamilyDetails() {
         mFamilyId = intent.getStringExtra(FAMILY_ID) ?: ""
-        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getFamilyDetails(mFamilyId, detailsCallback)
-    }
-
-    private val detailsCallback = object : IFamilyDetailsCallback {
-
-        override fun onSuccess(bean: FamilyBean) {
-            setFamilyData(bean)
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        if (mFamilyId.isNotEmpty()) KunLuHomeSdk.familyImpl.getFamilyDetails(mFamilyId, { code, msg -> toastErrorMsg(code, msg) }, { setFamilyData(it) })
     }
 
     companion object {

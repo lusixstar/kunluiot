@@ -1,5 +1,6 @@
 package com.example.kiotsdk.ui.family
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -8,8 +9,8 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyListBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.family.FamilyBean
-import com.kunluiot.sdk.callback.family.IFamilyListCallback
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.startActivity
 
 class FamilyListActivity : BaseActivity() {
 
@@ -26,8 +27,16 @@ class FamilyListActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
+        mBinding.add.setOnClickListener { gotoAdd.launch(Intent(this, FamilyCreateActivity::class.java)) }
+
         initAdapter()
         getFamilyData()
+    }
+
+    private val gotoAdd = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            getFamilyData()
+        }
     }
 
     private fun initAdapter() {
@@ -39,6 +48,23 @@ class FamilyListActivity : BaseActivity() {
             intent.putExtra(FamilyDetailsActivity.FAMILY_ID, data.familyId)
             gotoDeleteFamilyLaunch.launch(intent)
         }
+        mAdapter.setOnItemLongClickListener { adapter, view, position ->
+            val data = adapter.data[position] as FamilyBean
+            deleteFamily(data.familyId)
+            false
+        }
+
+    }
+
+    private fun deleteFamily(familyId: String) {
+        alert("是否删除") {
+            positiveButton("确定") { dialog ->
+                if (familyId.isNotEmpty()) KunLuHomeSdk.familyImpl.delete(familyId, { code, msg -> toastErrorMsg(code, msg) }, {
+                    getFamilyData()
+                })
+                dialog.dismiss()
+            }
+        }.show()
     }
 
     private val gotoDeleteFamilyLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

@@ -51,6 +51,10 @@
         <activity android:name=".ui.user.ChangeAccountPasswordActivity" />
 
 
+        <activity android:name=".ui.family.FamilyRoomListActivity" />
+        <activity android:name=".ui.family.RoomCreateActivity" />
+
+
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait" />
