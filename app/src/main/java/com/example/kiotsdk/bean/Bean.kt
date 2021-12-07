@@ -1,7 +1,5 @@
 package com.example.kiotsdk.bean
 
-import com.kunluiot.sdk.bean.scene.SceneConditionListParam
-
 /**
  * User: Chris
  * Date: 2021/11/29
@@ -23,4 +21,9 @@ data class TriggerModeBean(
     var key: String = "",
     var value: String = "",
     var select: Boolean = false,
+)
+
+data class FeedbackImgBean(
+    var type: String = "",
+    var url: String = "",
 )

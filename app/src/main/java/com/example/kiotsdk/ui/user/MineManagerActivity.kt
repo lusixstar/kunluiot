@@ -3,9 +3,12 @@ package com.example.kiotsdk.ui.user
 import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMineManagerBinding
+import com.example.kiotsdk.ui.SplashActivity
 import com.example.kiotsdk.ui.device.DeviceManagerActivity
 import com.example.kiotsdk.ui.family.FamilyListActivity
+import com.example.kiotsdk.ui.feedback.FeedbackActivity
 import com.example.kiotsdk.ui.msg.MsgActivity
+import com.kunluiot.sdk.KunLuHomeSdk
 import org.jetbrains.anko.startActivity
 
 /**
@@ -31,5 +34,10 @@ class MineManagerActivity : BaseActivity() {
         mBinding.btnDeviceManager.setOnClickListener { startActivity<DeviceManagerActivity>() }
         mBinding.btnFamilyManager.setOnClickListener { startActivity<FamilyListActivity>() }
         mBinding.btnMsgCenter.setOnClickListener { startActivity<MsgActivity>() }
+        mBinding.btnFeedback.setOnClickListener { startActivity<FeedbackActivity>() }
+        mBinding.btnLogout.setOnClickListener {
+            KunLuHomeSdk.instance.logout()
+            startActivity<SplashActivity>()
+        }
     }
 }

@@ -62,6 +62,8 @@
         <activity android:name=".ui.msg.MsgActivity" />
         <activity android:name=".ui.msg.MsgListActivity" />
 
+        <activity android:name=".ui.feedback.FeedbackActivity" />
+
 
         <activity
             android:name=".ui.MainActivity"

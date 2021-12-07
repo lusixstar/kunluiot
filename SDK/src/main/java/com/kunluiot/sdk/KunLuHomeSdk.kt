@@ -62,6 +62,11 @@ class KunLuHomeSdk {
         return app
     }
 
+    fun logout() {
+        SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, "")
+        webSocketDisConnect()
+    }
+
     fun getSessionBean(): SessionBean? {
         val sessionJson = SPUtil.get(app, UserApi.KHA_API_LOGIN, "") as String
         return JsonUtils.fromJson(sessionJson, SessionBean::class.java)
