@@ -45,22 +45,18 @@ interface IKunLuCommon {
      */
     fun emptyMessagePlatform(fail: OnFailResult, success: OnSuccessResult)
 
+    /**
+     * 意见反馈
+     * */
+    fun feedback(username: String, title: String, content: String, images: String, contact: String, fail: OnFailResult, success: OnSuccessResult)
+
+
     //----------------------------------------------
 
     /**
      * 常见问题列表
      * */
     fun getCommonProblem(callback: ICommonProblemCallback)
-
-    /**
-     * 意见反馈
-     * */
-    fun feedback(username: String, title: String, content: String, images: String, contact: String, callback: IResultCallback)
-
-
-
-
-
 
     /**
      * 绑定的第三方平台列表

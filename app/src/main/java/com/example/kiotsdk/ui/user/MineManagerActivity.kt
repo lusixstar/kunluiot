@@ -1,5 +1,6 @@
 package com.example.kiotsdk.ui.user
 
+import android.content.Intent
 import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMineManagerBinding
@@ -10,6 +11,7 @@ import com.example.kiotsdk.ui.feedback.FeedbackActivity
 import com.example.kiotsdk.ui.msg.MsgActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import org.jetbrains.anko.startActivity
+
 
 /**
  * User: Chris
@@ -37,7 +39,11 @@ class MineManagerActivity : BaseActivity() {
         mBinding.btnFeedback.setOnClickListener { startActivity<FeedbackActivity>() }
         mBinding.btnLogout.setOnClickListener {
             KunLuHomeSdk.instance.logout()
-            startActivity<SplashActivity>()
+            val intent = Intent()
+            intent.setClass(this, SplashActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.putExtra(SplashActivity.GO_FINISH, true)
+            startActivity(intent)
         }
     }
 }

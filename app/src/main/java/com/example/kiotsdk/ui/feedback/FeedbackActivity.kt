@@ -8,6 +8,7 @@ import com.example.kiotsdk.app.GlideEngine
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.bean.FeedbackImgBean
 import com.example.kiotsdk.databinding.ActivityFeedbackBinding
+import com.kunluiot.sdk.KunLuHomeSdk
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
@@ -26,7 +27,7 @@ class FeedbackActivity : BaseActivity() {
 
     private lateinit var mAdapter: FeedbackAdapter
 
-    private var mSelectImg = listOf<LocalMedia>()
+    private var mSelectImg = mutableListOf<LocalMedia>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,22 @@ class FeedbackActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
+        mBinding.btn.setOnClickListener { gotoNext() }
         initAdapter()
+    }
+
+    private fun gotoNext() {
+        val content = mBinding.etContent.text.toString().trim()
+        val phone = mBinding.contact.text.toString().trim()
+        if (content.isEmpty()) {
+            toastMsg("content is empty")
+            return
+        }
+        if (phone.isEmpty()) {
+            toastMsg("phone is empty")
+            return
+        }
+        KunLuHomeSdk.commonImpl.feedback(phone, "Android反馈", content, "", phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
     }
 
     private fun initAdapter() {
@@ -52,17 +68,22 @@ class FeedbackActivity : BaseActivity() {
         mAdapter.setOnItemClickListener { _, _, _ -> selectImg() }
         mAdapter.addChildClickViewIds(R.id.cancel)
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
-//            val bean = adapter.getItem(position) as FeedbackImgBean
-//            if (view.id == R.id.cancel) {
-//
-//            }
+            val bean = adapter.getItem(position) as FeedbackImgBean
+            if (view.id == R.id.cancel) {
+                val info = mSelectImg.first { it.realPath == bean.url }
+                mSelectImg.remove(info)
+                val l = mSelectImg.map { FeedbackImgBean(type = "img", url = it.realPath) } as MutableList
+                l.add(FeedbackImgBean(type = "add"))
+                mAdapter.data.clear()
+                mAdapter.addData(l)
+            }
         }
     }
 
     private fun selectImg() {
-        PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).selectionData(mSelectImg).imageEngine(GlideEngine.createGlideEngine()).maxSelectNum(3).selectionMode(PictureConfig.MULTIPLE).forResult(object : OnResultCallbackListener<LocalMedia> {
+        PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).isCompress(true).selectionData(mSelectImg).imageEngine(GlideEngine.createGlideEngine()).maxSelectNum(3).selectionMode(PictureConfig.MULTIPLE).forResult(object : OnResultCallbackListener<LocalMedia> {
             override fun onResult(result: List<LocalMedia>) {
-                mSelectImg = result
+                mSelectImg = result as MutableList<LocalMedia>
                 val list = mSelectImg.map { FeedbackImgBean(type = "img", url = it.realPath) } as MutableList
                 list.add(FeedbackImgBean(type = "add"))
                 mAdapter.data.clear()

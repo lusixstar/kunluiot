@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityLoginBinding
-import com.example.kiotsdk.ui.MainActivity
 import com.example.kiotsdk.ui.MainNewActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import org.jetbrains.anko.startActivity
@@ -32,17 +31,19 @@ class LoginActivity : BaseActivity() {
         mBinding.login.setOnClickListener { gotoNext() }
         mBinding.forget.setOnClickListener { startActivity<ForgetActivity>() }
 
-//        refreshLoginToken()
+        refreshLoginToken()
     }
 
     private fun refreshLoginToken() {
         val token = KunLuHomeSdk.instance.getSessionBean()?.refreshToken ?: ""
-        KunLuHomeSdk.userImpl.refreshToken(token, { code, err -> toastErrorMsg(code, err) }, {
-            setResult(Activity.RESULT_OK, intent)
-            startActivity<MainNewActivity>()
-            finish()
-            toast("login success")
-        })
+        if (token.isNotEmpty()) {
+            KunLuHomeSdk.userImpl.refreshToken(token, { code, err -> toastErrorMsg(code, err) }, {
+                setResult(Activity.RESULT_OK, intent)
+                startActivity<MainNewActivity>()
+                finish()
+                toast("login success")
+            })
+        }
     }
 
     private fun gotoNext() {

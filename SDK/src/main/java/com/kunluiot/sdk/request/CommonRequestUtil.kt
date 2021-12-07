@@ -4,7 +4,6 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.common.CommonMessageListBean
 import com.kunluiot.sdk.bean.common.CommonProblemBean
 import com.kunluiot.sdk.bean.common.CommonThirdPlatformBean
-import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.*
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
 import com.kunluiot.sdk.thirdlib.kalle.Kalle
@@ -176,6 +175,32 @@ object CommonRequestUtil {
         })
     }
 
+    /**
+     * 意见反馈
+     * */
+    fun feedback(username: String, title: String, content: String, images: String, contact: String, fail: OnFailResult, success: OnSuccessResult) {
+        val map = mutableMapOf<String, String>()
+        map["username"] = username
+        map["title"] = title
+        map["content"] = content
+        map["images"] = images
+        map["contact"] = contact
+        val param = JsonUtils.toJson(map)
+        val kalle = Kalle.post(ReqApi.KHA_CONSOLE_BASE_URL + CommonApi.KHA_API_FEEDBACK)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                }
+            }
+        })
+    }
+
     // -------------------------------------
 
     /**
@@ -189,29 +214,6 @@ object CommonRequestUtil {
                     callback.onError(response.code().toString(), failed)
                 } else {
                     KotlinSerializationUtils.getJsonData<CommonProblemBean>(response.succeed()).let { callback.onSuccess(it) }
-                }
-            }
-        })
-    }
-
-    /**
-     * 意见反馈
-     * */
-    fun feedback(username: String, title: String, content: String, images: String, contact: String, callback: IResultCallback) {
-        val map = mutableMapOf<String, String>()
-        map["username"] = username
-        map["title"] = title
-        map["content"] = content
-        map["images"] = images
-        map["contact"] = contact
-        val param = JsonUtils.toJson(map)
-        Kalle.post(ReqApi.KHA_CONSOLE_BASE_URL + CommonApi.KHA_API_FEEDBACK).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<CommonProblemBean>(response.succeed()).let { callback.onSuccess() }
                 }
             }
         })

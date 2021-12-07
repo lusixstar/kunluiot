@@ -17,12 +17,15 @@ class SplashActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivitySplashBinding
 
+    private var mIsFinish = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+        intent?.let { mIsFinish = it.getBooleanExtra(GO_FINISH, false) }
         getVersion()
 
         mBinding.login.setOnClickListener { activityResultLauncher.launch(Intent(this, LoginActivity::class.java)) }
@@ -35,6 +38,14 @@ class SplashActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (mIsFinish) {
+            finish()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     private fun getVersion() {
         try {
             val pInfo = this.packageManager.getPackageInfo(this.packageName, 0)
@@ -43,5 +54,9 @@ class SplashActivity : BaseActivity() {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
+    }
+
+    companion object {
+        const val GO_FINISH = "go_finish"
     }
 }

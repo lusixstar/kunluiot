@@ -1,6 +1,5 @@
 package com.kunluiot.sdk.api.common
 
-import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.*
 import com.kunluiot.sdk.request.CommonRequestUtil
 
@@ -75,15 +74,9 @@ internal class KunLuCommonImpl : IKunLuCommon {
     /**
      * 意见反馈
      * */
-    override fun feedback(username: String, title: String, content: String, images: String, contact: String, callback: IResultCallback) {
-        CommonRequestUtil.feedback(username, title, content, images, contact, callback)
+    override fun feedback(username: String, title: String, content: String, images: String, contact: String, fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.feedback(username, title, content, images, contact, fail, success)
     }
-
-
-
-
-
-
 
 
     /**
