@@ -244,10 +244,13 @@ data class DeviceNewBean(
     val bindKey: String = "",
     val bindResultCode: Int = 0,
     var bindResultMsg: String = "",
+    var binVer: String = "",
     val name: String = "",
     val ownerUid: String = "",
     val familyName: String = "",
     val folderName: String = "",
+    val binVersion: String = "",
+    val binType: String = "",
     val associateGatewayCtrlKey: String = "",
     var online: Boolean = false,
     var select: Boolean = false,
@@ -273,7 +276,7 @@ data class DeviceProductDescribeBean(
 @Serializable
 data class DeviceUpdateBean(
     val devTid: String = "",
-    val update: String = "",
+    val update: Boolean = false,
     val devFirmwareOTARawRuleVO: DeviceDevFirmwareOTARawRuleVO = DeviceDevFirmwareOTARawRuleVO(),
 )
 

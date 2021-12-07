@@ -41,7 +41,7 @@
 
 
         <activity android:name=".ui.MainNewActivity" />
-        <activity android:name=".ui.device.DeviceGotoActivity" />
+        <activity android:name=".ui.device.DeviceSetNetGotoActivity" />
         <activity android:name=".ui.user.MineManagerActivity" />
         <activity android:name=".ui.user.UserEditNameActivity" />
         <activity android:name=".ui.user.UserEditPhoneActivity" />
@@ -56,6 +56,11 @@
         <activity android:name=".ui.family.MemberCreateActivity" />
         <activity android:name=".ui.family.FamilyMemberManagerActivity" />
         <activity android:name=".ui.family.MemberEditActivity" />
+
+        <activity android:name=".ui.device.DeviceInfoActivity" />
+
+        <activity android:name=".ui.msg.MsgActivity" />
+        <activity android:name=".ui.msg.MsgListActivity" />
 
 
         <activity

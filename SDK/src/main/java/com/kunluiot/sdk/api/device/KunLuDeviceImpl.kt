@@ -51,6 +51,21 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.getRoomsDevices(folderId, quickOperation, fail, success)
     }
 
+    /**
+     * 删除授权设备
+     */
+    override fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.deleteAuthorizationDevice(grantor, ctrlKey, grantee, devTid, randomToken, fail, success)
+    }
+
+    /**
+     * 检查设备固件是否需要升级
+     */
+    override fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceUpdateResult) {
+        DeviceRequestUtil.checkDeviceIsUpdate(binVer, binType, binVersion, productPublicKey, devTid, ctrlKey, fail, success)
+    }
+
+
     //-----------------------------------------------
 
     /**
@@ -120,13 +135,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
 
 
     /**
-     * 检查设备固件是否需要升级
-     */
-    override fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, callback: IDeviceUpdateCallback) {
-        DeviceRequestUtil.checkDeviceIsUpdate(binVer, binType, binVersion, productPublicKey, devTid, ctrlKey, callback)
-    }
-
-    /**
      * 设备详情-更换WiFi
      */
     override fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
@@ -140,12 +148,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.getDeviceProtocolTemplate(ppk, callback)
     }
 
-    /**
-     * 删除授权设备
-     */
-    override fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback) {
-        DeviceRequestUtil.deleteAuthorizationDevice(grantor, ctrlKey, grantee, devTid, randomToken, callback)
-    }
 
     /**
      * 获取群控

@@ -60,12 +60,14 @@ data class CommonMessageListBean(
 @Serializable
 data class CommonMsgContentBean(
     val id: String = "",
+    val subject: String = "",
     val title: String = "",
     val content: String = "",
     val pushTime: Long = 0,
     val pushAppOpenType: String = "",
     val openContent: String = "",
     val read: Boolean = false,
+    val isRead: Boolean = false,
     val image: String = "",
 )
 

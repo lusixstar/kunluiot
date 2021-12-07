@@ -43,12 +43,18 @@ interface IKunLuDevice {
      * */
     fun getRoomsDevices(folderId: String, quickOperation: Boolean, fail: OnFailResult, success: DeviceListResult)
 
-    // ------------------------------------------------
-
     /**
      * 删除授权设备
      */
-    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback)
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 检查设备固件是否需要升级
+     */
+    fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceUpdateResult)
+
+
+    // ------------------------------------------------
 
 
     /**
@@ -93,11 +99,6 @@ interface IKunLuDevice {
      */
     fun getProductDescribe(category: String, callback: IDeviceProductDescribeCallback)
 
-
-    /**
-     * 检查设备固件是否需要升级
-     */
-    fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, callback: IDeviceUpdateCallback)
 
     /**
      * 设备详情-更换WiFi

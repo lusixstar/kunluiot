@@ -20,7 +20,7 @@ import org.jetbrains.anko.startActivity
  * Desc:
  */
 
-class DeviceGotoActivity : BaseActivity() {
+class DeviceSetNetGotoActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityDeviceGotoBinding
 

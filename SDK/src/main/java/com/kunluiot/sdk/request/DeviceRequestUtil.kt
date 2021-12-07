@@ -171,6 +171,54 @@ object DeviceRequestUtil {
         })
     }
 
+    /**
+     * 删除授权设备
+     */
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: OnSuccessResult) {
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.urlParam("grantor", grantor).urlParam("ctrlKey", ctrlKey).urlParam("grantee", grantee).urlParam("devTid", devTid)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                }
+            }
+        })
+    }
+
+    /**
+     * 检查设备固件是否需要升级
+     */
+    fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceUpdateResult) {
+        val map = mutableMapOf<String, String>()
+        map["binVer"] = binVer
+        map["binType"] = binType
+        map["binVersion"] = binVersion
+        map["productPublicKey"] = productPublicKey
+        map["devTid"] = devTid
+        map["ctrlKey"] = ctrlKey
+        val maps: MutableList<MutableMap<String, String>> = ArrayList()
+        maps.add(map)
+        val param = JsonUtils.toJson(maps)
+        val kalle = Kalle.post(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_CHECK_DEVICES_UPDATE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceUpdateBean>>(response.succeed()).let { success.success(it) }
+                }
+            }
+        })
+    }
+
 
     //------------------------------------------------------------
 
@@ -327,32 +375,6 @@ object DeviceRequestUtil {
 
 
     /**
-     * 检查设备固件是否需要升级
-     */
-    fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, callback: IDeviceUpdateCallback) {
-        val map = mutableMapOf<String, String>()
-        map["binVer"] = binVer
-        map["binType"] = binType
-        map["binVersion"] = binVersion
-        map["productPublicKey"] = productPublicKey
-        map["devTid"] = devTid
-        map["ctrlKey"] = ctrlKey
-        val maps: MutableList<MutableMap<String, String>> = ArrayList()
-        maps.add(map)
-        val param = JsonUtils.toJson(maps)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<DeviceUpdateBean>(response.succeed()).let { callback.onSuccess(it) }
-                }
-            }
-        })
-    }
-
-    /**
      * 设备详情-更换WiFi
      */
     fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
@@ -383,23 +405,6 @@ object DeviceRequestUtil {
                     callback.onError(response.code().toString(), failed)
                 } else {
                     KotlinSerializationUtils.getJsonData<Map<String, Any>>(response.succeed()).let { callback.onSuccess(JsonUtils.toJson(it)) }
-                }
-            }
-        })
-    }
-
-
-    /**
-     * 删除授权设备
-     */
-    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, callback: IDeviceDeleteCallback) {
-        Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("grantor", grantor).param("ctrlKey", ctrlKey).param("grantee", grantee).param("devTid", devTid).param("randomToken", randomToken).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
         })

@@ -10,6 +10,41 @@ interface IKunLuCommon {
      * */
     fun downloadsUrlFile(url: String, fail: OnFailResult, success: OnSuccessStrResult)
 
+    /**
+     * 平台消息列表
+     */
+    fun getMessagePlatform(page: Int, size: Int, fail: OnFailResult, success: CommonMsgListResult)
+
+    /**
+     * 设备消息列表
+     * */
+    fun getMessageDevice(page: Int, size: Int, fail: OnFailResult, success: CommonMsgListResult)
+
+    /**
+     * 设备消息置为已读
+     */
+    fun readMessageDevice(id: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 平台消息置为已读
+     */
+    fun readMessagePlatform(id: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 设备消息全部置为已读
+     * */
+    fun allReadMessageDevice(fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 设备消息清空
+     */
+    fun emptyMessageDevice(fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 平台消息清空
+     */
+    fun emptyMessagePlatform(fail: OnFailResult, success: OnSuccessResult)
+
     //----------------------------------------------
 
     /**
@@ -22,30 +57,10 @@ interface IKunLuCommon {
      * */
     fun feedback(username: String, title: String, content: String, images: String, contact: String, callback: IResultCallback)
 
-    /**
-     * 平台消息列表
-     */
-    fun getMessagePlatform(page: Int, size: Int, callback: ICommonMsgListCallback)
 
-    /**
-     * 设备消息列表
-     * */
-    fun getMessageDevice(page: Int, size: Int, callback: ICommonMsgListCallback)
 
-    /**
-     * 设备消息置为已读
-     */
-    fun readMessageDevice(id: String, callback: IResultCallback)
 
-    /**
-     * 设备消息全部置为已读
-     * */
-    fun allReadMessageDevice(callback: IResultCallback)
 
-    /**
-     * 设备消息清空
-     */
-    fun emptyMessageDevice(callback: IResultCallback)
 
     /**
      * 绑定的第三方平台列表

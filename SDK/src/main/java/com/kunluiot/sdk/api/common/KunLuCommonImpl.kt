@@ -14,6 +14,54 @@ internal class KunLuCommonImpl : IKunLuCommon {
         CommonRequestUtil.downloadsUrlFile(url, fail, success)
     }
 
+    /**
+     * 平台消息列表
+     */
+    override fun getMessagePlatform(page: Int, size: Int, fail: OnFailResult, success: CommonMsgListResult) {
+        CommonRequestUtil.getMessagePlatform(page, size, fail, success)
+    }
+
+    /**
+     * 设备消息列表
+     * */
+    override fun getMessageDevice(page: Int, size: Int, fail: OnFailResult, success: CommonMsgListResult) {
+        CommonRequestUtil.getMessageDevice(page, size, fail, success)
+    }
+
+    /**
+     * 设备消息置为已读
+     */
+    override fun readMessageDevice(id: String, fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.readMessageDevice(id, fail, success)
+    }
+
+    /**
+     * 平台消息置为已读
+     */
+    override fun readMessagePlatform(id: String, fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.readMessagePlatform(id, fail, success)
+    }
+
+    /**
+     * 设备消息全部置为已读
+     * */
+    override fun allReadMessageDevice(fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.allReadMessageDevice(fail, success)
+    }
+
+    /**
+     * 设备消息清空
+     */
+    override fun emptyMessageDevice(fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.emptyMessageDevice(fail, success)
+    }
+
+    /**
+     * 平台消息清空
+     */
+    override fun emptyMessagePlatform(fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.emptyMessagePlatform(fail, success)
+    }
 
     // ----------------------------------------
 
@@ -31,40 +79,12 @@ internal class KunLuCommonImpl : IKunLuCommon {
         CommonRequestUtil.feedback(username, title, content, images, contact, callback)
     }
 
-    /**
-     * 平台消息列表
-     */
-    override fun getMessagePlatform(page: Int, size: Int, callback: ICommonMsgListCallback) {
-        CommonRequestUtil.getMessagePlatform(page, size, callback)
-    }
 
-    /**
-     * 设备消息列表
-     * */
-    override fun getMessageDevice(page: Int, size: Int, callback: ICommonMsgListCallback) {
-        CommonRequestUtil.getMessageDevice(page, size, callback)
-    }
 
-    /**
-     * 设备消息置为已读
-     */
-    override fun readMessageDevice(id: String, callback: IResultCallback) {
-        CommonRequestUtil.readMessageDevice(id, callback)
-    }
 
-    /**
-     * 设备消息全部置为已读
-     * */
-    override fun allReadMessageDevice(callback: IResultCallback) {
-        CommonRequestUtil.allReadMessageDevice(callback)
-    }
 
-    /**
-     * 设备消息清空
-     */
-    override fun emptyMessageDevice(callback: IResultCallback) {
-        CommonRequestUtil.emptyMessageDevice(callback)
-    }
+
+
 
     /**
      * 绑定的第三方平台列表
@@ -72,8 +92,6 @@ internal class KunLuCommonImpl : IKunLuCommon {
     override fun getBindThirdPlatformList(callback: ICommonThirdPlatformCallback) {
         CommonRequestUtil.getBindThirdPlatformList(callback)
     }
-
-
 
 
 }

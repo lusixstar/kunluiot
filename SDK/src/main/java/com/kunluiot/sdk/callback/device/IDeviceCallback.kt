@@ -37,6 +37,13 @@ fun interface DeviceProductListResult {
     fun success(info: List<DeviceListProductBean>)
 }
 
+/**
+ * 设备升级
+ */
+fun interface DeviceUpdateResult {
+    fun success(info: List<DeviceUpdateBean>)
+}
+
 // ------------------------------------------
 
 /**

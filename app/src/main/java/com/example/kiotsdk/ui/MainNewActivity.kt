@@ -3,7 +3,7 @@ package com.example.kiotsdk.ui
 import android.os.Bundle
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMainNewBinding
-import com.example.kiotsdk.ui.device.DeviceGotoActivity
+import com.example.kiotsdk.ui.device.DeviceSetNetGotoActivity
 import com.example.kiotsdk.ui.scene.SceneManagerActivity
 import com.example.kiotsdk.ui.user.MineManagerActivity
 import org.jetbrains.anko.startActivity
@@ -24,7 +24,7 @@ class MainNewActivity : BaseActivity() {
         mBinding = ActivityMainNewBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        mBinding.btnDeviceManager.setOnClickListener { startActivity<DeviceGotoActivity>() }
+        mBinding.btnDeviceManager.setOnClickListener { startActivity<DeviceSetNetGotoActivity>() }
         mBinding.btnSceneLinked.setOnClickListener { startActivity<SceneManagerActivity>() }
         mBinding.btnMineCenter.setOnClickListener { startActivity<MineManagerActivity>() }
     }

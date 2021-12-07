@@ -40,6 +40,13 @@ fun interface OnWebControlVoidCall {
     fun call(bean: WebBridgeBean)
 }
 
+/**
+ * 消息列表
+ * */
+fun interface CommonMsgListResult {
+    fun success(bean: CommonMessageListBean)
+}
+
 
 //-----------------------------------------
 /**

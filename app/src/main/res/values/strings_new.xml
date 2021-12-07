@@ -6,6 +6,7 @@
     <string name="mine_center">个人中心</string>
     <string name="social_account_binding">社交账号绑定</string>
     <string name="binding_a_new_mobile_phone">绑定新手机</string>
+    <string name="msg_center">消息中心</string>
 
 
 </resources>

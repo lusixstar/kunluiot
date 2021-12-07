@@ -81,6 +81,9 @@ object DeviceApi {
     //设备列表
     const val KHA_API_DEVICE = "/device"
 
+    //检查设备固件是否需要升级
+    const val KHA_API_CHECK_DEVICES_UPDATE = "/external/device/fw/ota/check"
+
     //删除授权设备
     const val KHA_API_DELETE_AUTHORIZATION_DEVICE = "/authorization"
 
@@ -200,6 +203,12 @@ object CommonApi {
 
     //设备消息置为已读
     const val KHA_API_MESSAGE_DEVICE_READ = "/api/v1/notification"
+
+    //平台消息已读
+    const val KHA_API_READ_MSG_FOLDER = "/api/v1/app/push/history/"
+
+    //平台消息清空
+    const val KHA_API_CLEAR_MSG = "/api/v1/app/push/history/clear"
 
     //设备消息全部置为已读
     const val KHA_MESSAGE_DEVICE_ALL_READ = "/api/v1/warning"

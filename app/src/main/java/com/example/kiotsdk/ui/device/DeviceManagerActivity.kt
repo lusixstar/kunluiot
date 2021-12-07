@@ -11,8 +11,6 @@ import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
-import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
-import com.kunluiot.sdk.ui.web.DeviceWebControlActivity
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.startActivity
@@ -43,18 +41,14 @@ class DeviceManagerActivity : BaseActivity() {
     }
 
     private fun initAdapter() {
-        mRoomAdapter = DeviceRoomListAdapter(mutableListOf()) { gotoNext(it) }
+        mRoomAdapter = DeviceRoomListAdapter(mutableListOf(), { gotoNext(it) }, { gotoDelete(it) })
         mRoomAdapter.setDiffCallback(DiffRoomListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.list.adapter = mRoomAdapter
     }
 
     private fun gotoNext(bean: DeviceNewBean) {
-        if (bean.androidPageZipURL.isNotEmpty()) {
-            startActivity<DeviceWebControlActivity>(DeviceWebControlActivity.BEAN to bean)
-        } else {
-            toastMsg("androidPageZipURL is empty")
-        }
+        startActivity<DeviceInfoActivity>(DeviceInfoActivity.BEAN to bean)
     }
 
     private fun gotoDelete(it: DeviceNewBean) {
@@ -67,10 +61,7 @@ class DeviceManagerActivity : BaseActivity() {
                     if (userId == it.ownerUid) {
                         KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, "", false, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
                     } else {
-                        //删除授权设备
-//            KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, "", false, { code, msg -> toastErrorMsg(code, msg) }, {
-//                LogUtil.e("delete", "$it")
-//            })
+                        KunLuHomeSdk.deviceImpl.deleteAuthorizationDevice(it.ownerUid, it.ctrlKey, userId, it.devTid, "", { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
                     }
                 }
                 dialog.dismiss()
@@ -111,7 +102,9 @@ class DeviceManagerActivity : BaseActivity() {
 
     private fun setRoomData(it: List<FolderBean>) {
         if (!it.isNullOrEmpty()) {
-            mRoomAdapter.setDiffNewData(it as MutableList<FolderBean>)
+            mRoomAdapter.data.clear()
+            mRoomAdapter.addData(it)
+//            mRoomAdapter.setDiffNewData(it as MutableList<FolderBean>)
         }
     }
 }

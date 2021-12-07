@@ -5,6 +5,7 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMineManagerBinding
 import com.example.kiotsdk.ui.device.DeviceManagerActivity
 import com.example.kiotsdk.ui.family.FamilyListActivity
+import com.example.kiotsdk.ui.msg.MsgActivity
 import org.jetbrains.anko.startActivity
 
 /**
@@ -29,5 +30,6 @@ class MineManagerActivity : BaseActivity() {
         mBinding.btnMyInfo.setOnClickListener { startActivity<UserInfoActivity>() }
         mBinding.btnDeviceManager.setOnClickListener { startActivity<DeviceManagerActivity>() }
         mBinding.btnFamilyManager.setOnClickListener { startActivity<FamilyListActivity>() }
+        mBinding.btnMsgCenter.setOnClickListener { startActivity<MsgActivity>() }
     }
 }

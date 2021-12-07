@@ -14,43 +14,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:title="@string/mine_center" />
+        app:title="@string/msg_center" />
 
     <Button
-        android:id="@+id/btn_my_info"
+        android:id="@+id/item_platform_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="@string/user_info"
+        android:text="平台消息"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tool_bar" />
 
     <Button
-        android:id="@+id/btn_device_manager"
+        android:id="@+id/item_device_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="@string/device_manager"
+        android:text="设备消息"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_my_info" />
-
-    <Button
-        android:id="@+id/btn_family_manager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="@string/family_manager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_device_manager" />
-
-    <Button
-        android:id="@+id/btn_msg_center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="@string/msg_center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_family_manager" />
-
+        app:layout_constraintTop_toBottomOf="@id/item_platform_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
