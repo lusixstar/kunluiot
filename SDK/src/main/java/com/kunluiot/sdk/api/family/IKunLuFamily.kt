@@ -78,14 +78,13 @@ interface IKunLuFamily {
      */
     fun updateFamilyMemberInfo(familyId: String, name: String, gender: String, uid: String, fail: OnFailResult, success: OnSuccessResult)
 
-
-    //-----------------------------------------------------
-
-
     /**
      * 家庭成员设备授权
      */
-    fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, callback: IResultCallback)
+    fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, fail: OnFailResult, success: OnSuccessResult)
+
+
+    //-----------------------------------------------------
 
 
     /**

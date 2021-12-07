@@ -2,11 +2,14 @@ package com.example.kiotsdk.ui.family
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.device.DeviceRoomItemAdapter
+import com.example.kiotsdk.adapter.family.FamilyMemberDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyMemberEditBinding
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyMemberMapBean
 import com.kunluiot.sdk.bean.family.FolderBean
 import org.jetbrains.anko.selector
@@ -16,7 +19,7 @@ class MemberEditActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityFamilyMemberEditBinding
 
-    private lateinit var mAdapter: DeviceRoomItemAdapter
+    private lateinit var mAdapter: FamilyMemberDeviceListAdapter
 
     private var mBean = FamilyMemberMapBean()
 
@@ -46,20 +49,36 @@ class MemberEditActivity : BaseActivity() {
         mBinding.roomLayout.setOnClickListener { selectRoom() }
         mBinding.sexLayout.setOnClickListener { selectGender() }
         mBinding.create.setOnClickListener { gotoNext() }
+        mBinding.authorize.setOnClickListener { gotoAuthorize() }
 
         initAdapter()
         if (!mFolderList.isNullOrEmpty()) {
             mBinding.room.text = mFolderList.first().folderName
-            KunLuHomeSdk.deviceImpl.getRoomsDevices(mFolderList.first().folderId, true, { c, m -> toastErrorMsg(c, m) }, {
+            KunLuHomeSdk.deviceImpl.getRoomsDevices(mFolderList.first().folderId, true, { c, m -> toastErrorMsg(c, m) }, { list ->
+                val l = list.filter { it.devType != "SUB" }.filter { it.bindKey.isNotEmpty() }.filter { it.ctrlKey.isNotEmpty() }
+                l.forEach { if (mBean.ctrlKeys.contains(it.ctrlKey)) it.select = true }
                 mAdapter.data.clear()
-                mAdapter.addData(it)
+                mAdapter.addData(l)
             })
         }
     }
 
+    private fun gotoAuthorize() {
+        if (!mAdapter.data.isNullOrEmpty()) {
+            val list = mAdapter.data.map { it.ctrlKey }
+            KunLuHomeSdk.familyImpl.updateMemberCtrlKeys(mFamilyId, mBean.uid, list, { c, m -> toastErrorMsg(c, m) }, { toastMsg("change success") })
+        }
+    }
+
     private fun initAdapter() {
-        mAdapter = DeviceRoomItemAdapter(arrayListOf())
+        mAdapter = FamilyMemberDeviceListAdapter(arrayListOf())
+        (mBinding.deviceList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.deviceList.adapter = mAdapter
+        mAdapter.setOnItemClickListener { adapter, _, position ->
+            val bean = adapter.getItem(position) as DeviceNewBean
+            bean.select = !bean.select
+            adapter.notifyItemChanged(position)
+        }
     }
 
     private fun selectRoom() {
@@ -67,9 +86,11 @@ class MemberEditActivity : BaseActivity() {
         selector("选择房间", list) { dialog, i ->
             val bean = mFolderList[i]
             mBinding.room.text = list[i]
-            KunLuHomeSdk.deviceImpl.getRoomsDevices(bean.folderId, true, { c, m -> toastErrorMsg(c, m) }, {
+            KunLuHomeSdk.deviceImpl.getRoomsDevices(bean.folderId, true, { c, m -> toastErrorMsg(c, m) }, { list ->
+                val l = list.filter { it.devType != "SUB" }.filter { it.bindKey.isNotEmpty() }.filter { it.ctrlKey.isNotEmpty() }
+                l.forEach { if (mBean.ctrlKeys.contains(it.ctrlKey)) it.select = true }
                 mAdapter.data.clear()
-                mAdapter.addData(it)
+                mAdapter.addData(l)
             })
             dialog.dismiss()
         }
@@ -86,8 +107,6 @@ class MemberEditActivity : BaseActivity() {
             else -> "小孩"
         }
         mBinding.gender.text = gender
-
-
     }
 
     private fun selectGender() {

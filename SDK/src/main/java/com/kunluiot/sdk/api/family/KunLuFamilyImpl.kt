@@ -108,16 +108,15 @@ internal class KunLuFamilyImpl : IKunLuFamily {
         FamilyRequestUtil.updateFamilyMemberInfo(familyId, name, gender, uid, fail, success)
     }
 
-
-    //-----------------------------------------------------
-
-
     /**
      * 家庭成员设备授权
      */
-    override fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, callback: IResultCallback) {
-        FamilyRequestUtil.updateMemberCtrlKeys(familyId, uid, ctrlKeys, callback)
+    override fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, fail: OnFailResult, success: OnSuccessResult) {
+        FamilyRequestUtil.updateMemberCtrlKeys(familyId, uid, ctrlKeys, fail, success)
     }
+
+
+    //-----------------------------------------------------
 
 
     /**

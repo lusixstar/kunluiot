@@ -311,30 +311,30 @@ object FamilyRequestUtil {
         })
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      *  家庭成员设备授权
      */
-    fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, callback: IResultCallback) {
+    fun updateMemberCtrlKeys(familyId: String, uid: String, ctrlKeys: List<String>, fail: OnFailResult, success: OnSuccessResult) {
         val map = mutableMapOf<String, Any>()
         map["ctrlKeys"] = ctrlKeys
         map["uid"] = uid
         val param = JsonUtils.toJson(map)
-        Kalle.put(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/$familyId/member").setHeaders(KunLuHelper.getSign()).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.put(ReqApi.KHA_WEB_BASE_URL + FamilyApi.KHA_API_FAMILY + "/$familyId/member")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-
+                    KotlinSerializationUtils.getJsonData<MemberAddBean>(response.succeed()).let { success.success() }
                 }
             }
         })
     }
+
+    //--------------------------------------------------------------------
 
 
     /**

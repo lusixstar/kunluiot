@@ -68,11 +68,7 @@ class FamilyMemberManagerActivity : BaseActivity() {
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
             val bean = adapter.getItem(position) as FamilyMemberMapBean
-            gotoEdit.launch(Intent(this, MemberEditActivity::class.java)
-                .putExtra(MemberEditActivity.MEMBER_DEVICE_BEAN, bean)
-                .putExtra(MemberEditActivity.MEMBER_TYPE, mType)
-                .putExtra(MemberEditActivity.MEMBER_FAMILY_ID, mFamilyId)
-                .putExtra(MemberEditActivity.MEMBER_FOLDER, mFolderList))
+            gotoEdit.launch(Intent(this, MemberEditActivity::class.java).putExtra(MemberEditActivity.MEMBER_DEVICE_BEAN, bean).putExtra(MemberEditActivity.MEMBER_TYPE, mType).putExtra(MemberEditActivity.MEMBER_FAMILY_ID, mFamilyId).putExtra(MemberEditActivity.MEMBER_FOLDER, mFolderList))
         }
         mAdapter.setOnItemLongClickListener { adapter, _, position ->
             val bean = adapter.getItem(position) as FamilyMemberMapBean

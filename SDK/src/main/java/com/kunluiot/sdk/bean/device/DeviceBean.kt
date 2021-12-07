@@ -250,6 +250,7 @@ data class DeviceNewBean(
     val folderName: String = "",
     val associateGatewayCtrlKey: String = "",
     var online: Boolean = false,
+    var select: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),
     val branchNames: List<String> = listOf(),
 ) : Parcelable
