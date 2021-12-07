@@ -18,8 +18,6 @@ internal object KunLuHelper {
     val INJECT_JS = FileUtil.getStringFromAssets(KunLuHomeSdk.instance.getApp(), "inject.js")
 
     private const val lang = "cn"
-    private const val accessId = "db96ba0828a146498165f4de8b37dca0"
-    private const val accessSecret = "gCijFSQYavXhfLjsk2,L86u@VMWmxXFcBAWytvBAarkfwvaxLp4uYuK/Fbb02dz;ZRCMcByt,QH8RA7vR;3Dzuih6tMkaka3EEwgWA@kv3nHPN5GLK3jvKg8"
 
     fun getSign(): Headers {
         val map = Headers()
@@ -29,13 +27,13 @@ internal object KunLuHelper {
 
         map.set("lang", lang)
 
-        map.set("accessId", accessId)
+        map.set("accessId", KunLuHomeSdk.instance.getAppKey())
 
         val time = getTimeMillis()
         map.set("t", time.toString())
 
-        val sign = "$accessId$lang$nonce$time"
-        val result = HMACSHA256.sha256_HMAC(sign, accessSecret)
+        val sign = "${KunLuHomeSdk.instance.getAppKey()}$lang$nonce$time"
+        val result = HMACSHA256.sha256_HMAC(sign, KunLuHomeSdk.instance.getAppSecret())
         map.set("sign", result)
 
         return map

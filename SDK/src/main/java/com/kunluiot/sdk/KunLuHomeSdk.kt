@@ -34,6 +34,9 @@ class KunLuHomeSdk {
     private lateinit var appSecret: String
     private var msgId = 1
 
+    internal fun getAppKey(): String = appKey
+    internal fun getAppSecret(): String = appSecret
+
     private fun setKalle() {
         XLog.init(LogLevel.ALL)
         val build = KalleConfig.newBuilder().network(BroadcastNetwork(app)).addInterceptor(LoggerInterceptor("KunLuSDK", BuildConfig.DEBUG)).converter(KunLuJsonConverter(app))
@@ -63,7 +66,7 @@ class KunLuHomeSdk {
     }
 
     fun logout() {
-        SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, "")
+        SPUtil.apply(instance.getApp(), UserApi.KHA_API_LOGIN, "")
         webSocketDisConnect()
     }
 

@@ -6,8 +6,6 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyEditBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.family.FamilyBean
-import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.family.IFamilyDetailsCallback
 import org.jetbrains.anko.toast
 
 class FamilyEditActivity : BaseActivity() {

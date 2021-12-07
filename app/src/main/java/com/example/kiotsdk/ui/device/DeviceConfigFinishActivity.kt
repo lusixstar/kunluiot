@@ -1,21 +1,11 @@
 package com.example.kiotsdk.ui.device
 
-import android.app.AlertDialog
 import android.os.Bundle
-import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceConfigFinishBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceNewBean
-import com.kunluiot.sdk.bean.family.FamilyBean
-import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
-import com.kunluiot.sdk.callback.family.IFamilyListCallback
-import com.kunluiot.sdk.callback.family.IFamilyRoomListCallback
-import com.kunluiot.sdk.thirdlib.qrcode.util.LogUtils
-import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
-import com.kunluiot.sdk.util.JsonUtils
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 

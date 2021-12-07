@@ -7,7 +7,6 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilySelectBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.family.FamilyBean
-import com.kunluiot.sdk.callback.family.IFamilyListCallback
 import org.jetbrains.anko.toast
 
 class FamilySelectActivity : BaseActivity() {
