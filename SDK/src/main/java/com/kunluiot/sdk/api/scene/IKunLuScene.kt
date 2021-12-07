@@ -18,8 +18,6 @@ interface IKunLuScene {
      */
     fun getSceneTemplate(fail: OnFailResult, success: SceneListResult)
 
-    // ----------------------------------------------------
-
     /**
      * 新增手动场景
      */

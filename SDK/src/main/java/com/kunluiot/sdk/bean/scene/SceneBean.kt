@@ -31,18 +31,6 @@ data class SceneLinkBean(
 
 @Parcelize
 @Serializable
-data class Condition(
-    var conDesc: String = "",
-    var ctrlKey: String = "",
-    var relation: String = "",
-    var customFields: CustomFields = CustomFields(),
-    var devTid: String = "",
-    var thirdDevice: Boolean = false,
-    var triggerParams: List<TriggerParam> = listOf(),
-) : Parcelable
-
-@Parcelize
-@Serializable
 data class IftttTask(
     val customParam: CustomParam = CustomParam(),
     val desc: String = "",
@@ -73,25 +61,6 @@ data class PushMsg(
 
 @Parcelize
 @Serializable
-data class CustomFields(
-    val devName: String = "",
-    val family_folder: String = "",
-    val icon: String = "",
-    val mid: String = "",
-    val name: String = "",
-    var desc: String = "",
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class TriggerParam(
-    val left: String = "",
-    val `operator`: String = "",
-    val right: Int = 0,
-) : Parcelable
-
-@Parcelize
-@Serializable
 data class CustomParam(
     val devName: String = "",
     val family_folder: String = "",
@@ -105,17 +74,9 @@ data class CustomParam(
 data class Params(
     val ctrlKey: String = "",
     val `data`: Map<String, String> = mapOf(),
-//    val `data`: Data = Data(),
     val devTid: String = "",
     val subDevTid: String = "",
     val time: Int = 0,
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class Data(
-    val cmdId: Int = 0,
-    val sw1: Int = 0,
 ) : Parcelable
 
 // -------------------------------------------------------
@@ -182,7 +143,6 @@ data class SceneLinkedBean(
     var params: SceneLinkedParamsBean = SceneLinkedParamsBean(),
     var cmdArgs: Map<String, String> = mapOf(),
     var cmdArgsLink: Map<String, String> = mapOf(),
-//    var cmdArgs: SceneOneKeyCmdArgs = SceneOneKeyCmdArgs(),
     var customParam: SceneOneKeyCustomParam = SceneOneKeyCustomParam(),
 ) : Parcelable
 
@@ -192,11 +152,10 @@ data class SceneLinkedParamsBean(
     var ctrlKey: String = "",
     var subDevTid: String = "",
     var `data`: Map<String, String> = mapOf(),
-//    var `data`: SceneStackLinkedData? = null,
     var devTid: String = "",
     var sceneId: String = "",
     var time: Int = 0,
-): Parcelable
+) : Parcelable
 
 @Parcelize
 @Serializable
@@ -215,9 +174,6 @@ data class AddTimeConditionEvent(
     var timeList: List<TimeConditionBean>? = null,
 ) : Parcelable
 
-// ------------------------------------------
-
-
 @Serializable
 data class SceneListBean(
     val sceneId: String = "",
@@ -227,34 +183,6 @@ data class SceneListBean(
     val showType: String = "",
     val templateId: String = "",
     val name: String = "",
-)
-
-@Serializable
-data class SceneObjectIdBean(
-    val timestamp: Int = 0,
-    val machineIdentifier: Int = 0,
-    val processIdentifier: Int = 0,
-    val counter: Int = 0,
-    val time: Long = 0,
-    val date: Long = 0,
-    val timeSecond: Int = 0,
-)
-
-@Serializable
-data class SceneAddOneKeyBean(
-    val taskId: String = "",
-    val cmdArgs: Map<String, Unit> = mapOf(),
-    val customParam: SceneCustomParamBean = SceneCustomParamBean(),
-    val time: String = "",
-    val iftttId: String = "",
-    val enable: String = "",
-    val devTid: String = "",
-    val ctrlKey: String = "",
-    val subDevTid: String = "",
-    val thirdPid: String = "",
-    val newDesc: String = "",
-    val fix: String = "0",
-    val updateIndex: Int = -1,
 )
 
 @Serializable

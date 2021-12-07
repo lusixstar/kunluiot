@@ -34,11 +34,11 @@ data class FamilyMemberMapBean(
     var gender: String = "",
     var type: String = "",
     var ctrlKeys: List<String> = listOf(),
-): Parcelable
+) : Parcelable
 
 @Serializable
 data class MemberAddBean(
-   val  results: List<FamilyMemberMapBean>,
+    val results: List<FamilyMemberMapBean>,
 )
 
 
@@ -51,4 +51,4 @@ data class FolderBean(
     val folderName: String = "",
     val folderSort: Int = 0,
     val deviceList: List<DeviceNewBean> = listOf(),
-): Parcelable
+) : Parcelable

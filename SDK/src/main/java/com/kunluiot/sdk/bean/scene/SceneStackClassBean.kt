@@ -116,15 +116,9 @@ data class SceneStackLinkedParams(
     var ctrlKey: String? = null,
     var subDevTid: String? = null,
     var `data`: Map<String, Any>? = null,
-//    var `data`: SceneStackLinkedData? = null,
     var devTid: String? = null,
     var sceneId: String? = null,
     var time: Int? = null,
 )
-
-//data class SceneStackLinkedData(
-//    var cmdId: Int? = null,
-//    var temp_value: Int? = null,
-//)
 
 

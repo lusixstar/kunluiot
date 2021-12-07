@@ -1,6 +1,5 @@
 package com.kunluiot.sdk.api.user
 
-import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.common.OnSuccessStrResult

@@ -58,14 +58,6 @@ interface ICommonProblemCallback {
 }
 
 /**
- * 平台消息列表
- * */
-interface ICommonMsgListCallback {
-    fun onSuccess(bean: CommonMessageListBean)
-    fun onError(code: String, error: String)
-}
-
-/**
  * 绑定的第三方平台
  * */
 interface ICommonThirdPlatformCallback {
