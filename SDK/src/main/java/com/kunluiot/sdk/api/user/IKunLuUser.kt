@@ -15,29 +15,19 @@ interface IKunLuUser {
     /**
      * 登录
      */
-    fun login(countryCode: String, phone: String, passwd: String, fail: OnFailResult, success: LoginSuccessResult)
-
-    /**
-     * 获取图像验证
-     */
-    fun getVerifyImageCode(fail: OnFailResult, success: VerifyImageSuccessResult)
-
-    /**
-     * 检测图像验证有效性
-     */
-    fun checkVerifyImageCode(rid: String, code: String, fail: OnFailResult, success: CheckVerifyImageSuccessResult)
+    fun login(phone: String, passwd: String, fail: OnFailResult, success: LoginSuccessResult)
 
     /**
      * 获取验证码
      * phoneNumber 手机号码
      * type 注册：register 忘记密码：resetPassword 更换手机号码：changePhone
      */
-    fun getVerifyCode(phoneNumber: String, type: String, token: String, fail: OnFailResult, success: OnSuccessResult)
+    fun getVerifyCode(phoneNumber: String, type: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 检测验证码有效性
      */
-    fun checkVerifyCode(phoneNumber: String, type: String, areaCode: String, code: String, fail: OnFailResult, success: VerifyCodeSuccessResult)
+    fun checkVerifyCode(phoneNumber: String, type: String, code: String, fail: OnFailResult, success: VerifyCodeSuccessResult)
 
     /**
      * 注册
@@ -47,7 +37,7 @@ interface IKunLuUser {
     /**
      * 重置密码
      */
-    fun resetPassword(account: String, password: String, token: String, verifyCode: String, fail: OnFailResult, success: OnSuccessResult)
+    fun resetPassword(account: String, password: String, token: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 获取用户信息

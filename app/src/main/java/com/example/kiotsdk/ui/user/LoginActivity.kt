@@ -48,7 +48,6 @@ class LoginActivity : BaseActivity() {
 
     private fun gotoNext() {
         val account = mBinding.emailPhone.text.toString()
-        val country = mBinding.countryCode.text.toString()
         val password = mBinding.password.text.toString()
         if (account.isEmpty()) {
             toast("account is empty")
@@ -58,7 +57,7 @@ class LoginActivity : BaseActivity() {
             toast("password is empty")
             return
         }
-        KunLuHomeSdk.userImpl.login(country, account, password, { code, err -> toastErrorMsg(code, err) }, {
+        KunLuHomeSdk.userImpl.login(account, password, { code, err -> toastErrorMsg(code, err) }, {
             setResult(Activity.RESULT_OK, intent)
             startActivity<MainNewActivity>()
             finish()

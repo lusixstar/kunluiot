@@ -1,11 +1,7 @@
 package com.example.kiotsdk.ui.user
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Base64
-import android.view.View
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityRegisterBinding
@@ -35,7 +31,6 @@ class RegisterActivity : BaseActivity() {
 
     private fun gotoRegister() {
         val account = mBinding.emailPhone.text.toString()
-        val area = mBinding.countryCode.text.toString()
         val code = mBinding.verifyCode.text.toString()
         val password = mBinding.password.text.toString()
         if (account.isEmpty()) {
@@ -50,7 +45,7 @@ class RegisterActivity : BaseActivity() {
             toast("password is empty")
             return
         }
-        KunLuHomeSdk.userImpl.checkVerifyCode(account, KunLuUserType.SEND_CODE_REGISTER, area, code, { c, err -> toastErrorMsg(c, err) }, { finishRegister(it) })
+        KunLuHomeSdk.userImpl.checkVerifyCode(account, KunLuUserType.SEND_CODE_REGISTER, code, { c, err -> toastErrorMsg(c, err) }, { finishRegister(it) })
     }
 
     private fun finishRegister(bean: VerifyCodeBean) {
@@ -59,57 +54,18 @@ class RegisterActivity : BaseActivity() {
     }
 
     private fun sendCode() {
-        if (mBinding.verifyImageLayout.visibility != View.VISIBLE) {
-            getVerifyImage()
-        } else {
-            val imageCode = mBinding.etVerifyImage.text.toString()
-            val phone = mBinding.emailPhone.text.toString()
-            if (imageCode.isEmpty()) {
-                toast("imageCode is empty")
-                return
-            }
-            if (phone.isEmpty()) {
-                toast("phone is empty")
-                return
-            }
-            checkVerifyImage(imageCode)
-        }
-    }
-
-    private fun getSMSCode(captchaToken: String) {
         val phone = mBinding.emailPhone.text.toString()
-        KunLuHomeSdk.userImpl.getVerifyCode(phone, KunLuUserType.SEND_CODE_REGISTER, captchaToken, { code, err -> toastErrorMsg(code, err) }, { toastMsg("send SMS success") })
-        countDownTimer.start()
-    }
-
-    private fun checkVerifyImage(imageCode: String) {
-        KunLuHomeSdk.userImpl.checkVerifyImageCode(mRid, imageCode, { code, err -> toastErrorMsg(code, err) }, { bean -> getSMSCode(bean.captchaToken) })
-    }
-
-    private fun getVerifyImage() {
-        KunLuHomeSdk.userImpl.getVerifyImageCode({ code, err -> toastErrorMsg(code, err) }, { bean ->
-            if (bean.png.isNotEmpty()) {
-                mBinding.verifyImageLayout.visibility = View.VISIBLE
-                mBinding.verifyImage.setImageBitmap(base64CodeToBitmap(bean.png))
-                mRid = bean.rid
-            } else {
-                toastMsg("please once click")
-            }
-        })
-    }
-
-    /**
-     * 将Base64字符串形式存储的图片转成Bitmap
-     */
-    private fun base64CodeToBitmap(base64Code: String): Bitmap? {
-        var bitmap: Bitmap? = null
-        try {
-            val bitmapArray = Base64.decode(base64Code, Base64.DEFAULT)
-            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.size)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        if (phone.isEmpty()) {
+            toast("phone is empty")
+            return
         }
-        return bitmap
+        getSMSCode()
+    }
+
+    private fun getSMSCode() {
+        val phone = mBinding.emailPhone.text.toString()
+        KunLuHomeSdk.userImpl.getVerifyCode(phone, KunLuUserType.SEND_CODE_REGISTER, { code, err -> toastErrorMsg(code, err) }, { toastMsg("send SMS success") })
+        countDownTimer.start()
     }
 
     private var smsTime: Long = 60 * 1000

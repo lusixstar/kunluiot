@@ -2,11 +2,17 @@ package com.kunluiot.sdk.request
 
 import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.user.*
+import com.kunluiot.sdk.bean.user.AvatarBean
+import com.kunluiot.sdk.bean.user.SessionBean
+import com.kunluiot.sdk.bean.user.User
+import com.kunluiot.sdk.bean.user.VerifyCodeBean
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.common.OnSuccessResult
 import com.kunluiot.sdk.callback.common.OnSuccessStrResult
-import com.kunluiot.sdk.callback.user.*
+import com.kunluiot.sdk.callback.user.AvatarSuccessResult
+import com.kunluiot.sdk.callback.user.LoginSuccessResult
+import com.kunluiot.sdk.callback.user.UserSuccessResult
+import com.kunluiot.sdk.callback.user.VerifyCodeSuccessResult
 import com.kunluiot.sdk.thirdlib.kalle.FileBinary
 import com.kunluiot.sdk.thirdlib.kalle.FormBody
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
@@ -50,12 +56,11 @@ object UserRequestUtil {
     /**
      * 登录
      */
-    fun login(countryCode: String, phone: String, passwd: String, fail: OnFailResult, success: LoginSuccessResult) {
+    fun login(phone: String, passwd: String, fail: OnFailResult, success: LoginSuccessResult) {
         val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_LOGIN)
         kalle.param("username", phone)
         kalle.param("password", passwd)
         kalle.param("clientType", "ANDROID")
-        kalle.param("areaCode", countryCode)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
@@ -75,46 +80,11 @@ object UserRequestUtil {
     }
 
     /**
-     * 获取图像验证
-     */
-    fun getVerifyImageCode(fail: OnFailResult, success: VerifyImageSuccessResult) {
-        val kalle = Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GET_VERIFY_IMAGE_CODE)
-        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    fail.fail(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<VerifyImageBean>(response.succeed()).let { success.success(it) }
-                }
-            }
-        })
-    }
-
-    /**
-     * 检测图像验证有效性
-     */
-    fun checkVerifyImageCode(rid: String, code: String, fail: OnFailResult, success: CheckVerifyImageSuccessResult) {
-        val kalle = Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_CHECK_VERIFY_IMAGE_CODE)
-        kalle.param("rid", rid).param("code", code)
-        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    fail.fail(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<CheckVerifyImageBean>(response.succeed()).let { success.success(it) }
-                }
-            }
-        })
-    }
-
-    /**
      * 获取验证码
      */
-    fun getVerifyCode(phoneNumber: String, type: String, token: String, fail: OnFailResult, success: OnSuccessResult) {
+    fun getVerifyCode(phoneNumber: String, type: String, fail: OnFailResult, success: OnSuccessResult) {
         val kalle = Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_GET_VERIFY_CODE)
-        kalle.param("phoneNumber", phoneNumber).param("token", token).param("type", type)
+        kalle.param("phoneNumber", phoneNumber).param("type", type)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
@@ -130,11 +100,9 @@ object UserRequestUtil {
     /**
      * 检测验证码有效性
      */
-    fun checkVerifyCode(phoneNumber: String, type: String, areaCode: String, code: String, fail: OnFailResult, success: VerifyCodeSuccessResult) {
-        var area = areaCode
-        if (area.isEmpty()) area = "86"
+    fun checkVerifyCode(phoneNumber: String, type: String, code: String, fail: OnFailResult, success: VerifyCodeSuccessResult) {
         val kalle = Kalle.get(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_CHECK_VERIFY_CODE)
-        kalle.param("type", type).param("phoneNumber", phoneNumber).param("areaCode", area).param("code", code)
+        kalle.param("type", type).param("phoneNumber", phoneNumber).param("code", code)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
@@ -173,9 +141,9 @@ object UserRequestUtil {
     /**
      * 重置密码
      */
-    fun resetPassword(phoneNumber: String, password: String, token: String, verifyCode: String, fail: OnFailResult, success: OnSuccessResult) {
+    fun resetPassword(phoneNumber: String, password: String, token: String, fail: OnFailResult, success: OnSuccessResult) {
         val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_RESET_PASSWORD)
-        kalle.param("phoneNumber", phoneNumber).param("password", password).param("token", token).param("verifyCode", verifyCode)
+        kalle.param("phoneNumber", phoneNumber).param("password", password).param("token", token)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()

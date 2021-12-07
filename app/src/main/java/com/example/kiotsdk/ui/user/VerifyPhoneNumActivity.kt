@@ -45,7 +45,7 @@ class VerifyPhoneNumActivity : BaseActivity() {
     }
 
     private fun sendSms() {
-        KunLuHomeSdk.userImpl.getVerifyCode(mPhone, KunLuUserType.SEND_CODE_CHANGE_PHONE, "", { code, msg -> toastErrorMsg(code, msg) }, { countDownTimer.start() })
+        KunLuHomeSdk.userImpl.getVerifyCode(mPhone, KunLuUserType.SEND_CODE_CHANGE_PHONE, { code, msg -> toastErrorMsg(code, msg) }, { countDownTimer.start() })
     }
 
     private fun gotoNext() {
@@ -55,7 +55,7 @@ class VerifyPhoneNumActivity : BaseActivity() {
             return
         }
         if (!isNewPhone) {
-            KunLuHomeSdk.userImpl.checkVerifyCode(mPhone, KunLuUserType.SEND_CODE_CHANGE_PHONE, "", code, { c, msg -> toastErrorMsg(c, msg) }, {
+            KunLuHomeSdk.userImpl.checkVerifyCode(mPhone, KunLuUserType.SEND_CODE_CHANGE_PHONE, code, { c, msg -> toastErrorMsg(c, msg) }, {
                 mToken = it.token
                 gotoNew.launch(Intent(this, BindNewPhoneNumActivity::class.java))
             })
@@ -77,7 +77,7 @@ class VerifyPhoneNumActivity : BaseActivity() {
     }
 
     private fun sendNewPhoneSms(phone: String) {
-        KunLuHomeSdk.userImpl.getVerifyCode(phone, KunLuUserType.SEND_CODE_REGISTER, "", { code, msg -> toastErrorMsg(code, msg) }, {
+        KunLuHomeSdk.userImpl.getVerifyCode(phone, KunLuUserType.SEND_CODE_REGISTER, { code, msg -> toastErrorMsg(code, msg) }, {
             mBinding.hint.text = "我们已发送一条短信验证码至 $phone"
             mBinding.etSms.setText("")
             isNewPhone = true
