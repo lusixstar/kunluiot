@@ -41,8 +41,8 @@ class RegisterActivity : BaseActivity() {
             toast("code is empty")
             return
         }
-        if (password.isEmpty()) {
-            toast("password is empty")
+        if (password.isEmpty() || password.length < 6) {
+            toast("密码不能为空 最少6位长度")
             return
         }
         KunLuHomeSdk.userImpl.checkVerifyCode(account, KunLuUserType.SEND_CODE_REGISTER, code, { c, err -> toastErrorMsg(c, err) }, { finishRegister(it) })
