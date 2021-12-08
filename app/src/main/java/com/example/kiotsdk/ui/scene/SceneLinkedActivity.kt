@@ -49,7 +49,7 @@ class SceneLinkedActivity : BaseActivity() {
     }
 
     private fun getData() {
-        KunLuHomeSdk.sceneImpl.getLinkageSceneList(0, 999, { code, msg -> toastErrorMsg(code, msg) }, { setData(it) })
+        KunLuHomeSdk.sceneImpl.getLinkageSceneList({ code, msg -> toastErrorMsg(code, msg) }, { setData(it) })
     }
 
     private fun setData(list: List<SceneLinkBean> = listOf()) {
@@ -84,15 +84,7 @@ class SceneLinkedActivity : BaseActivity() {
     private fun gotoDelete(bean: SceneLinkBean) {
         alert(message = "是否删除") {
             positiveButton("确定") { dialog ->
-                KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, object : IResultCallback {
-                    override fun onSuccess() {
-                        getData()
-                    }
-
-                    override fun onError(code: String, error: String) {
-                        toastErrorMsg(code, error)
-                    }
-                })
+                KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, { c, m -> toastErrorMsg(c, m) }, { getData() })
                 dialog.dismiss()
             }
             negativeButton("取消") { dialog -> dialog.dismiss() }

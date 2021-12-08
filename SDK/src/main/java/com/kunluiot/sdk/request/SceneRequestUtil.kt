@@ -55,12 +55,10 @@ object SceneRequestUtil {
         })
     }
 
-    // ----------------------------------------------------------
-
     /**
      * 手动场景列表
      * */
-    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
+    fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult) {
 
         val list = mutableListOf<SceneStackClassBean>()
         sceneTaskList.forEach {
@@ -93,13 +91,8 @@ object SceneRequestUtil {
 
         val map = HashMap<String, Any>()
         map["sceneName"] = sceneName
-        if (templateId.isNotEmpty()) map["templateId"] = templateId
         map["sceneTaskList"] = list
         if (icon.isNotEmpty()) map["icon"] = icon
-        if (oneKeyType != 0) map["oneKeyType"] = oneKeyType
-        if (!preset.isNullOrEmpty()) {
-            preset.forEach { (t, u) -> map[t] = u }
-        }
         val json: String = JsonUtils.toJson(map)
 
         val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
@@ -109,9 +102,9 @@ object SceneRequestUtil {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -120,7 +113,7 @@ object SceneRequestUtil {
     /**
      * 编辑手动场景
      * */
-    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback) {
+    fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult) {
 
         val list = mutableListOf<SceneStackClassBean>()
         sceneTaskList.forEach {
@@ -155,12 +148,8 @@ object SceneRequestUtil {
         map["sceneId"] = sceneId
         map["sceneName"] = sceneName
         if (icon.isNotEmpty()) map["icon"] = icon
-        if (oneKeyType != 0) map["oneKeyType"] = oneKeyType
         map["sceneTaskList"] = list
 
-        if (!preset.isNullOrEmpty()) {
-            preset.forEach { (t, u) -> map[t] = u }
-        }
         val json: String = JsonUtils.toJson(map)
         val kalle = Kalle.patch(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId")
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
@@ -169,9 +158,9 @@ object SceneRequestUtil {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -180,20 +169,24 @@ object SceneRequestUtil {
     /**
      * 删除手动场景
      * */
-    fun deleteOneKeyScene(sceneId: String, callback: IResultCallback) {
+    fun deleteOneKeyScene(sceneId: String, fail: OnFailResult, success: OnSuccessResult) {
         val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST + "/$sceneId")
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
             }
         })
     }
+
+
+    // ----------------------------------------------------------
+
 
     /**
      * 删除使用中的手动场景
@@ -214,10 +207,10 @@ object SceneRequestUtil {
     /**
      * 获取联动场景列表
      * */
-    fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult) {
+    fun getLinkageSceneList(fail: OnFailResult, success: SceneLinkedListResult) {
         val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_LINKAGE_SCENE_LIST)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-        kalle.param("page", page).param("size", size)
+        kalle.param("page", 0).param("size", 999)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
@@ -423,7 +416,7 @@ object SceneRequestUtil {
     /**
      * 删除联动场景
      * */
-    fun deleteLinkageScene(ruleId: String, callback: IResultCallback) {
+    fun deleteLinkageScene(ruleId: String, fail: OnFailResult, success: OnSuccessResult) {
         val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_DELETE_LINKAGE_SCENE)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.urlParam("ruleId", ruleId)
@@ -431,9 +424,9 @@ object SceneRequestUtil {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -450,22 +443,6 @@ object SceneRequestUtil {
                     callback.onError(response.code().toString(), failed)
                 } else {
                     KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
-                }
-            }
-        })
-    }
-
-    /**
-     * 新玩法列表
-     * */
-    fun getNewPlay(callback: ISceneNewPlayCallback) {
-        Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + SceneApi.KHA_API_NEW_PLAY).setHeaders(KunLuHelper.getSign()).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<SceneNewPlayBean>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
         })

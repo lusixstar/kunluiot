@@ -136,10 +136,10 @@ object DeviceRequestUtil {
     /**
      * 设备产品列表
      */
-    fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult) {
+    fun getDeviceProducts(fail: OnFailResult, success: DeviceProductListResult) {
         val kalle = Kalle.get(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_GET_PRODUCTLIST)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-        kalle.param("filterFlag", filterFlag)
+        kalle.param("filterFlag", true)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()

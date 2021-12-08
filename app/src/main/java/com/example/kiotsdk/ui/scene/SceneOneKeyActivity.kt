@@ -130,15 +130,7 @@ class SceneOneKeyActivity : BaseActivity() {
     private fun gotoDelete(bean: SceneOneKeyBean) {
         alert(message = "是否删除") {
             positiveButton("确定") { dialog ->
-                KunLuHomeSdk.sceneImpl.deleteOneKeyScene(bean.sceneId, object : IResultCallback {
-                    override fun onSuccess() {
-                        getData()
-                    }
-
-                    override fun onError(code: String, error: String) {
-                        toastErrorMsg(code, error)
-                    }
-                })
+                KunLuHomeSdk.sceneImpl.deleteOneKeyScene(bean.sceneId, { c, m -> toastErrorMsg(c, m) }, { getData() })
                 dialog.dismiss()
             }
             negativeButton("取消") { dialog -> dialog.dismiss() }

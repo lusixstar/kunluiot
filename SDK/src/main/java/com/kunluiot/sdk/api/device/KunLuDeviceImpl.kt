@@ -122,8 +122,8 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 设备产品列表
      */
-    override fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult) {
-        DeviceRequestUtil.getDeviceProducts(filterFlag, fail, success)
+    override fun getDeviceProducts(fail: OnFailResult, success: DeviceProductListResult) {
+        DeviceRequestUtil.getDeviceProducts(fail, success)
     }
 
     /**

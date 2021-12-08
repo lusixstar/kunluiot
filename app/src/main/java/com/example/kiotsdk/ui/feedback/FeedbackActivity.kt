@@ -53,7 +53,7 @@ class FeedbackActivity : BaseActivity() {
             toastMsg("phone is empty")
             return
         }
-        KunLuHomeSdk.commonImpl.feedback(phone, "Android反馈", content, "", phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
+        KunLuHomeSdk.commonImpl.feedback(content, listOf(), phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
     }
 
     private fun initAdapter() {

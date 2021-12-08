@@ -29,22 +29,22 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 新增手动场景
      */
-    override fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback) {
-        SceneRequestUtil.addOneKeyScene(oneKeyType, icon, sceneName, sceneTaskList, preset, templateId, callback)
+    override fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.addOneKeyScene(icon, sceneName, sceneTaskList, fail, success)
     }
 
     /**
      * 编辑手动场景
      */
-    override fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback) {
-        SceneRequestUtil.updateOneKeyScene(sceneId, oneKeyType, icon, sceneName, sceneTaskList, preset, callback)
+    override fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.updateOneKeyScene(sceneId, icon, sceneName, sceneTaskList, fail, success)
     }
 
     /**
      * 删除手动场景
      * */
-    override fun deleteOneKeyScene(sceneId: String, callback: IResultCallback) {
-        SceneRequestUtil.deleteOneKeyScene(sceneId, callback)
+    override fun deleteOneKeyScene(sceneId: String, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.deleteOneKeyScene(sceneId, fail, success)
     }
 
     /**
@@ -57,8 +57,8 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 联动场景列表
      */
-    override fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult) {
-        SceneRequestUtil.getLinkageSceneList(page, size, fail, success)
+    override fun getLinkageSceneList(fail: OnFailResult, success: SceneLinkedListResult) {
+        SceneRequestUtil.getLinkageSceneList(fail, success)
     }
 
     /**
@@ -78,8 +78,8 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 删除联动场景
      * */
-    override fun deleteLinkageScene(ruleId: String, callback: IResultCallback) {
-        SceneRequestUtil.deleteLinkageScene(ruleId, callback)
+    override fun deleteLinkageScene(ruleId: String, fail: OnFailResult, success: OnSuccessResult) {
+        SceneRequestUtil.deleteLinkageScene(ruleId, fail, success)
     }
 
     /**
@@ -87,13 +87,6 @@ internal class KunLuSceneImpl : IKunLuScene {
      * */
     override fun deleteUseLinkageScene(ruleId: String, randomToken: String, callback: IResultCallback) {
         SceneRequestUtil.deleteUseLinkageScene(ruleId, randomToken, callback)
-    }
-
-    /**
-     * 新玩法列表
-     */
-    override fun getNewPlay(callback: ISceneNewPlayCallback) {
-        SceneRequestUtil.getNewPlay(callback)
     }
 
     /**

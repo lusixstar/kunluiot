@@ -48,7 +48,7 @@ interface IKunLuCommon {
     /**
      * 意见反馈
      * */
-    fun feedback(username: String, title: String, content: String, images: String, contact: String, fail: OnFailResult, success: OnSuccessResult)
+    fun feedback(content: String, images: List<String>, contact: String, fail: OnFailResult, success: OnSuccessResult)
 
 
     //----------------------------------------------

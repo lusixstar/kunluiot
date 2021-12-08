@@ -178,12 +178,15 @@ object CommonRequestUtil {
     /**
      * 意见反馈
      * */
-    fun feedback(username: String, title: String, content: String, images: String, contact: String, fail: OnFailResult, success: OnSuccessResult) {
-        val map = mutableMapOf<String, String>()
-        map["username"] = username
-        map["title"] = title
+    fun feedback(content: String, images: List<String>, contact: String, fail: OnFailResult, success: OnSuccessResult) {
+        var img = ""
+        images.forEach { img = "$it," }
+        if (img.contains(",")) img = img.substring(0, img.length - 1)
+        val map = mutableMapOf<String, Any>()
+        map["username"] = contact
+        map["title"] = "Android反馈"
         map["content"] = content
-        map["images"] = images
+        map["images"] = img
         map["contact"] = contact
         val param = JsonUtils.toJson(map)
         val kalle = Kalle.post(ReqApi.KHA_CONSOLE_BASE_URL + CommonApi.KHA_API_FEEDBACK)

@@ -21,17 +21,17 @@ interface IKunLuScene {
     /**
      * 新增手动场景
      */
-    fun addOneKeyScene(oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, templateId: String, callback: IResultCallback)
+    fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 编辑手动场景
      */
-    fun updateOneKeyScene(sceneId: String, oneKeyType: Int, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, preset: Map<String, String>, callback: IResultCallback)
+    fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除手动场景
      * */
-    fun deleteOneKeyScene(sceneId: String, callback: IResultCallback)
+    fun deleteOneKeyScene(sceneId: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除使用中的手动场景
@@ -41,7 +41,7 @@ interface IKunLuScene {
     /**
      * 联动场景列表
      */
-    fun getLinkageSceneList(page: Int, size: Int, fail: OnFailResult, success: SceneLinkedListResult)
+    fun getLinkageSceneList(fail: OnFailResult, success: SceneLinkedListResult)
 
     /**
      * 新增联动场景
@@ -56,17 +56,12 @@ interface IKunLuScene {
     /**
      * 删除联动场景
      * */
-    fun deleteLinkageScene(ruleId: String, callback: IResultCallback)
+    fun deleteLinkageScene(ruleId: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除已使用的联动场景
      * */
     fun deleteUseLinkageScene(ruleId: String, randomToken: String, callback: IResultCallback)
-
-    /**
-     * 新玩法列表
-     */
-    fun getNewPlay(callback: ISceneNewPlayCallback)
 
     /**
      * 更新一键场景排序

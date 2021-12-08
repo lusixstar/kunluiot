@@ -49,7 +49,7 @@ class SelectSceneActivity : BaseActivity() {
 
     private fun getData() {
         if (mIsOneKey) {
-            KunLuHomeSdk.sceneImpl.getLinkageSceneList(0, 999, { code, msg -> toastErrorMsg(code, msg) }, { mAdapter.setDiffNewData(it as MutableList<SceneLinkBean>) })
+            KunLuHomeSdk.sceneImpl.getLinkageSceneList({ code, msg -> toastErrorMsg(code, msg) }, { mAdapter.setDiffNewData(it as MutableList<SceneLinkBean>) })
         } else {
             KunLuHomeSdk.sceneImpl.getOneKeySceneList({ code, msg -> toastErrorMsg(code, msg) }, { mLinkedAdapter.setDiffNewData(it as MutableList<SceneOneKeyBean>) })
         }

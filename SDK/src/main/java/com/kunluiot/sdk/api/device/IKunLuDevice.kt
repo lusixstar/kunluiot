@@ -36,7 +36,7 @@ interface IKunLuDevice {
     /**
      * 设备产品列表
      */
-    fun getDeviceProducts(filterFlag: Boolean, fail: OnFailResult, success: DeviceProductListResult)
+    fun getDeviceProducts(fail: OnFailResult, success: DeviceProductListResult)
 
     /**
      * 房间中设备列表

@@ -47,7 +47,7 @@ class DeviceProductListActivity : BaseActivity() {
     }
 
     private fun getDeviceList() {
-        KunLuHomeSdk.deviceImpl.getDeviceProducts(true, { code, msg -> toastErrorMsg(code, msg) }, { setListData(it) })
+        KunLuHomeSdk.deviceImpl.getDeviceProducts({ code, msg -> toastErrorMsg(code, msg) }, { setListData(it) })
     }
 
     private fun initAdapter() {

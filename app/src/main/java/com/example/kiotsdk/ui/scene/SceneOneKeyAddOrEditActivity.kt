@@ -71,28 +71,16 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
             return
         }
         if (mIsAdd) {
-            KunLuHomeSdk.sceneImpl.addOneKeyScene(mOneKeyType, mSelectIcon, mSceneName, mAdapter.data.toList(), mapOf(), "", object : IResultCallback {
-                override fun onError(code: String, error: String) {
-                    toastErrorMsg(code, error)
-                }
-
-                override fun onSuccess() {
-                    toastMsg("success")
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
+            KunLuHomeSdk.sceneImpl.addOneKeyScene(mSelectIcon, mSceneName, mAdapter.data.toList(), { c, m -> toastErrorMsg(c, m) }, {
+                toastMsg("success")
+                setResult(Activity.RESULT_OK)
+                finish()
             })
         } else {
-            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mOneKeyType, mSelectIcon, mSceneName, mAdapter.data.toList(), mapOf(), object : IResultCallback {
-                override fun onError(code: String, error: String) {
-                    toastErrorMsg(code, error)
-                }
-
-                override fun onSuccess() {
-                    toastMsg("success")
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
+            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mSelectIcon, mSceneName, mAdapter.data.toList(), { c, m -> toastErrorMsg(c, m) }, {
+                toastMsg("success")
+                setResult(Activity.RESULT_OK)
+                finish()
             })
         }
     }
@@ -121,21 +109,18 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
                 val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneLinkedBean()
                 mAdapter.data.add(mAdapter.data.size, bean)
                 mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
-                XLog.e("bean == $bean")
             }
             val scene = it.data?.getStringExtra(SelectExecutionActionActivity.SCENE) ?: ""
             if (scene.isNotEmpty()) {
                 val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_BEAN) ?: SceneLinkedBean()
                 mAdapter.data.add(mAdapter.data.size, bean)
                 mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
-                XLog.e("bean == $bean")
             }
             val device = it.data?.getStringExtra(SelectExecutionActionActivity.DEVICE) ?: ""
             if (device.isNotEmpty()) {
                 val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneLinkedBean()
                 mAdapter.data.add(mAdapter.data.size, bean)
                 mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
-                XLog.e("bean == $bean")
             }
         }
     }

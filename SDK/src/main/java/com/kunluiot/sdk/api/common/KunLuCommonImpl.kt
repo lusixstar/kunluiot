@@ -74,8 +74,8 @@ internal class KunLuCommonImpl : IKunLuCommon {
     /**
      * 意见反馈
      * */
-    override fun feedback(username: String, title: String, content: String, images: String, contact: String, fail: OnFailResult, success: OnSuccessResult) {
-        CommonRequestUtil.feedback(username, title, content, images, contact, fail, success)
+    override fun feedback(content: String, images: List<String>, contact: String, fail: OnFailResult, success: OnSuccessResult) {
+        CommonRequestUtil.feedback(content, images, contact, fail, success)
     }
 
 
