@@ -245,6 +245,7 @@ data class DeviceNewBean(
     val bindResultCode: Int = 0,
     var bindResultMsg: String = "",
     var binVer: String = "",
+    var zigOtaBinVer : String= "", //zigbee协调器版本
     val name: String = "",
     val ownerUid: String = "",
     val familyName: String = "",

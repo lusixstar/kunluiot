@@ -59,7 +59,7 @@ class DeviceManagerActivity : BaseActivity() {
                     KunLuHomeSdk.deviceImpl.deletesSubDevice(it.parentDevTid, it.parentCtrlKey, it.devTid, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
                 } else {
                     if (userId == it.ownerUid) {
-                        KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, "", false, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
+                        KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
                     } else {
                         KunLuHomeSdk.deviceImpl.deleteAuthorizationDevice(it.ownerUid, it.ctrlKey, userId, it.devTid, "", { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
                     }

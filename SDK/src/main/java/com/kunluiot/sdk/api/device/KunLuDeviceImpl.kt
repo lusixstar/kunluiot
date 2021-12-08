@@ -19,8 +19,8 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 删除设备
      */
-    override fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult) {
-        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, randomToken, bluetooth, fail, success)
+    override fun deleteDevice(delDevTid: String, bindKey: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, fail, success)
     }
 
     /**
@@ -63,6 +63,20 @@ internal class KunLuDeviceImpl : IKunLuDevice {
      */
     override fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceUpdateResult) {
         DeviceRequestUtil.checkDeviceIsUpdate(binVer, binType, binVersion, productPublicKey, devTid, ctrlKey, fail, success)
+    }
+
+    /**
+     * 检查协调器版本
+     */
+    override fun checkZigVer(zigOtaBinVer: String, productPublicKey: String, fail: OnFailResult, success: DeviceUpdateResult) {
+        DeviceRequestUtil.checkZigVer(zigOtaBinVer, productPublicKey, fail, success)
+    }
+
+    /**
+     * 修改设备名称
+     */
+    override fun editDeviceName(deviceName: String, ctrlKey: String, devTid: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.editDeviceName(deviceName, ctrlKey, devTid, fail, success)
     }
 
 

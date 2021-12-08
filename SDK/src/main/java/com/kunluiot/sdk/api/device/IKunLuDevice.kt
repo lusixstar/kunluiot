@@ -16,7 +16,7 @@ interface IKunLuDevice {
     /**
      * 删除设备
      */
-    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult)
+    fun deleteDevice(delDevTid: String, bindKey: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除子设备
@@ -53,6 +53,15 @@ interface IKunLuDevice {
      */
     fun checkDeviceIsUpdate(binVer: String, binType: String, binVersion: String, productPublicKey: String, devTid: String, ctrlKey: String, fail: OnFailResult, success: DeviceUpdateResult)
 
+    /**
+     * 检查协调器版本
+     */
+    fun checkZigVer(zigOtaBinVer: String, productPublicKey: String, fail: OnFailResult, success: DeviceUpdateResult)
+
+    /**
+     * 修改设备名称
+     */
+    fun editDeviceName(deviceName: String, ctrlKey: String, devTid: String, fail: OnFailResult, success: OnSuccessResult)
 
     // ------------------------------------------------
 

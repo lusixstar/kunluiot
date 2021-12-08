@@ -84,6 +84,9 @@ object DeviceApi {
     //检查设备固件是否需要升级
     const val KHA_API_CHECK_DEVICES_UPDATE = "/external/device/fw/ota/check"
 
+    //协调器升级
+    const val KHA_API_CHECK_ZIG_VER = "/external/device/fw/zig/ota/check"
+
     //删除授权设备
     const val KHA_API_DELETE_AUTHORIZATION_DEVICE = "/authorization"
 

@@ -61,11 +61,10 @@ object DeviceRequestUtil {
     /**
      * 删除设备
      */
-    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, bluetooth: Boolean, fail: OnFailResult, success: OnSuccessResult) {
+    fun deleteDevice(delDevTid: String, bindKey: String, fail: OnFailResult, success: OnSuccessResult) {
         val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$delDevTid")
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.urlParam("bindKey", bindKey)
-        kalle.urlParam("bluetooth", bluetooth)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
@@ -219,6 +218,54 @@ object DeviceRequestUtil {
         })
     }
 
+
+    /**
+     *  检查协调器版本
+     */
+    fun checkZigVer(zigOtaBinVer: String, productPublicKey: String, fail: OnFailResult, success: DeviceUpdateResult) {
+        val map = mutableMapOf<String, String>()
+        map["zigOtaBinVer"] = zigOtaBinVer
+        map["productPublicKey"] = productPublicKey
+        val maps: MutableList<MutableMap<String, String>> = ArrayList()
+        maps.add(map)
+        val param = JsonUtils.toJson(maps)
+        val kalle = Kalle.post(ReqApi.KHA_CONSOLE_BASE_URL + DeviceApi.KHA_API_CHECK_ZIG_VER)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<List<DeviceUpdateBean>>(response.succeed()).let { success.success(it) }
+                }
+            }
+        })
+    }
+
+    /**
+     *  修改设备名称
+     */
+    fun editDeviceName(deviceName: String, ctrlKey: String, devTid: String, fail: OnFailResult, success: OnSuccessResult) {
+        val map = mutableMapOf<String, String>()
+        map["deviceName"] = deviceName
+        map["ctrlKey"] = ctrlKey
+        val param = JsonUtils.toJson(map)
+        val kalle = Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                }
+            }
+        })
+    }
 
     //------------------------------------------------------------
 
