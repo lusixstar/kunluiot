@@ -36,6 +36,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_device_manager" />
 
+    <Button
+        android:id="@+id/btn_device_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="@string/device_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_device_manager" />
+
+
     <TextView
         android:id="@+id/tv_scene_linked"
         android:layout_width="wrap_content"
@@ -46,7 +56,7 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_device_manager" />
+        app:layout_constraintTop_toBottomOf="@id/btn_device_list" />
 
     <Button
         android:id="@+id/btn_scene_linked"

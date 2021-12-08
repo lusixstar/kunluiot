@@ -25,14 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tool_bar" />
 
-    <Button
-        android:id="@+id/btn_device_manager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="@string/device_manager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_my_info" />
 
     <Button
         android:id="@+id/btn_family_manager"
@@ -41,7 +33,7 @@
         android:layout_margin="15dp"
         android:text="@string/family_manager"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_device_manager" />
+        app:layout_constraintTop_toBottomOf="@id/btn_my_info" />
 
     <Button
         android:id="@+id/btn_msg_center"

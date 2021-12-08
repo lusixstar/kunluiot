@@ -33,7 +33,6 @@ class MineManagerActivity : BaseActivity() {
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         mBinding.btnMyInfo.setOnClickListener { startActivity<UserInfoActivity>() }
-        mBinding.btnDeviceManager.setOnClickListener { startActivity<DeviceManagerActivity>() }
         mBinding.btnFamilyManager.setOnClickListener { startActivity<FamilyListActivity>() }
         mBinding.btnMsgCenter.setOnClickListener { startActivity<MsgActivity>() }
         mBinding.btnFeedback.setOnClickListener { startActivity<FeedbackActivity>() }

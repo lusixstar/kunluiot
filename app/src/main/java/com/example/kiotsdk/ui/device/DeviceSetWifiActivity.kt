@@ -10,7 +10,6 @@ import com.kunluiot.sdk.bean.device.DevicePinCodeBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import com.kunluiot.sdk.bean.device.DeviceWifiBean
 import com.kunluiot.sdk.callback.device.IPinCodeCallback
-import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
@@ -34,7 +33,7 @@ class DeviceSetWifiActivity : BaseActivity() {
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         intent?.let {
-            mBean = it.getParcelableExtra(DeviceSetWifiDetailsActivity.BEAN) ?: DeviceProductsBean()
+            mBean = it.getParcelableExtra(BEAN) ?: DeviceProductsBean()
             mApModel = it.getBooleanExtra(NET_TYPE_AP, false)
         }
 
@@ -70,15 +69,24 @@ class DeviceSetWifiActivity : BaseActivity() {
 
     private fun gotoSetNet(bean: DevicePinCodeBean) {
         val password = mBinding.etPassword.text.toString().trim()
-        startActivity<DeviceSetWifiDetailsActivity>(
-            DeviceSetWifiDetailsActivity.BEAN to mBean,
-            DeviceSetWifiDetailsActivity.SSID to bean.ssid,
-            DeviceSetWifiDetailsActivity.PIN to bean.PINCode,
-            DeviceSetWifiDetailsActivity.PASSWD to password,
-            DeviceSetWifiDetailsActivity.NET_TYPE_AP to mApModel,
-        )
+        if (mApModel) {
+            startActivity<DeviceSetWifiApActivity>(
+                DeviceSetWifiDetailsActivity.BEAN to mBean,
+                DeviceSetWifiDetailsActivity.SSID to bean.ssid,
+                DeviceSetWifiDetailsActivity.PIN to bean.PINCode,
+                DeviceSetWifiDetailsActivity.PASSWD to password,
+                DeviceSetWifiDetailsActivity.NET_TYPE_AP to mApModel,
+            )
+        } else {
+            startActivity<DeviceSetWifiDetailsActivity>(
+                DeviceSetWifiDetailsActivity.BEAN to mBean,
+                DeviceSetWifiDetailsActivity.SSID to bean.ssid,
+                DeviceSetWifiDetailsActivity.PIN to bean.PINCode,
+                DeviceSetWifiDetailsActivity.PASSWD to password,
+                DeviceSetWifiDetailsActivity.NET_TYPE_AP to mApModel,
+            )
+        }
     }
-
 
     private fun saveWiFiInfo() {
         val account = mBinding.etAccount.text.toString().trim()
@@ -88,7 +96,7 @@ class DeviceSetWifiActivity : BaseActivity() {
 
     private fun initWifiInfo() {
         val str = SPUtil.get(this, SPUtil.DEVICE_WIFI_INFO, "") as String
-        val info =  JsonUtils.fromJson(str, DeviceWifiBean::class.java)
+        val info = JsonUtils.fromJson(str, DeviceWifiBean::class.java)
 
         var currentName = DemoUtils.getCurrentSSID(this)
         if (currentName == "<unknown ssid>") {
