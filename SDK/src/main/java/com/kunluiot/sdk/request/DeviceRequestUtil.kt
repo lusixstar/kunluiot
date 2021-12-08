@@ -290,14 +290,16 @@ object DeviceRequestUtil {
     /**
      * 获取网关
      */
-    fun getGateway(quickOperation: Boolean, type: String, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("quickOperation", quickOperation).param("type", type).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+    fun getGateway(fail: OnFailResult,  success: DeviceListResult) {
+        val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
+                    KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { success.success(it) }
                 }
             }
         })
@@ -374,14 +376,17 @@ object DeviceRequestUtil {
     /**
      * 设备列表
      */
-    fun getPINCode(ssid: String, callback: IPinCodeCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_PIN_CODE).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ssid", ssid).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+    fun getPINCode(ssid: String, fail: OnFailResult, success: DevicePinCodeResult) {
+        val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_PIN_CODE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.param("ssid", ssid)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<DevicePinCodeBean>(response.succeed()).let { callback.onSuccess(it) }
+                    KotlinSerializationUtils.getJsonData<DevicePinCodeBean>(response.succeed()).let { success.success(it) }
                 }
             }
         })

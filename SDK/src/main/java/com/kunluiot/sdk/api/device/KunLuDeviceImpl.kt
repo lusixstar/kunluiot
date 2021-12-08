@@ -93,8 +93,8 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 获取网关
      */
-    override fun getGateway(quickOperation: Boolean, type: String, callback: IDeviceListCallback) {
-        DeviceRequestUtil.getGateway(quickOperation, type, callback)
+    override fun getGateway(fail: OnFailResult, success: DeviceListResult) {
+        DeviceRequestUtil.getGateway(fail, success)
     }
 
     /**
@@ -122,8 +122,8 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 获取pinCode
      */
-    override fun getPINCode(ssid: String, callback: IPinCodeCallback) {
-        DeviceRequestUtil.getPINCode(ssid, callback)
+    override fun getPINCode(ssid: String, fail: OnFailResult, success: DevicePinCodeResult) {
+        DeviceRequestUtil.getPINCode(ssid, fail, success)
     }
 
     /**

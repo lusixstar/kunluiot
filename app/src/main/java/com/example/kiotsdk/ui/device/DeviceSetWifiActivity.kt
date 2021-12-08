@@ -9,7 +9,6 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DevicePinCodeBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import com.kunluiot.sdk.bean.device.DeviceWifiBean
-import com.kunluiot.sdk.callback.device.IPinCodeCallback
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
@@ -52,19 +51,10 @@ class DeviceSetWifiActivity : BaseActivity() {
             toast("password is empty")
             return
         }
-        KunLuHomeSdk.deviceImpl.getPINCode(account, ssidCallback)
-    }
-
-    private val ssidCallback = object : IPinCodeCallback {
-
-        override fun onSuccess(bean: DevicePinCodeBean) {
+        KunLuHomeSdk.deviceImpl.getPINCode(account, { c, m -> toastErrorMsg(c, m) }, {
             saveWiFiInfo()
-            gotoSetNet(bean)
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+            gotoSetNet(it)
+        })
     }
 
     private fun gotoSetNet(bean: DevicePinCodeBean) {

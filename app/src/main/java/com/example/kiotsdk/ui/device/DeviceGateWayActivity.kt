@@ -65,12 +65,7 @@ class DeviceGateWayActivity : BaseActivity() {
     }
 
     private fun getGatewayData() {
-        KunLuHomeSdk.deviceImpl.getGateway(true, KunLuDeviceType.DEVICE_GATEWAY, gatewayCallback)
-    }
-
-    private val gatewayCallback = object : IDeviceListCallback {
-
-        override fun onSuccess(bean: List<DeviceNewBean>) {
+        KunLuHomeSdk.deviceImpl.getGateway({ c, m -> toastErrorMsg(c, m) }, { bean ->
             if (!bean.isNullOrEmpty()) {
                 val list = bean.map {
                     val online = if (it.online) "     {在线}" else "     {不在线}"
@@ -80,11 +75,7 @@ class DeviceGateWayActivity : BaseActivity() {
                 mGatewayNameArray = list
                 showGatewayList(list)
             }
-        }
-
-        override fun onError(code: String, error: String) {
-            toast("code == $code, error == $error")
-        }
+        })
     }
 
     private fun showGatewayList(bean: Array<String>) {

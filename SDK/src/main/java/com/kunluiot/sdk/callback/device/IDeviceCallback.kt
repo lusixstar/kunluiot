@@ -44,6 +44,13 @@ fun interface DeviceUpdateResult {
     fun success(info: List<DeviceUpdateBean>)
 }
 
+/**
+ * 设备获取pin
+ */
+fun interface DevicePinCodeResult {
+    fun success(info: DevicePinCodeBean)
+}
+
 // ------------------------------------------
 
 /**

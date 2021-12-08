@@ -75,7 +75,7 @@ interface IKunLuDevice {
     /**
      * 获取网关
      */
-    fun getGateway(quickOperation: Boolean, type: String, callback: IDeviceListCallback)
+    fun getGateway(fail: OnFailResult,  success: DeviceListResult)
 
     /**
      *  获取子设备信息
@@ -95,7 +95,7 @@ interface IKunLuDevice {
     /**
      * 获取pinCode
      */
-    fun getPINCode(ssid: String, callback: IPinCodeCallback)
+    fun getPINCode(ssid: String, fail: OnFailResult, success: DevicePinCodeResult)
 
     /**
      * 获取新配上的设备列表
