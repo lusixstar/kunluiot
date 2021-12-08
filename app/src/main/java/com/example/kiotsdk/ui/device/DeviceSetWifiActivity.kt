@@ -1,5 +1,11 @@
 package com.example.kiotsdk.ui.device
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
@@ -13,6 +19,13 @@ import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import com.example.kiotsdk.ui.MainActivity
+
+import com.hjq.permissions.XXPermissions
+
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+
 
 class DeviceSetWifiActivity : BaseActivity() {
 
@@ -37,7 +50,7 @@ class DeviceSetWifiActivity : BaseActivity() {
         }
 
         mBinding.finish.setOnClickListener { gotoNext() }
-        initWifiInfo()
+        getPermissions()
     }
 
     private fun gotoNext() {
@@ -88,7 +101,8 @@ class DeviceSetWifiActivity : BaseActivity() {
         val str = SPUtil.get(this, SPUtil.DEVICE_WIFI_INFO, "") as String
         val info = JsonUtils.fromJson(str, DeviceWifiBean::class.java)
 
-        var currentName = DemoUtils.getCurrentSSID(this)
+        var currentName = getWifiSsid()
+//        var currentName = DemoUtils.getCurrentSSID(this)
         if (currentName == "<unknown ssid>") {
             currentName = ""
             mBinding.etAccount.hint = resources.getString(R.string.please_select_a_wifi_network)
@@ -97,6 +111,41 @@ class DeviceSetWifiActivity : BaseActivity() {
         if (info != null && info.name.isNotEmpty()) {
             mBinding.etAccount.setText(info.name)
         }
+    }
+
+    private fun getPermissions() {
+        XXPermissions.with(this)
+            .permission(Permission.ACCESS_FINE_LOCATION)
+            .permission(Permission.ACCESS_COARSE_LOCATION)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: List<String>, all: Boolean) {
+                    if (all) {
+                        initWifiInfo()
+                    }
+                }
+
+                override fun onDenied(permissions: List<String>, never: Boolean) {
+
+                }
+            })
+    }
+
+    private fun getWifiSsid(): String {
+        val ssid = "unknown id"
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val mWifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val info = mWifiManager.connectionInfo
+            return info.ssid.replace("\"", "")
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1) {
+            val connManager = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connManager.activeNetworkInfo
+            if (networkInfo!!.isConnected) {
+                if (networkInfo.extraInfo != null) {
+                    return networkInfo.extraInfo.replace("\"", "");
+                }
+            }
+        }
+        return ssid
     }
 
     companion object {
