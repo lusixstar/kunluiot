@@ -290,7 +290,7 @@ object DeviceRequestUtil {
     /**
      * 获取网关
      */
-    fun getGateway(fail: OnFailResult,  success: DeviceListResult) {
+    fun getGateway(fail: OnFailResult, success: DeviceListResult) {
         val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICES)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
@@ -324,24 +324,23 @@ object DeviceRequestUtil {
     /**
      * 设备配网成功后将设备配置到某个家庭下某个房间
      */
-    fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback) {
+    fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, fail: OnFailResult, success: OnSuccessResult) {
         val map = HashMap<String, Any>()
         map["ctrlKey"] = ctrlKey
         map["deviceName"] = deviceName
         map["familyId"] = familyId
         map["folderId"] = folderId
-        if (!branchNames.isNullOrEmpty()) {
-            map["branchNames"] = branchNames
-            map["anotherNames"] = anotherNames
-        }
         val param = JsonUtils.toJson(map)
-        Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid").addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
             }
         })

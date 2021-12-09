@@ -1,7 +1,5 @@
 package com.example.kiotsdk.ui.device
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
@@ -10,7 +8,9 @@ import android.os.Bundle
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceSetWifiBinding
-import com.example.kiotsdk.util.DemoUtils
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DevicePinCodeBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
@@ -19,12 +19,6 @@ import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.SPUtil
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import com.example.kiotsdk.ui.MainActivity
-
-import com.hjq.permissions.XXPermissions
-
-import com.hjq.permissions.OnPermissionCallback
-import com.hjq.permissions.Permission
 
 
 class DeviceSetWifiActivity : BaseActivity() {
@@ -114,10 +108,7 @@ class DeviceSetWifiActivity : BaseActivity() {
     }
 
     private fun getPermissions() {
-        XXPermissions.with(this)
-            .permission(Permission.ACCESS_FINE_LOCATION)
-            .permission(Permission.ACCESS_COARSE_LOCATION)
-            .request(object : OnPermissionCallback {
+        XXPermissions.with(this).permission(Permission.ACCESS_FINE_LOCATION).permission(Permission.ACCESS_COARSE_LOCATION).request(object : OnPermissionCallback {
                 override fun onGranted(permissions: List<String>, all: Boolean) {
                     if (all) {
                         initWifiInfo()

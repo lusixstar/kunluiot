@@ -85,7 +85,7 @@ interface IKunLuDevice {
     /**
      * 设备配网成功后将设备配置到某个家庭下某个房间
      * */
-    fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback)
+    fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 子设备配网成功后将设备配置到某个家庭下某个房间

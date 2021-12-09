@@ -1,11 +1,16 @@
 package com.example.kiotsdk.ui.device
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceConfigFinishBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceNewBean
+import com.kunluiot.sdk.bean.family.FamilyBean
+import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.callback.IResultCallback
+import org.jetbrains.anko.selector
 import org.jetbrains.anko.toast
 
 
@@ -24,6 +29,9 @@ class DeviceConfigFinishActivity : BaseActivity() {
 
     private var mFamilyId = ""
     private var mRoomId = ""
+
+    private var mFamilyList = mutableListOf<FamilyBean>()
+    private var mFolderList = mutableListOf<FolderBean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,35 +54,68 @@ class DeviceConfigFinishActivity : BaseActivity() {
         }
 
         mBinding.finish.setOnClickListener { gotoNext() }
+        mBinding.deviceValue.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                mDeviceName = s.toString()
+            }
 
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+        mBinding.familyLayout.setOnClickListener { selectFamily() }
+        mBinding.roomLayout.setOnClickListener { selectRoom() }
         getFamilyData()
 
     }
 
+    private fun selectRoom() {
+        if (!mFolderList.isNullOrEmpty()) {
+            val list = mFolderList.map { it.folderName }
+            selector("选择房间", list) { dialog, i ->
+                val info = mFolderList[i]
+                mBinding.roomValue.text = if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
+                mRoomId = info.folderId
+                dialog.dismiss()
+            }
+        }
+    }
+
+    private fun selectFamily() {
+        if (!mFamilyList.isNullOrEmpty()) {
+            val list = mFamilyList.map { it.familyName }
+            selector("选择家庭", list) { dialog, i ->
+                val info = mFamilyList[i]
+                mBinding.familyValue.text = "${info.familyName}"
+                mFamilyId = info.familyId
+                getRoomData(info.familyId)
+                dialog.dismiss()
+            }
+        }
+    }
+
     private fun gotoNext() {
-        val family = mBinding.family.text.toString()
-        val room = mBinding.room.text.toString()
+        if (mDeviceName.isEmpty()) {
+            toast("device name is empty")
+            return
+        }
+        val family = mBinding.familyValue.text.toString()
+        val room = mBinding.roomValue.text.toString()
         if (family.isEmpty() || room.isEmpty()) {
             toast("family or room is empty")
             return
         }
-        KunLuHomeSdk.deviceImpl.deviceConfigFinish(mDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, listOf(), listOf(), object : IResultCallback {
-            override fun onError(code: String, error: String) {
-                toast("code == $code, error == $error")
-            }
-
-            override fun onSuccess() {
-                toast("finish")
-            }
-        })
+        KunLuHomeSdk.deviceImpl.deviceConfigFinish(mDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, { c, m -> toastErrorMsg(c, m) }, { toastMsg("set success") })
     }
 
     private fun getFamilyData() {
         KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, { bean ->
             if (!bean.isNullOrEmpty()) {
+                mFamilyList.addAll(bean)
                 val info = bean.first()
-                mBinding.family.text = "当前家庭: ${info.familyName}"
+                mBinding.familyValue.text = "当前家庭: ${info.familyName}"
                 mFamilyId = info.familyId
                 getRoomData(info.familyId)
             }
@@ -83,22 +124,12 @@ class DeviceConfigFinishActivity : BaseActivity() {
 
     private fun getRoomData(familyId: String) {
         KunLuHomeSdk.familyImpl.getRooms(familyId, 0, 20, { c, m -> toastErrorMsg(c, m) }, { bean ->
+            mFolderList.clear()
+            mFolderList.addAll(bean)
             val info = bean.first()
             mRoomId = info.folderId
-            mBinding.room.text = if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
-        }
-//            object : IFamilyRoomListCallback {
-//            override fun onSuccess(bean: List<FolderBean>) {
-//                val info = bean.first()
-//                mRoomId = info.folderId
-//                mBinding.room.text =  if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
-//            }
-//
-//            override fun onError(code: String, error: String) {
-//                toast("code == $code, error == $error")
-//            }
-//        }
-        )
+            mBinding.roomValue.text = if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
+        })
     }
 
     companion object {
