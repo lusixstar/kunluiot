@@ -50,7 +50,8 @@ class RegisterActivity : BaseActivity() {
 
     private fun finishRegister(bean: VerifyCodeBean) {
         val password = mBinding.password.text.toString()
-        KunLuHomeSdk.userImpl.register(bean.phoneNumber, password, bean.token, { code, err -> toastErrorMsg(code, err) }, { toastMsg("register success") })
+        val code = mBinding.verifyCode.text.toString()
+        KunLuHomeSdk.userImpl.register(bean.phoneNumber, password, bean.token, code, { c, err -> toastErrorMsg(c, err) }, { toastMsg("register success") })
     }
 
     private fun sendCode() {

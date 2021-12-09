@@ -9,6 +9,7 @@ import com.example.kiotsdk.app.GlideEngine
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityUserInfoBinding
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.user.AvatarBean
 import com.kunluiot.sdk.bean.user.User
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -56,11 +57,23 @@ class UserInfoActivity : BaseActivity() {
     }
 
     private fun updateAvatar(filePath: String) {
-        KunLuHomeSdk.userImpl.uploadHeader(filePath, { code, err -> toastErrorMsg(code, err) }, { toastMsg("update success $it") })
+        KunLuHomeSdk.userImpl.uploadHeader(filePath, { code, err -> toastErrorMsg(code, err) }, { updateHeader(it) })
+    }
+
+    private fun updateHeader(avatarBean: AvatarBean) {
+        val url = avatarBean.fileCDNUrl.replace("//", "/")
+        KunLuHomeSdk.userImpl.updateHeader(url, { c, m -> toastErrorMsg(c, m) }, { getUserInfoData() })
     }
 
     private fun selectAvatar() {
-        PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).imageEngine(GlideEngine.createGlideEngine()).selectionMode(PictureConfig.SINGLE).forResult(object : OnResultCallbackListener<LocalMedia> {
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofAll())
+            .imageEngine(GlideEngine.createGlideEngine())
+            .isCompress(true)
+            .isEnableCrop(true)
+            .withAspectRatio(1, 1)
+            .selectionMode(PictureConfig.SINGLE)
+            .forResult(object : OnResultCallbackListener<LocalMedia> {
             override fun onResult(result: List<LocalMedia>) {
                 val filePath: String = result[0].realPath
                 updateAvatar(filePath)

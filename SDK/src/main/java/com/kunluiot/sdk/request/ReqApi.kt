@@ -147,6 +147,7 @@ object UserApi {
 
     //注册
     const val KHA_API_REGISTER = "/register?type=phone"
+    const val KHA_API_REGISTER_NEW = "/v1.0/register?type=phone"
 
     //重置密码
     const val KHA_API_RESET_PASSWORD = "/resetPassword?type=phone"

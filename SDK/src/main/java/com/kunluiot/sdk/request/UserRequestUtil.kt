@@ -118,13 +118,14 @@ object UserRequestUtil {
     /**
      * 注册
      */
-    fun register(phoneNumber: String, password: String, token: String, fail: OnFailResult, success: UserSuccessResult) {
+    fun register(phoneNumber: String, password: String, token: String, code: String, fail: OnFailResult, success: UserSuccessResult) {
         val map = mutableMapOf<String, String>()
         map["phoneNumber"] = phoneNumber
         map["password"] = password
         map["token"] = token
+        map["verifyCode"] = code
         val param = JsonUtils.toJson(map)
-        val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_REGISTER)
+        val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_REGISTER_NEW)
         kalle.body(JsonBody(param))
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
@@ -200,13 +201,15 @@ object UserRequestUtil {
      * 上传用户头像
      */
     fun uploadHeader(filePath: String, fail: OnFailResult, success: AvatarSuccessResult) {
-        val boundary = KunLuHelper.getUuid()
+        val sign = KunLuHelper.getSign()
+        val boundary = sign["nonce"][0]
         val binary = FileBinary(File(filePath))
         val formBody: FormBody = FormBody.newBuilder().boundary(boundary).binary("file", binary).build()
 
         formBody.onProgress { _, progress -> XLog.d("formBody progress == $progress") }
 
-        val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_UPDATE_PHOTO)
+        val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + UserApi.KHA_API_UPDATE_PHOTO)
+        kalle.setHeaders(sign)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.body(formBody)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {

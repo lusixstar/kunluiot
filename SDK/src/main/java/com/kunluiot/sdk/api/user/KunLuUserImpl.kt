@@ -42,8 +42,8 @@ internal class KunLuUserImpl : IKunLuUser {
     /**
      * 注册
      */
-    override fun register(account: String, password: String, token: String, fail: OnFailResult, success: UserSuccessResult) {
-        UserRequestUtil.register(account, password, token, fail, success)
+    override fun register(account: String, password: String, token: String, code: String, fail: OnFailResult, success: UserSuccessResult) {
+        UserRequestUtil.register(account, password, token, code, fail, success)
     }
 
     /**

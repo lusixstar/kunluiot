@@ -32,7 +32,7 @@ interface IKunLuUser {
     /**
      * 注册
      */
-    fun register(account: String, password: String, token: String, fail: OnFailResult, success: UserSuccessResult)
+    fun register(account: String, password: String, token: String, code: String, fail: OnFailResult, success: UserSuccessResult)
 
     /**
      * 重置密码
