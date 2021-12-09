@@ -66,23 +66,16 @@ class UserInfoActivity : BaseActivity() {
     }
 
     private fun selectAvatar() {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofAll())
-            .imageEngine(GlideEngine.createGlideEngine())
-            .isCompress(true)
-            .isEnableCrop(true)
-            .withAspectRatio(1, 1)
-            .selectionMode(PictureConfig.SINGLE)
-            .forResult(object : OnResultCallbackListener<LocalMedia> {
-            override fun onResult(result: List<LocalMedia>) {
-                val filePath: String = result[0].realPath
-                updateAvatar(filePath)
-            }
+        PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).imageEngine(GlideEngine.createGlideEngine()).isCompress(true).isEnableCrop(true).withAspectRatio(1, 1).selectionMode(PictureConfig.SINGLE).forResult(object : OnResultCallbackListener<LocalMedia> {
+                override fun onResult(result: List<LocalMedia>) {
+                    val filePath: String = result[0].realPath
+                    updateAvatar(filePath)
+                }
 
-            override fun onCancel() {
+                override fun onCancel() {
 
-            }
-        })
+                }
+            })
     }
 
     private fun getUserInfoData() {

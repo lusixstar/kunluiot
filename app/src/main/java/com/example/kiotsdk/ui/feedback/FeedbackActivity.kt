@@ -2,6 +2,7 @@ package com.example.kiotsdk.ui.feedback
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.feedback.FeedbackAdapter
 import com.example.kiotsdk.app.GlideEngine
@@ -53,8 +54,21 @@ class FeedbackActivity : BaseActivity() {
             toastMsg("phone is empty")
             return
         }
-        KunLuHomeSdk.commonImpl.feedback(content, listOf(), phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
+        val images = mutableListOf<String>()
+        val urls = mSelectImg.map { it.realPath }
+        urls.forEach {
+            KunLuHomeSdk.userImpl.uploadHeader(it, { _, _ -> }, { url ->
+                images.add(url.fileCDNUrl)
+                if (images.size == urls.size) {
+                    KunLuHomeSdk.commonImpl.feedback(content, images, phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
+                }
+            })
+        }
+        if (urls.isEmpty()) {
+            KunLuHomeSdk.commonImpl.feedback(content, listOf(), phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
+        }
     }
+
 
     private fun initAdapter() {
         val manager = LinearLayoutManager(this)

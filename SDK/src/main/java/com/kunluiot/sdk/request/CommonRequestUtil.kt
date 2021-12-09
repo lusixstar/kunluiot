@@ -180,7 +180,7 @@ object CommonRequestUtil {
      * */
     fun feedback(content: String, images: List<String>, contact: String, fail: OnFailResult, success: OnSuccessResult) {
         var img = ""
-        images.forEach { img = "$it," }
+        images.forEach { img = "$it,$img" }
         if (img.contains(",")) img = img.substring(0, img.length - 1)
         val map = mutableMapOf<String, Any>()
         map["username"] = contact
