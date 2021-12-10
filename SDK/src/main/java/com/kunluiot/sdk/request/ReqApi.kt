@@ -209,7 +209,7 @@ object CommonApi {
     const val KHA_API_MESSAGE_DEVICE_READ = "/api/v1/notification"
 
     //平台消息已读
-    const val KHA_API_READ_MSG_FOLDER = "/api/v1/app/push/history/"
+    const val KHA_API_READ_MSG_FOLDER = "/api/v1/app/push/history"
 
     //平台消息清空
     const val KHA_API_CLEAR_MSG = "/api/v1/app/push/history/clear"
