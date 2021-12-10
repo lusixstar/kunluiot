@@ -37,7 +37,7 @@ interface IKunLuUser {
     /**
      * 重置密码
      */
-    fun resetPassword(account: String, password: String, token: String, fail: OnFailResult, success: OnSuccessResult)
+    fun resetPassword(account: String, password: String, token: String, verifyCode: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 获取用户信息

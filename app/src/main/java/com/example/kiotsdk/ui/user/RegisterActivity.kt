@@ -41,7 +41,7 @@ class RegisterActivity : BaseActivity() {
             toast("code is empty")
             return
         }
-        if (password.isEmpty() || password.length < 6) {
+        if (password.isEmpty() || password.length < 6 || password.length > 20) {
             toast("密码不能为空 最少6位长度")
             return
         }

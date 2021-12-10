@@ -33,7 +33,7 @@ class ChangeAccountPasswordActivity : BaseActivity() {
         val old = mBinding.tvOld.text.toString().trim()
         val new = mBinding.tvNew.text.toString().trim()
         val two = mBinding.tvNewTwo.text.toString().trim()
-        if (old.isEmpty() || new.isEmpty() || two.isEmpty()) {
+        if (old.isEmpty() || new.isEmpty() || two.isEmpty() || new.length < 6 || new.length > 20) {
             toastMsg("password is empty")
             return
         }

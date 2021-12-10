@@ -142,9 +142,9 @@ object UserRequestUtil {
     /**
      * 重置密码
      */
-    fun resetPassword(phoneNumber: String, password: String, token: String, fail: OnFailResult, success: OnSuccessResult) {
+    fun resetPassword(phoneNumber: String, password: String, token: String, verifyCode: String, fail: OnFailResult, success: OnSuccessResult) {
         val kalle = Kalle.post(ReqApi.KHA_UAA_BASE_URL + UserApi.KHA_API_RESET_PASSWORD)
-        kalle.param("phoneNumber", phoneNumber).param("password", password).param("token", token)
+        kalle.param("phoneNumber", phoneNumber).param("password", password).param("token", token).param("verifyCode", verifyCode)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()

@@ -44,8 +44,8 @@ class ForgetActivity : BaseActivity() {
             toast("code is empty")
             return
         }
-        if (password.isEmpty()) {
-            toast("password is empty")
+        if (password.isEmpty() || password.length < 6 || password.length > 20) {
+            toast("password is error")
             return
         }
         KunLuHomeSdk.userImpl.checkVerifyCode(account, KunLuUserType.SEND_CODE_RESET_PASSWORD, code, { c, err -> toastErrorMsg(c, err) }, { finishResetPassword(it) })
@@ -53,7 +53,8 @@ class ForgetActivity : BaseActivity() {
 
     private fun finishResetPassword(bean: VerifyCodeBean) {
         val password = mBinding.password.text.toString()
-        KunLuHomeSdk.userImpl.resetPassword(bean.phoneNumber, password, bean.token, { c, err -> toastErrorMsg(c, err) }, { toastMsg("resetPassword success") })
+        val verifyCode = mBinding.verifyCode.text.toString()
+        KunLuHomeSdk.userImpl.resetPassword(bean.phoneNumber, password, bean.token, verifyCode, { c, err -> toastErrorMsg(c, err) }, { toastMsg("resetPassword success") })
     }
 
     private fun sendCode() {

@@ -56,8 +56,8 @@ internal class KunLuUserImpl : IKunLuUser {
     /**
      * 重置密码
      */
-    override fun resetPassword(account: String, password: String, token: String, fail: OnFailResult, success: OnSuccessResult) {
-        UserRequestUtil.resetPassword(account, password, token, fail, success)
+    override fun resetPassword(account: String, password: String, token: String, verifyCode: String, fail: OnFailResult, success: OnSuccessResult) {
+        UserRequestUtil.resetPassword(account, password, token, verifyCode, fail, success)
     }
 
     /**
