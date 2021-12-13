@@ -95,7 +95,15 @@ class FeedbackActivity : BaseActivity() {
     }
 
     private fun selectImg() {
-        PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).isCompress(true).selectionData(mSelectImg).imageEngine(GlideEngine.createGlideEngine()).maxSelectNum(3).selectionMode(PictureConfig.MULTIPLE).forResult(object : OnResultCallbackListener<LocalMedia> {
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofAll())
+            .isCamera(false)
+            .isCompress(true)
+            .selectionData(mSelectImg)
+            .imageEngine(GlideEngine.createGlideEngine())
+            .maxSelectNum(3)
+            .selectionMode(PictureConfig.MULTIPLE)
+            .forResult(object : OnResultCallbackListener<LocalMedia> {
             override fun onResult(result: List<LocalMedia>) {
                 mSelectImg = result as MutableList<LocalMedia>
                 val list = mSelectImg.map { FeedbackImgBean(type = "img", url = it.realPath) } as MutableList
