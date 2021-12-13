@@ -37,7 +37,7 @@ class UserInfoActivity : BaseActivity() {
 
         mBinding.avatarLayout.setOnClickListener { selectAvatar() }
         mBinding.nameLayout.setOnClickListener { gotoName.launch(Intent(this, UserEditNameActivity::class.java).putExtra(UserEditNameActivity.NAME, mName)) }
-        mBinding.phoneLayout.setOnClickListener { gotoPhone.launch(Intent(this, UserEditPhoneActivity::class.java).putExtra(UserEditPhoneActivity.PHONE, mPhone)) }
+//        mBinding.phoneLayout.setOnClickListener { gotoPhone.launch(Intent(this, UserEditPhoneActivity::class.java).putExtra(UserEditPhoneActivity.PHONE, mPhone)) }
         mBinding.changeLayout.setOnClickListener { startActivity<ChangeAccountPasswordActivity>() }
 //        mBinding.otherAccountLayout.setOnClickListener { startActivity<BindSocialAccountActivity>() }
 

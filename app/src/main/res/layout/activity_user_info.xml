@@ -127,6 +127,7 @@
             tools:text="@string/user_phone" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:visibility="gone"
             android:id="@+id/img_phone"
             android:layout_width="11dp"
             android:layout_height="11dp"
