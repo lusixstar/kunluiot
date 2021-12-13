@@ -2,8 +2,11 @@ package com.example.kiotsdk.ui.user
 
 import android.app.Activity
 import android.os.Bundle
+import com.blankj.utilcode.util.RegexUtils
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityUserBindNewPhoneBinding
+import com.example.kiotsdk.util.DemoUtils
+import org.jetbrains.anko.toast
 
 /**
  * User: Chris
@@ -31,6 +34,10 @@ class BindNewPhoneNumActivity : BaseActivity() {
         val phone = mBinding.etNewPhone.text.toString().trim()
         if (phone.isEmpty()) {
             toastMsg("phone is empty")
+            return
+        }
+        if (!RegexUtils.isMobileSimple(phone)) {
+            toast("phone error")
             return
         }
         setResult(Activity.RESULT_OK, intent.putExtra(NEW_PHONE, phone))

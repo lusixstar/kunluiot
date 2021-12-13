@@ -2,10 +2,14 @@ package com.example.kiotsdk.ui.user
 
 import android.content.Intent
 import android.os.Bundle
+import com.blankj.utilcode.util.RegexUtils
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityChangeAccountPasswordBinding
 import com.example.kiotsdk.ui.SplashActivity
+import com.example.kiotsdk.util.DemoUtils
+import com.example.kiotsdk.util.StringUtils
 import com.kunluiot.sdk.KunLuHomeSdk
+import org.jetbrains.anko.toast
 
 /**
  * User: Chris
@@ -33,6 +37,10 @@ class ChangeAccountPasswordActivity : BaseActivity() {
         val old = mBinding.tvOld.text.toString().trim()
         val new = mBinding.tvNew.text.toString().trim()
         val two = mBinding.tvNewTwo.text.toString().trim()
+        if (StringUtils.inputJudge(new)) {
+            toast("password error")
+            return
+        }
         if (old.isEmpty() || new.isEmpty() || two.isEmpty() || new.length < 6 || new.length > 20) {
             toastMsg("password is empty")
             return

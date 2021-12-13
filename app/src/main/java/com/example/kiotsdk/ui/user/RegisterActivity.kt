@@ -2,9 +2,12 @@ package com.example.kiotsdk.ui.user
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import com.blankj.utilcode.util.RegexUtils
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityRegisterBinding
+import com.example.kiotsdk.util.DemoUtils
+import com.example.kiotsdk.util.StringUtils
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.user.KunLuUserType
 import com.kunluiot.sdk.bean.user.VerifyCodeBean
@@ -33,12 +36,16 @@ class RegisterActivity : BaseActivity() {
         val account = mBinding.emailPhone.text.toString()
         val code = mBinding.verifyCode.text.toString()
         val password = mBinding.password.text.toString()
-        if (account.isEmpty()) {
-            toast("account is empty")
+        if (!RegexUtils.isMobileSimple(account)) {
+            toast("phone error")
             return
         }
         if (code.isEmpty()) {
             toast("code is empty")
+            return
+        }
+        if (StringUtils.inputJudge(password)) {
+            toast("password error")
             return
         }
         if (password.isEmpty() || password.length < 6 || password.length > 20) {
@@ -56,8 +63,8 @@ class RegisterActivity : BaseActivity() {
 
     private fun sendCode() {
         val phone = mBinding.emailPhone.text.toString()
-        if (phone.isEmpty()) {
-            toast("phone is empty")
+        if (!RegexUtils.isMobileSimple(phone)) {
+            toast("phone error")
             return
         }
         getSMSCode()

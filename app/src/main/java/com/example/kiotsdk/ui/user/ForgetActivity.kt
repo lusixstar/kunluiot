@@ -5,9 +5,12 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Base64
+import com.blankj.utilcode.util.RegexUtils
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityForgetBinding
+import com.example.kiotsdk.util.DemoUtils
+import com.example.kiotsdk.util.StringUtils
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.user.KunLuUserType
 import com.kunluiot.sdk.bean.user.VerifyCodeBean
@@ -36,6 +39,14 @@ class ForgetActivity : BaseActivity() {
         val account = mBinding.emailPhone.text.toString()
         val code = mBinding.verifyCode.text.toString()
         val password = mBinding.password.text.toString()
+        if (!RegexUtils.isMobileSimple(account)) {
+            toast("phone error")
+            return
+        }
+        if (StringUtils.inputJudge(password)) {
+            toast("password error")
+            return
+        }
         if (account.isEmpty()) {
             toast("account is empty")
             return
@@ -61,6 +72,10 @@ class ForgetActivity : BaseActivity() {
         val phone = mBinding.emailPhone.text.toString()
         if (phone.isEmpty()) {
             toast("phone is empty")
+            return
+        }
+        if (!RegexUtils.isMobileSimple(phone)) {
+            toast("phone error")
             return
         }
         getSMSCode()
