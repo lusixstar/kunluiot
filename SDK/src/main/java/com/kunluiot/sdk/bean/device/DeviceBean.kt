@@ -256,6 +256,7 @@ data class DeviceNewBean(
     var online: Boolean = false,
     var select: Boolean = false,
     val productName: DeviceNameBean = DeviceNameBean(),
+//    val subDevices: List<DeviceNameBean> = listOf(),
     val branchNames: List<String> = listOf(),
 ) : Parcelable
 

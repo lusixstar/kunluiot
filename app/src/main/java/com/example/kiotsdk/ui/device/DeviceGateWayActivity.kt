@@ -6,10 +6,8 @@ import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceGatewayBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.api.device.KunLuDeviceType
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
-import com.kunluiot.sdk.callback.device.IDeviceListCallback
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -67,7 +65,8 @@ class DeviceGateWayActivity : BaseActivity() {
     private fun getGatewayData() {
         KunLuHomeSdk.deviceImpl.getGateway({ c, m -> toastErrorMsg(c, m) }, { bean ->
             if (!bean.isNullOrEmpty()) {
-                val list = bean.map {
+
+                val list = bean.filter { it.devType == "GATEWAY" }.map {
                     val online = if (it.online) "     {在线}" else "     {不在线}"
                     "${it.deviceName}$online"
                 }.toTypedArray()
