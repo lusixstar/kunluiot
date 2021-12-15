@@ -2,6 +2,7 @@ package com.example.kiotsdk.ui.device
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import coil.load
@@ -101,7 +102,8 @@ class DeviceInfoActivity : BaseActivity() {
         devInfoMap["binUrl"] = bean.binUrl
         devInfoMap["md5"] = bean.md5
         devInfoMap["binType"] = bean.latestBinType
-        devInfoMap["appTid"] = Tools.getAppTid().toString() + "web"
+//        devInfoMap["appTid"] = Tools.getAppTid().toString() + "web"
+        devInfoMap["appTid"] =  Build.BRAND + Build.MODEL
         devInfoMap["size"] = bean.size.toString() + ""
         devInfoMap["ctrlKey"] = mBean.ctrlKey
         val map = HashMap<String, Any>()
@@ -127,7 +129,8 @@ class DeviceInfoActivity : BaseActivity() {
         devInfoMap["binUrl"] = bean.binUrl
         devInfoMap["md5"] = bean.md5
         devInfoMap["binType"] = bean.latestBinType
-        devInfoMap["appTid"] = Tools.getAppTid().toString() + "web"
+//        devInfoMap["appTid"] = Tools.getAppTid().toString() + "web"
+        devInfoMap["appTid"] =  Build.BRAND + Build.MODEL
         devInfoMap["size"] = bean.size
         devInfoMap["ctrlKey"] = mBean.ctrlKey
         val map = HashMap<String, Any>()

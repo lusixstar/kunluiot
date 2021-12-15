@@ -2,12 +2,11 @@ package com.kunluiot.sdk.ui.web
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.webkit.WebSettings
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
@@ -29,6 +28,7 @@ import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.MD5Util
 import com.kunluiot.sdk.util.Tools
 import org.java_websocket.framing.Framedata
+import org.json.JSONObject
 import java.io.File
 import java.nio.ByteBuffer
 import java.util.*
@@ -71,7 +71,37 @@ class DeviceWebControlActivity : AppCompatActivity() {
 
     private fun getSocketMsg(message: String, toJson: String) {
         val msg: BaseSocketBean = JsonUtils.fromJson(toJson, BaseSocketBean::class.java)
-        XLog.e("msg == $msg")
+        val action: String = msg.action
+        if (action == "heartbeatResp") {
+            return
+        }
+        var cansend = false
+        try {
+            val jb = JSONObject(message)
+            if (jb.has("params")) {
+                val params = jb.getJSONObject("params")
+                val devTid = params.getString("devTid")
+                val subDevTid = params.getString("subDevTid")
+                if (mBean.devType == "SUB") {
+                    if (mBean.devTid == subDevTid || devTid == mBean.parentDevTid) {
+                        cansend = true
+                    }
+                } else if (devTid == mBean.devTid) {
+                    cansend = true
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return
+        }
+        if ("appSendResp" == action && mBean.virtual) {
+            cansend = false
+        }
+        if (cansend) {
+            val header = "javascript:document.dispatchEvent(new CustomEvent('notifyDevEvent', {detail:$message}));"
+            mWebView.loadUrl(header)
+            XLog.e("js = $header")
+        }
     }
 
     override fun onDestroy() {
@@ -84,14 +114,13 @@ class DeviceWebControlActivity : AppCompatActivity() {
             val allMap: MutableMap<String, Any> = HashMap()
             when (bean.name) {
                 "getDomain" -> {
-                    val domain = ReqApi.KHA_DOMAIN
+                    val domain = "kunluiot.com"
                     val domainMap: MutableMap<String, Any?> = HashMap()
                     domainMap["domain"] = domain
-                    domainMap["user"] = ReqApi.KHA_WEB_BASE_URL.replace(ReqApi.KHA_DOMAIN, domain)
                     domainMap["test"] = false
-                    domainMap["uaa"] = ReqApi.KHA_UAA_BASE_URL.replace(ReqApi.KHA_DOMAIN, domain)
-                    domainMap["console"] = ReqApi.KHA_CONSOLE_BASE_URL.replace(ReqApi.KHA_DOMAIN, domain)
-//                    domainMap["pid"] = "00000000000"
+                    domainMap["user"] = "http://webapi-openapi.kunluiot.com"
+                    domainMap["uaa"] = "http://uaa-openapi.kunluiot.com"
+                    domainMap["console"] = "http://console-openapi.kunluiot.com"
                     allMap["result"] = domainMap
                 }
                 "close" -> {
@@ -101,7 +130,8 @@ class DeviceWebControlActivity : AppCompatActivity() {
                     val userMap: MutableMap<String, Any> = HashMap()
                     userMap["token"] = KunLuHomeSdk.instance.getSessionBean()?.accessToken ?: ""
                     userMap["access_token"] = KunLuHomeSdk.instance.getSessionBean()?.accessToken ?: ""
-                    userMap["appTid"] = Tools.getAppTid() + "web"
+//                    userMap["appTid"] = Tools.getAppTid() + "web"
+                    userMap["appTid"] = Build.BRAND + Build.MODEL
                     userMap["lang"] = Tools.getLanguage()
                     userMap["uid"] = KunLuHomeSdk.instance.getSessionBean()?.user ?: ""
                     allMap["result"] = userMap
@@ -120,16 +150,16 @@ class DeviceWebControlActivity : AppCompatActivity() {
                     allMap["result"] = platform
                 }
                 "getDevice" -> {
-                    mBean.androidPageZipURL
+                    val bean = mBean.copy()
                     if (mBean.virtual) {
-                        mBean.online = true
+                        bean.online = true
                     }
                     if (mBean.devType == KunLuDeviceType.DEVICE_SUB) {
-                        mBean.subDevTid = mBean.devTid
-                        mBean.devTid = mBean.parentDevTid
-                        mBean.ctrlKey = mBean.parentCtrlKey
+                        bean.subDevTid = mBean.devTid
+                        bean.devTid = mBean.parentDevTid
+                        bean.ctrlKey = mBean.parentCtrlKey
                     }
-                    allMap["result"] = mBean
+                    allMap["result"] = bean
                 }
                 "getProtocol" -> {
                     allMap["result"] = mProtocolMap
@@ -147,11 +177,6 @@ class DeviceWebControlActivity : AppCompatActivity() {
                         startActivity(i)
                     }
                 }
-                "errorLog" -> {
-                    // 打印错误日志
-                    val parametersBean: WebBridgeParametersBean = JsonUtils.fromJson(bean.parameters.toString(), WebBridgeParametersBean::class.java)
-                    XLog.e("errorLog::  $mUrl  $parametersBean")
-                }
                 "send" -> {
                     val params = bean.parameters as Map<*, *>
                     val command = params["command"] as Map<*, *>
@@ -166,7 +191,7 @@ class DeviceWebControlActivity : AppCompatActivity() {
                             resp["action"] = "devSend"
                             rawMap?.set("cmdId", 1)
                             resp["params"] = commandParams
-                            val header = ("javascript:document.dispatchEvent(new CustomEvent('notifyDevEvent', {detail:" + JsonUtils.toJson(resp)) + "}));"
+                            val header = "javascript:document.dispatchEvent(new CustomEvent('notifyDevEvent', {detail:" + JsonUtils.toJson(resp) + "}));"
 
                             runOnUiThread { mWebView.loadUrl(header) }
                         }
@@ -200,13 +225,13 @@ class DeviceWebControlActivity : AppCompatActivity() {
         webSettings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         WebView.setWebContentsDebuggingEnabled(true)
-        mWebView.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                view?.evaluateJavascript(KunLuHelper.INJECT_JS) { }
-            }
-        }
         mWebView.loadUrl(mUrl)
+//        mWebView.webViewClient = object : WebViewClient() {
+//            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+//                super.onPageStarted(view, url, favicon)
+////                view?.evaluateJavascript(KunLuHelper.INJECT_JS) { XLog.e("evaluateJavascript result == $it")}
+//            }
+//        }
     }
 
     private fun getZipUrl() {
@@ -217,13 +242,11 @@ class DeviceWebControlActivity : AppCompatActivity() {
             val isOk = isFileExist(indexHtml)
             if (!isOk) {
                 KunLuHomeSdk.commonImpl.downloadsUrlFile(mBean.androidPageZipURL, { code, msg -> XLog.e("code == $code, msg == $msg") }, {
-                    XLog.e("it == $it")
                     mUrl = KunLuHelper.LOCAL_FILE_PRE + it
                     initWebView()
                 })
             } else {
                 mUrl = KunLuHelper.LOCAL_FILE_PRE + indexHtml
-                XLog.e("indexHtml == $indexHtml")
                 initWebView()
             }
         }

@@ -44,31 +44,71 @@
         </activity>
 
 
-        <activity android:name=".ui.MainNewActivity" />
-        <activity android:name=".ui.device.DeviceSetNetGotoActivity" />
-        <activity android:name=".ui.user.MineManagerActivity" />
-        <activity android:name=".ui.user.UserEditNameActivity" />
-        <activity android:name=".ui.user.UserEditPhoneActivity" />
-        <activity android:name=".ui.user.VerifyPhoneNumActivity" />
-        <activity android:name=".ui.user.BindNewPhoneNumActivity" />
-        <activity android:name=".ui.user.BindSocialAccountActivity" />
-        <activity android:name=".ui.user.ChangeAccountPasswordActivity" />
+        <activity
+            android:name=".ui.MainNewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.device.DeviceSetNetGotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.MineManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.UserEditNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.UserEditPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.VerifyPhoneNumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.BindNewPhoneNumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.BindSocialAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.user.ChangeAccountPasswordActivity"
+            android:screenOrientation="portrait" />
 
 
-        <activity android:name=".ui.family.FamilyRoomListActivity" />
-        <activity android:name=".ui.family.RoomCreateActivity" />
-        <activity android:name=".ui.family.MemberCreateActivity" />
-        <activity android:name=".ui.family.FamilyMemberManagerActivity" />
-        <activity android:name=".ui.family.MemberEditActivity" />
+        <activity
+            android:name=".ui.family.FamilyRoomListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.family.RoomCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.family.MemberCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.family.FamilyMemberManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.family.MemberEditActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.device.DeviceInfoActivity" />
-        <activity android:name=".ui.device.DeviceSetWifiApActivity" />
-        <activity android:name=".ui.device.DeviceEditActivity" />
+        <activity
+            android:name=".ui.device.DeviceInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.device.DeviceSetWifiApActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.device.DeviceEditActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.msg.MsgActivity" />
-        <activity android:name=".ui.msg.MsgListActivity" />
+        <activity
+            android:name=".ui.msg.MsgActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.MsgListActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.feedback.FeedbackActivity" />
+        <activity
+            android:name=".ui.feedback.FeedbackActivity"
+            android:screenOrientation="portrait" />
 
 
         <activity
