@@ -8,12 +8,19 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceRoomListBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.api.device.KunLuDeviceType
+import com.kunluiot.sdk.bean.common.BaseSocketBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
+import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
+import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
+import com.kunluiot.sdk.util.JsonUtils
+import org.java_websocket.framing.Framedata
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.startActivity
+import java.nio.ByteBuffer
+import java.util.*
 
 
 class DeviceManagerActivity : BaseActivity() {
@@ -38,6 +45,34 @@ class DeviceManagerActivity : BaseActivity() {
 
         initAdapter()
         getFamilyData()
+        KunLuHomeSdk.instance.getWebSocketManager()?.addListener(webSocketListener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KunLuHomeSdk.instance.getWebSocketManager()?.removeListener(webSocketListener)
+    }
+
+    private val webSocketListener = object : SocketListener {
+        override fun onConnected() {}
+        override fun onConnectFailed(e: Throwable?) {}
+        override fun onDisconnect() {}
+        override fun onSendDataError(errorResponse: ErrorResponse?) {}
+
+        override fun <T : Any?> onMessage(message: String?, data: T) {
+            message?.let { getSocketMsg(message, JsonUtils.toJson(data)) }
+        }
+
+        override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {}
+        override fun onPing(framedata: Framedata?) {}
+        override fun onPong(framedata: Framedata?) {}
+    }
+
+    private fun getSocketMsg(message: String, toJson: String) {
+        val msg: BaseSocketBean = JsonUtils.fromJson(toJson, BaseSocketBean::class.java)
+        if (msg.action == "devDeleteResp") {
+            getFamilyData()
+        }
     }
 
     private fun initAdapter() {
@@ -56,7 +91,17 @@ class DeviceManagerActivity : BaseActivity() {
         alert("是否删除设备") {
             positiveButton("确定") { dialog ->
                 if (it.devType == KunLuDeviceType.DEVICE_SUB) {
-                    KunLuHomeSdk.deviceImpl.deletesSubDevice(it.parentDevTid, it.parentCtrlKey, it.devTid, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
+                    KunLuHomeSdk.deviceImpl.deletesSubDevice(it.parentDevTid, it.parentCtrlKey, it.devTid, { code, msg -> toastErrorMsg(code, msg) }, {
+                        val params: MutableMap<String, Any> = HashMap()
+                        params["devTid"] = it.parentDevTid
+                        params["ctrlKey"] = it.parentCtrlKey
+                        params["subDevTid"] = it.devTid
+                        params["randomToken"] = ""
+                        val resp: MutableMap<String, Any> = HashMap()
+                        resp["action"] = "devDelete"
+                        resp["params"] = params
+                        KunLuHomeSdk.instance.getWebSocketManager()?.send(JsonUtils.toJson(resp))
+                    })
                 } else {
                     if (userId == it.ownerUid) {
                         KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
@@ -104,7 +149,6 @@ class DeviceManagerActivity : BaseActivity() {
         if (!it.isNullOrEmpty()) {
             mRoomAdapter.data.clear()
             mRoomAdapter.addData(it)
-//            mRoomAdapter.setDiffNewData(it as MutableList<FolderBean>)
         }
     }
 }

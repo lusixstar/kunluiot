@@ -10,7 +10,11 @@ class DeviceRoomItemAdapter(list: MutableList<DeviceNewBean>) : BaseQuickAdapter
 
     override fun convert(holder: BaseViewHolder, item: DeviceNewBean) {
         val name = if (item.deviceName.isNotEmpty()) item.deviceName else item.name
-        holder.setText(R.id.text, "设备名称：$name")
+        if (item.devType == "GATEWAY") {
+            holder.setText(R.id.text, "网关名称：$name")
+        } else {
+            holder.setText(R.id.text, "设备名称：$name")
+        }
 
         if (item.online) {
             holder.setText(R.id.next, "在线   >")

@@ -41,7 +41,8 @@ object ReqApi {
     const val KHA_UAA_BASE_URL = "$KHA_BASE_URL/uaa"
     const val KHA_WEB_BASE_URL = "$KHA_BASE_URL/webapi"
     const val KHA_CONSOLE_BASE_URL = "$KHA_BASE_URL/console"
-    const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
+//    const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
+    const val KHA_WEB_SOCKET_URL = "ws://hub.kunluiot.com:86"
 
     //old-test-url
 //    const val IS_NEW_TEST = false

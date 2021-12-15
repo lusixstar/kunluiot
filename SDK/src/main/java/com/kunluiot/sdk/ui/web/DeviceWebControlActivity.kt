@@ -13,6 +13,7 @@ import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.R
 import com.kunluiot.sdk.api.device.KunLuDeviceType
+import com.kunluiot.sdk.bean.common.BaseSocketBean
 import com.kunluiot.sdk.bean.common.WebBridgeBean
 import com.kunluiot.sdk.bean.common.WebBridgeParametersBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
@@ -21,11 +22,15 @@ import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
 import com.kunluiot.sdk.request.DeviceApi
 import com.kunluiot.sdk.request.KunLuHelper
 import com.kunluiot.sdk.request.ReqApi
+import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
+import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.util.CacheUtils
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.MD5Util
 import com.kunluiot.sdk.util.Tools
+import org.java_websocket.framing.Framedata
 import java.io.File
+import java.nio.ByteBuffer
 import java.util.*
 
 class DeviceWebControlActivity : AppCompatActivity() {
@@ -45,6 +50,33 @@ class DeviceWebControlActivity : AppCompatActivity() {
         mWebView = findViewById(R.id.web)
 
         getIntentData()
+        KunLuHomeSdk.instance.getWebSocketManager()?.addListener(webSocketListener)
+
+    }
+
+    private val webSocketListener = object : SocketListener {
+        override fun onConnected() {}
+        override fun onConnectFailed(e: Throwable?) {}
+        override fun onDisconnect() {}
+        override fun onSendDataError(errorResponse: ErrorResponse?) {}
+
+        override fun <T : Any?> onMessage(message: String?, data: T) {
+            message?.let { getSocketMsg(message, JsonUtils.toJson(data)) }
+        }
+
+        override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {}
+        override fun onPing(framedata: Framedata?) {}
+        override fun onPong(framedata: Framedata?) {}
+    }
+
+    private fun getSocketMsg(message: String, toJson: String) {
+        val msg: BaseSocketBean = JsonUtils.fromJson(toJson, BaseSocketBean::class.java)
+        XLog.e("msg == $msg")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KunLuHomeSdk.instance.getWebSocketManager()?.removeListener(webSocketListener)
     }
 
     private fun getJSBridgeBean(bean: WebBridgeBean): String {
@@ -59,7 +91,7 @@ class DeviceWebControlActivity : AppCompatActivity() {
                     domainMap["test"] = false
                     domainMap["uaa"] = ReqApi.KHA_UAA_BASE_URL.replace(ReqApi.KHA_DOMAIN, domain)
                     domainMap["console"] = ReqApi.KHA_CONSOLE_BASE_URL.replace(ReqApi.KHA_DOMAIN, domain)
-                    domainMap["pid"] = "00000000000"
+//                    domainMap["pid"] = "00000000000"
                     allMap["result"] = domainMap
                 }
                 "close" -> {
@@ -115,9 +147,30 @@ class DeviceWebControlActivity : AppCompatActivity() {
                         startActivity(i)
                     }
                 }
+                "errorLog" -> {
+                    // 打印错误日志
+                    val parametersBean: WebBridgeParametersBean = JsonUtils.fromJson(bean.parameters.toString(), WebBridgeParametersBean::class.java)
+                    XLog.e("errorLog::  $mUrl  $parametersBean")
+                }
                 "send" -> {
                     val params = bean.parameters as Map<*, *>
                     val command = params["command"] as Map<*, *>
+
+                    val commandParams = command["params"] as Map<*, *>?
+                    val rawMap = (commandParams!!["data"] as Map<*, *>?)?.toMutableMap()
+
+                    if (mBean.virtual) {
+                        if (mBean.workModeType == "JSON_TRANSPARENT" || mBean.workModeType == "JSON_CTRL") {
+                            val resp: MutableMap<String, Any> = HashMap()
+                            resp["msgId"] = KunLuHomeSdk.instance.getMsgId()
+                            resp["action"] = "devSend"
+                            rawMap?.set("cmdId", 1)
+                            resp["params"] = commandParams
+                            val header = ("javascript:document.dispatchEvent(new CustomEvent('notifyDevEvent', {detail:" + JsonUtils.toJson(resp)) + "}));"
+
+                            runOnUiThread { mWebView.loadUrl(header) }
+                        }
+                    }
                     sendWebSocketText(JsonUtils.toJson(command))
                 }
             }
@@ -158,16 +211,19 @@ class DeviceWebControlActivity : AppCompatActivity() {
 
     private fun getZipUrl() {
         if (mBean.androidPageZipURL.isNotEmpty()) {
-            val cacheDir = KunLuHomeSdk.instance.getApp().cacheDir.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
+//            val cacheDir = KunLuHomeSdk.instance.getApp().cacheDir.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
+            val cacheDir = KunLuHomeSdk.instance.getApp().externalCacheDir?.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
             val indexHtml = cacheDir + File.separator + KunLuHelper.CACHE_INDEX_HTML
             val isOk = isFileExist(indexHtml)
             if (!isOk) {
                 KunLuHomeSdk.commonImpl.downloadsUrlFile(mBean.androidPageZipURL, { code, msg -> XLog.e("code == $code, msg == $msg") }, {
+                    XLog.e("it == $it")
                     mUrl = KunLuHelper.LOCAL_FILE_PRE + it
                     initWebView()
                 })
             } else {
                 mUrl = KunLuHelper.LOCAL_FILE_PRE + indexHtml
+                XLog.e("indexHtml == $indexHtml")
                 initWebView()
             }
         }

@@ -45,8 +45,8 @@ object UserRequestUtil {
                         SPUtil.apply(KunLuHomeSdk.instance.getApp(), UserApi.KHA_API_LOGIN, data)
                         val user = User()
                         user.uid = data.user
-                        success.success(user)
                         WebsocketUtil.init(ReqApi.KHA_WEB_SOCKET_URL)
+                        success.success(user)
                     }
                 }
             }

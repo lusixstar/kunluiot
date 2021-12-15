@@ -1,8 +1,10 @@
 package com.example.kiotsdk.ui.device
 
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceGatewayDetailsBinding
@@ -20,6 +22,7 @@ import org.java_websocket.framing.Framedata
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.nio.ByteBuffer
+import java.util.*
 
 
 class DeviceGateWayDetailsActivity : BaseActivity() {
@@ -53,8 +56,8 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
         }
 
         initView()
-        startConfig()
         KunLuHomeSdk.instance.getWebSocketManager()?.addListener(webSocketListener)
+        startConfig()
     }
 
     private val webSocketListener = object : SocketListener {
@@ -137,7 +140,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
                             DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
                             DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
                             DeviceConfigFinishActivity.DEVICE_NAME to deviceName,
-                            DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+                            DeviceConfigFinishActivity.CTRL_KEY to bean.parentCtrlKey,
                         )
                     } else {
                         startActivity<DeviceConfigFinishActivity>(
@@ -227,7 +230,12 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
         }
 
         override fun onTick(millisUntilFinished: Long) {
-            mBinding.roundProgressBar.progress = mTotalProgress - (millisUntilFinished / 1000).toInt()
+            val progress: Int = mTotalProgress - (millisUntilFinished / 1000).toInt()
+            mBinding.roundProgressBar.progress = progress
+//            if (progress % 5 == 0) {
+//                //间隔五秒请求一次数据 如果已请到云端数据则不请求
+//                if (mSubDeviceList.isEmpty()) sendMsg()
+//            }
         }
     }
 
