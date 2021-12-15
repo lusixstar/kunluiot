@@ -80,9 +80,9 @@ class DeviceWebControlActivity : AppCompatActivity() {
             val jb = JSONObject(message)
             if (jb.has("params")) {
                 val params = jb.getJSONObject("params")
-                val devTid = params.getString("devTid")
-                val subDevTid = params.getString("subDevTid")
+                val devTid = params.getString("devTid") ?: ""
                 if (mBean.devType == "SUB") {
+                    val subDevTid = params.getString("subDevTid") ?: ""
                     if (mBean.devTid == subDevTid || devTid == mBean.parentDevTid) {
                         cansend = true
                     }
@@ -236,8 +236,8 @@ class DeviceWebControlActivity : AppCompatActivity() {
 
     private fun getZipUrl() {
         if (mBean.androidPageZipURL.isNotEmpty()) {
-//            val cacheDir = KunLuHomeSdk.instance.getApp().cacheDir.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
-            val cacheDir = KunLuHomeSdk.instance.getApp().externalCacheDir?.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
+            val cacheDir = KunLuHomeSdk.instance.getApp().cacheDir.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
+//            val cacheDir = KunLuHomeSdk.instance.getApp().externalCacheDir?.absolutePath + File.separator + KunLuHelper.CACHE_DIR_NAME + File.separator + KunLuHelper.CACHE_URL_NAME + File.separator + MD5Util.md5(mBean.androidPageZipURL)
             val indexHtml = cacheDir + File.separator + KunLuHelper.CACHE_INDEX_HTML
             val isOk = isFileExist(indexHtml)
             if (!isOk) {
