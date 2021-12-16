@@ -4,7 +4,95 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+@Parcelize
+@Serializable
+data class SceneLinkBeanNew(
+    val uid: String = "",
+    val pid: String = "",
+    val ruleId: String = "",
+    var ruleName: String = "",
+    val ruleSort: Int = 0,
+    var iftttType: String = "",
+    var triggerType: String = "",
+    var conditionLogic: String = "",
+    var desc: String = "",
+    val enabled: Boolean = false,
+    var timeZoneOffset: Int = 0,
+    var cronExpr: String = "",
+    val intervalTime: Int = 0,
+    var conditionList: List<SceneConditionListBeanNew> = listOf(),
+    var iftttTasks: List<SceneIftttTasksListBeanNew> = listOf(),
+) : Parcelable
 
+@Parcelize
+@Serializable
+data class SceneIftttTasksListBeanNew(
+    var type: String = "",
+    var desc: String = "",
+    var taskId: String = "",
+    var params: SceneIftttTasksParamBeanNew = SceneIftttTasksParamBeanNew(),
+    var customParam: SceneCustomFieldsBeanNew = SceneCustomFieldsBeanNew(),
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class SceneConditionListBeanNew(
+    var devTid: String = "",
+    var ctrlKey: String = "",
+    var subDevTid: String = "",
+    var conDesc: String = "",
+    var triggerParams: List<SceneTriggerBeanNew> = listOf(),
+    var customFields: SceneCustomFieldsBeanNew = SceneCustomFieldsBeanNew(),
+) : Parcelable
+
+
+@Parcelize
+@Serializable
+data class SceneTriggerBeanNew(
+    var left: String = "",
+    var right: String = "",
+    var `operator`: String = "",
+) : Parcelable
+
+
+@Parcelize
+@Serializable
+data class SceneCustomFieldsBeanNew(
+    var mid: String = "",
+    var desc: String = "",
+    var name: String = "",
+    var icon: String = "",
+    var time: String = "",
+    var devName: String = "",
+    var family_folder: String = "",
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class SceneIftttTasksParamBeanNew(
+    var data: Map<String, String> = mapOf(),
+    var subDevTid: String = "",
+    var devTid: String = "",
+    var ctrlKey: String = "",
+    var sceneId: String = "",
+    var time: String = "",
+) : Parcelable
+
+@Parcelize
+@Serializable
+data class AddTimeConditionEvent(
+    var triggerType: String? = null,
+    var conDesc: String? = null,
+    var devTid: String? = null,
+    var ctrlKey: String? = null,
+    var cronExpr: String? = null,
+    var desc: String? = null,
+    var subDevTid: String? = null,
+    var triggerParams: List<SceneTriggerBeanNew>? = null,
+    var customFields: SceneCustomFieldsBeanNew? = null,
+) : Parcelable
+
+// ---------------------------------------------------
 @Parcelize
 @Serializable
 data class SceneLinkBean(
@@ -84,32 +172,29 @@ data class Params(
 @Parcelize
 @Serializable
 data class SceneOneKeyBean(
-    val createTime: Long = 0,
-    val id: SceneOneKeyIdBean = SceneOneKeyIdBean(),
-    val name: String = "",
+    val sceneName: String = "",
+    val sceneId: String = "",
+    val icon: String = "",
     val pid: String = "",
     val uid: String = "",
-    val sceneId: String = "",
-    var sceneName: String = "",
-    var icon: String = "",
+    val sceneSort: Int = 0,
     val showType: String = "",
-    val sceneTaskList: List<SceneLinkedBean> = listOf(),
+    val desc: String = "",
+    val sceneTaskList: List<SceneOneKeyTaskListBean> = listOf(),
     val templateId: String = "",
-    val updateTime: Long = 0,
-    //0、表示普通 1、表示回家 2、表示离家 3、表示智能厨房
     var oneKeyType: Int = 0,
 ) : Parcelable
 
 @Parcelize
 @Serializable
-data class SceneOneKeyIdBean(
-    val counter: Int = 0,
-    val date: Long = 0,
-    val machineIdentifier: Int = 0,
-    val processIdentifier: Int = 0,
-    val time: Long = 0,
-    val timeSecond: Int = 0,
-    val timestamp: Int = 0,
+data class SceneOneKeyTaskListBean(
+    var taskId: String = "",
+    var desc: String = "",
+    var devTid: String = "",
+    var ctrlKey: String = "",
+    var subDevTid: String = "",
+    var customParam: SceneCustomFieldsBeanNew = SceneCustomFieldsBeanNew(),
+    var cmdArgs: Map<String, String> = mapOf(),
 ) : Parcelable
 
 @Parcelize
@@ -164,15 +249,7 @@ data class TimeConditionBean(
     val time: String = "",
 ) : Parcelable
 
-@Parcelize
-@Serializable
-data class AddTimeConditionEvent(
-    var triggerType: String? = null,
-    var desc: String? = null,
-    var cronExpr: String? = null,
-    var conditionBean: SceneConditionListParam? = null,
-    var timeList: List<TimeConditionBean>? = null,
-) : Parcelable
+
 
 @Serializable
 data class SceneListBean(

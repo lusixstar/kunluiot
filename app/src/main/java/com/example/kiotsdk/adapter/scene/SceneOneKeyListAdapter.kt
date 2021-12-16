@@ -12,11 +12,7 @@ class SceneOneKeyListAdapter(list: MutableList<SceneOneKeyBean>) : BaseQuickAdap
 
     override fun convert(holder: BaseViewHolder, item: SceneOneKeyBean) {
 
-        if (item.name.isNotEmpty()) {
-            holder.setText(R.id.name, item.name)
-        } else {
-            holder.setText(R.id.name, item.sceneName)
-        }
+        holder.setText(R.id.name, item.sceneName)
 
         val img = holder.getView<AppCompatImageView>(R.id.logo)
         if (item.icon.isNotEmpty()) {

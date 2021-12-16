@@ -51,7 +51,18 @@ class SceneAddTimeConditionActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-        intent?.let { mIsTimeSlot = it.getBooleanExtra(TIME_SLOT, false) }
+        intent?.let {
+            mIsTimeSlot = it.getBooleanExtra(TIME_SLOT, false)
+            val time = it.getStringExtra(TIME_SELECT) ?: ""
+            if (time.isNotEmpty() && time.contains(":")) {
+                mStartHour = time.substring(0, 2)
+                mStartMinute = time.substring(3, 5)
+                mTime = "$mStartHour:$mStartMinute"
+                mBinding.timeValue.text = mTime
+                mTimeList.clear()
+                mTimeList.add(TimeConditionBean(true, mTime))
+            }
+        }
 
         initView()
         initAdapter()
@@ -81,7 +92,7 @@ class SceneAddTimeConditionActivity : BaseActivity() {
     }
 
     private fun initView() {
-        mBinding.timeValue.text = resources.getString(R.string.please_select_the_time_)
+        if (mBinding.timeValue.text.isEmpty()) mBinding.timeValue.text = resources.getString(R.string.please_select_the_time_)
         mBinding.timeLayout.setOnClickListener { if (mIsTimeSlot) showTimeSlotBottomDialog() else showTimeBottomDialog() }
         mBinding.everydayLayout.setOnClickListener { selectDay(mBinding.everydayNext) }
         mBinding.workingDayLayout.setOnClickListener { selectDay(mBinding.workingDayNext) }
@@ -127,36 +138,30 @@ class SceneAddTimeConditionActivity : BaseActivity() {
             var conDesc = ""
             conDesc = conDesc + mStartHour + ":" + mStartMinute + " (" + getWeekName() + ")"
 
-            bean.conditionBean = getConditionBean(rightContent, conDesc)
+            bean.conDesc = conDesc
+            bean.devTid = "time"
+            bean.ctrlKey = "time"
+            bean.cronExpr = ""
+
+            val triggerParams = ArrayList<SceneTriggerBeanNew>()
+            val triggerParamBean = SceneTriggerBeanNew()
+            triggerParamBean.left = "cloudTime"
+            triggerParamBean.right = rightContent
+            triggerParamBean.operator = "=="
+            triggerParams.add(triggerParamBean)
+
+            bean.triggerParams = triggerParams
+
+            val customFields = SceneCustomFieldsBeanNew()
+            customFields.name = "定时触发"
+            customFields.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
+            bean.customFields = customFields
+
             bean.desc = getString(R.string.all_day)
         }
-        bean.timeList = mTimeList
 
         setResult(Activity.RESULT_OK, intent.putExtra(TIME_BEAN, bean))
         finish()
-    }
-
-    private fun getConditionBean(rightContent: String, conDesc: String): SceneConditionListParam {
-        val triggerParams = ArrayList<SceneTriggerParam>()
-        val triggerParamBean = SceneTriggerParam()
-        triggerParamBean.left = "cloudTime"
-        triggerParamBean.right = rightContent
-        triggerParamBean.operator = "=="
-        triggerParams.add(triggerParamBean)
-
-        val customParamBean = SceneOneKeyCustomParam()
-        customParamBean.name = "定时触发"
-        customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
-
-        val bean = SceneConditionListParam()
-        bean.devTid = "time"
-        bean.ctrlKey = "time"
-        bean.relation = "OR"
-        bean.customFields = customParamBean
-        bean.triggerParams = triggerParams
-        bean.conDesc = conDesc
-
-        return bean
     }
 
     private fun getWeekName(): String {
@@ -264,5 +269,6 @@ class SceneAddTimeConditionActivity : BaseActivity() {
     companion object {
         const val TIME_BEAN = "time_bean"
         const val TIME_SLOT = "time_slot"
+        const val TIME_SELECT = "time_select"
     }
 }

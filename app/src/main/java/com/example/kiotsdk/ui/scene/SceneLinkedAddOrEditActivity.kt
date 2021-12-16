@@ -5,10 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
+import com.example.kiotsdk.adapter.diff.DiffSceneIftttTasksListCallback
 import com.example.kiotsdk.adapter.diff.DiffSceneLinkedConditionListCallback
-import com.example.kiotsdk.adapter.diff.DiffSceneLinkedDeviceListCallback
 import com.example.kiotsdk.adapter.scene.SceneConditionListAdapter
 import com.example.kiotsdk.adapter.scene.SceneDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
@@ -16,12 +15,11 @@ import com.example.kiotsdk.bean.TriggerModeBean
 import com.example.kiotsdk.databinding.ActivitySceneLinkedEditOrAddBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.AddTimeConditionEvent
-import com.kunluiot.sdk.bean.scene.SceneConditionListParam
-import com.kunluiot.sdk.bean.scene.SceneLinkBean
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
+import com.kunluiot.sdk.bean.scene.SceneConditionListBeanNew
+import com.kunluiot.sdk.bean.scene.SceneIftttTasksListBeanNew
+import com.kunluiot.sdk.bean.scene.SceneLinkBeanNew
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
-import java.util.*
 
 /**
  * User: Chris
@@ -34,7 +32,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
     private lateinit var mBinding: ActivitySceneLinkedEditOrAddBinding
 
     private var mIsAdd = false
-    private var mBean: SceneLinkBean = SceneLinkBean()
+    private var mBean: SceneLinkBeanNew = SceneLinkBeanNew()
 
     private var mSceneName = ""
 
@@ -60,7 +58,9 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         getIntentData()
 
         mBinding.titleLayout.setOnClickListener { gotoEditName.launch(Intent(this, SceneNameEditActivity::class.java).putExtra(SceneNameEditActivity.NAME, mSceneName)) }
-        mBinding.timeLayout.setOnClickListener { gotoTime.launch(Intent(this, SceneAddTimeConditionActivity::class.java)) }
+        mBinding.timeLayout.setOnClickListener {
+            gotoTime.launch(Intent(this, SceneAddTimeConditionActivity::class.java).putExtra(SceneAddTimeConditionActivity.TIME_SELECT, mBinding.timeValue.text))
+        }
         mBinding.dateLayout.setOnClickListener { gotoDate.launch(Intent(this, SceneAddTimeConditionActivity::class.java).putExtra(SceneAddTimeConditionActivity.TIME_SLOT, true)) }
         mBinding.modeLayout.setOnClickListener { showTriggerModeDialog() }
         mBinding.addCondition.setOnClickListener { clickAddCondition() }
@@ -106,7 +106,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
 
     private fun initAdapter() {
         mAdapter = SceneDeviceListAdapter(arrayListOf())
-        mAdapter.setDiffCallback(DiffSceneLinkedDeviceListCallback())
+        mAdapter.setDiffCallback(DiffSceneIftttTasksListCallback())
         mBinding.deviceList.adapter = mAdapter
         mAdapter.setOnItemClickListener { _, _, position ->
             alert("是否删除") {
@@ -135,21 +135,21 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val delay = it.data?.getStringExtra(SelectExecutionActionActivity.DELAY) ?: ""
             if (delay.isNotEmpty()) {
-                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneLinkedBean()
+                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneIftttTasksListBeanNew()
                 mAdapter.data.add(mAdapter.data.size, bean)
                 mAdapter.notifyItemInserted(mAdapter.data.size)
                 mBean.iftttTasks = mAdapter.data
             }
             val scene = it.data?.getStringExtra(SelectExecutionActionActivity.SCENE_LINK) ?: ""
             if (scene.isNotEmpty()) {
-                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_LINK_BEAN) ?: SceneLinkedBean()
+                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_LINK_BEAN) ?: SceneIftttTasksListBeanNew()
                 mAdapter.data.add(mAdapter.data.size, bean)
                 mAdapter.notifyItemInserted(mAdapter.data.size)
                 mBean.iftttTasks = mAdapter.data
             }
             val device = it.data?.getStringExtra(SelectExecutionActionActivity.DEVICE) ?: ""
             if (device.isNotEmpty()) {
-                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneLinkedBean()
+                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
                 mAdapter.data.add(mAdapter.data.size, bean)
                 mAdapter.notifyItemInserted(mAdapter.data.size)
                 mBean.iftttTasks = mAdapter.data
@@ -161,7 +161,8 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         if (mTriggerType.isEmpty()) {
             gotoAddCondition.launch(Intent(this, SceneAddConditionActivity::class.java))
         } else if (mTriggerType == "REPORT") {
-            gotoAddConditionDevice.launch(Intent(this, SceneSelectConditionDevicesActivity::class.java))
+            val keyList = mConditionAdapter.data.map { it.customFields.name }.toTypedArray()
+            gotoAddConditionDevice.launch(Intent(this, SceneSelectConditionDevicesActivity::class.java).putExtra(SceneSelectConditionDevicesActivity.HAS_ADD_LIST, keyList))
         }
     }
 
@@ -169,7 +170,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(SceneAddConditionActivity.DEVICE) ?: ""
             if (device == SceneAddConditionActivity.DEVICE) {
-                val bean = it.data?.getParcelableExtra(SceneAddConditionActivity.DEVICE_BEAN) ?: SceneConditionListParam()
+                val bean = it.data?.getParcelableExtra(SceneAddConditionActivity.DEVICE_BEAN) ?: SceneConditionListBeanNew()
                 mConditionAdapter.data.add(mConditionAdapter.data.size, bean)
                 mConditionAdapter.notifyItemInserted(mConditionAdapter.data.size)
                 mBean.conditionList = mConditionAdapter.data
@@ -204,8 +205,18 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val bean = it.data?.getParcelableExtra(SceneAddTimeConditionActivity.TIME_BEAN) ?: AddTimeConditionEvent()
             mTriggerType = bean.triggerType ?: ""
-            val timeTrigger = if (mTriggerType == "SCHEDULER") bean.conditionBean?.conDesc else ""
+            val timeTrigger = if (mTriggerType == "SCHEDULER") bean.conDesc else ""
             mBinding.timeValue.text = timeTrigger
+            if (!mBean.conditionList.isNullOrEmpty()) {
+                mBean.conditionList.first().conDesc = bean.conDesc ?: ""
+                mBean.conditionList.first().triggerParams.first().let { mstp ->
+                    bean.triggerParams?.first().let { stp ->
+                        mstp.left = stp?.left ?: ""
+                        mstp.right = stp?.right ?: ""
+                        mstp.operator = stp?.operator ?: ""
+                    }
+                }
+            }
         }
     }
 
@@ -217,11 +228,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
             val deviceTrigger = if (mTriggerType == "SCHEDULER") "" else bean.desc
             mBinding.dateValue.text = deviceTrigger
             bean.desc?.let { desc -> mBean.desc = desc }
-            bean.conditionBean?.let {
-                val conditionListBean: ArrayList<SceneConditionListParam> = ArrayList<SceneConditionListParam>()
-                conditionListBean.add(conditionListBean.size, bean.conditionBean!!)
-                mBean.conditionList = conditionListBean
-            }
+            bean.cronExpr?.let { cronExpr -> mBean.cronExpr = cronExpr }
         }
     }
 
@@ -232,22 +239,26 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
                 val bean = it.data?.getParcelableExtra(SceneAddConditionActivity.TIME_BEAN) ?: AddTimeConditionEvent()
                 mTriggerType = bean.triggerType ?: ""
                 mBean.triggerType = mTriggerType
-                val timeTrigger = if (mTriggerType == "SCHEDULER") bean.conditionBean?.conDesc else ""
+                val timeTrigger = if (mTriggerType == "SCHEDULER") bean.conDesc else ""
                 mBinding.timeLayout.visibility = View.VISIBLE
                 mBinding.timeValue.text = timeTrigger
                 mBinding.addCondition.visibility = View.GONE
                 mBinding.conditionHint.visibility = View.GONE
                 mBinding.conditionList.visibility = View.GONE
                 bean.desc?.let { desc -> mBean.desc = desc }
-                bean.conditionBean?.let {
-                    val conditionListBean: ArrayList<SceneConditionListParam> = ArrayList<SceneConditionListParam>()
-                    conditionListBean.add(conditionListBean.size, bean.conditionBean!!)
-                    mBean.conditionList = conditionListBean
-                }
+                bean.cronExpr?.let { mBean.cronExpr = bean.cronExpr!! }
+                val condListBean = SceneConditionListBeanNew()
+                bean.conDesc?.let { condListBean.conDesc = bean.conDesc!! }
+                bean.devTid?.let { condListBean.devTid = bean.devTid!! }
+                bean.ctrlKey?.let { condListBean.ctrlKey = bean.ctrlKey!! }
+                bean.desc?.let { condListBean.conDesc = bean.conDesc!! }
+                bean.triggerParams?.let { condListBean.triggerParams = bean.triggerParams!! }
+                bean.customFields?.let { condListBean.customFields = bean.customFields!! }
+                mBean.conditionList = listOf(condListBean)
             }
             val device = it.data?.getStringExtra(SceneAddConditionActivity.DEVICE) ?: ""
             if (device == SceneAddConditionActivity.DEVICE) {
-                val bean = it.data?.getParcelableExtra(SceneAddConditionActivity.DEVICE_BEAN) ?: SceneConditionListParam()
+                val bean = it.data?.getParcelableExtra(SceneAddConditionActivity.DEVICE_BEAN) ?: SceneConditionListBeanNew()
                 mTriggerType = "REPORT"
                 mBinding.timeLayout.visibility = View.GONE
                 mBinding.dateLayout.visibility = View.VISIBLE
@@ -271,16 +282,37 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
     private fun getIntentData() {
         intent?.let {
             mIsAdd = it.getBooleanExtra(IS_ADD, false)
-            if (!mIsAdd) mBean = it.getParcelableExtra(BEAN) ?: SceneLinkBean()
-            if (mIsAdd) mBinding.toolBar.title = "创建${resources.getString(R.string.scene_linked)}${resources.getString(R.string.scene)}"
-            else mBinding.toolBar.title = "编辑${resources.getString(R.string.scene_linked)}${resources.getString(R.string.scene)}"
+            if (!mIsAdd) mBean = it.getParcelableExtra(BEAN) ?: SceneLinkBeanNew()
+            if (mIsAdd) {
+                mBinding.toolBar.title = "创建${resources.getString(R.string.scene_linked)}${resources.getString(R.string.scene)}"
+                mBinding.titleValue.text = "请输入场景名称"
+            } else {
+                mBinding.toolBar.title = "编辑${resources.getString(R.string.scene_linked)}${resources.getString(R.string.scene)}"
+            }
             if (!mIsAdd) {
                 mSceneName = mBean.ruleName
                 mTriggerType = mBean.triggerType
-                mBinding.titleValue.text = "$mSceneName   >"
+                mBinding.titleValue.text = "$mSceneName"
                 val deviceTrigger = if (mTriggerType == "SCHEDULER") "" else mBean.desc
-                if (deviceTrigger.isNotEmpty()) mBinding.dateValue.text = deviceTrigger
-                val timeTrigger = if (mTriggerType == "SCHEDULER") mBean.conditionList.first().conDesc ?: "" else ""
+                if (deviceTrigger.isNotEmpty()) {
+                    mBinding.dateValue.text = deviceTrigger
+                    mBinding.dateValue.visibility = View.VISIBLE
+                    mBinding.dateLayout.visibility = View.VISIBLE
+                    mBinding.modeLayout.visibility = View.VISIBLE
+                    mBinding.addCondition.visibility = View.VISIBLE
+                    mBinding.conditionHint.visibility = View.VISIBLE
+                    mBinding.conditionList.visibility = View.VISIBLE
+                    if (mBean.conditionLogic == "OR") {
+                        mCurrTriggerMode.key = "OR"
+                        mCurrTriggerMode.value = resources.getString(R.string.any_of_the_following_conditions_are_satisfied)
+                        mBinding.modeValue.text = mCurrTriggerMode.value
+                    } else {
+                        mCurrTriggerMode.key = "AND"
+                        mCurrTriggerMode.value = resources.getString(R.string.all_of_the_following_conditions_are_met)
+                        mBinding.modeValue.text = mCurrTriggerMode.value
+                    }
+                }
+                val timeTrigger = if (mTriggerType == "SCHEDULER") mBean.conditionList.first().conDesc else ""
                 if (timeTrigger.isNotEmpty()) {
                     mBinding.timeLayout.visibility = View.VISIBLE
                     mBinding.timeValue.text = timeTrigger

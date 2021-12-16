@@ -15,6 +15,8 @@ import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
+import com.kunluiot.sdk.bean.scene.SceneIftttTasksListBeanNew
+import com.kunluiot.sdk.bean.scene.SceneIftttTasksParamBeanNew
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 import org.jetbrains.anko.selector
 
@@ -45,7 +47,7 @@ class SceneSelectDevicesActivity : BaseActivity() {
     private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(OperationListActivity.DEVICE) ?: ""
-            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneLinkedBean()
+            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
             if (device == OperationListActivity.DEVICE) {
                 setResult(Activity.RESULT_OK, intent.putExtra(OperationListActivity.DEVICE, OperationListActivity.DEVICE).putExtra(OperationListActivity.DEVICE_BEAN, deviceBean))
                 finish()

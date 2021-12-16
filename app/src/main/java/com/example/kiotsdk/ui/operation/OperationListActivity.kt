@@ -1,16 +1,17 @@
 package com.example.kiotsdk.ui.operation
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
-import com.elvishew.xlog.XLog
-import com.example.kiotsdk.adapter.operation.OperationListAdapter
+import com.example.kiotsdk.adapter.operation.OperationFieldsListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationListBinding
+import com.example.kiotsdk.widget.SeekBarBottomDialog
 import com.kunluiot.sdk.bean.device.DeviceNewBean
+import com.kunluiot.sdk.bean.device.DeviceOperationFieldsBean
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
+import com.kunluiot.sdk.bean.scene.*
+import org.jetbrains.anko.selector
+import java.util.*
 
 /**
  * User: Chris
@@ -22,7 +23,7 @@ class OperationListActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityOperationListBinding
 
-    private lateinit var mAdapter: OperationListAdapter
+    private lateinit var mAdapter: OperationFieldsListAdapter
 
     private var mList = mutableListOf<DeviceOperationProtocolBean>()
     private var mDeviceBean = DeviceNewBean()
@@ -41,26 +42,113 @@ class OperationListActivity : BaseActivity() {
             mDeviceBean = it.getParcelableExtra(DEVICE_BEAN) ?: DeviceNewBean()
         }
 
+        mBinding.btnFinish.setOnClickListener { gotoNext() }
         initAdapter()
     }
 
+    private fun gotoNext() {
+        val customFields = SceneCustomFieldsBeanNew()
+        customFields.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+        customFields.devName = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+        customFields.icon = mDeviceBean.logo
+        customFields.mid = mDeviceBean.mid
+        customFields.desc = getDesc()
+        val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
+        customFields.family_folder = mDeviceBean.familyName + "-" + folder
+
+        val iftttTasksBean = SceneIftttTasksListBeanNew()
+        iftttTasksBean.desc = getDesc()
+
+        val iftttTasksParam = SceneIftttTasksParamBeanNew()
+
+        when (mDeviceBean.devType) {
+            "SUB" -> {
+                iftttTasksBean.type = "APPSUBSEND"
+                iftttTasksParam.devTid = mDeviceBean.parentDevTid
+                iftttTasksParam.subDevTid = mDeviceBean.devTid
+                iftttTasksParam.ctrlKey = mDeviceBean.parentCtrlKey
+            }
+            else -> {
+                iftttTasksBean.type = "APPSEND"
+                iftttTasksParam.devTid = mDeviceBean.devTid
+                iftttTasksParam.ctrlKey = mDeviceBean.ctrlKey
+            }
+        }
+        iftttTasksParam.data = getCmdArgs()
+        iftttTasksBean.params = iftttTasksParam
+        iftttTasksBean.customParam = customFields
+
+        setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, iftttTasksBean))
+        finish()
+    }
+
+    private fun getCmdArgs(): Map<String, String> {
+        val cmdArgMap: MutableMap<String, String> = HashMap()
+        cmdArgMap["cmdId"] = mList.first().cmdId.toString()
+        for (item in mAdapter.data) {
+            cmdArgMap[item.name] = item.selectValue
+        }
+        return cmdArgMap
+    }
+
+    private fun getDesc(): String {
+        var desc = ""
+        for (i in mAdapter.data.indices) {
+            if (i != 0) {
+                desc = "$desc,"
+            }
+            desc = desc + mAdapter.data[i].desc + ":" + mAdapter.data[i].selectedDesc
+        }
+        return desc
+    }
+
     private fun initAdapter() {
-        mAdapter = OperationListAdapter(mList)
+        val list = mutableListOf<DeviceOperationFieldsBean>()
+        mList.forEach { list.addAll(it.fields) }
+        list.forEach {
+            if (!it.enumeration.isNullOrEmpty()) {
+                it.selectValue = it.enumeration.first().value.toString()
+                it.selectedDesc = it.enumeration.first().desc
+            } else {
+                it.selectValue = it.minValue.toString()
+                it.selectedDesc = it.minValue.toString()
+            }
+        }
+        mAdapter = OperationFieldsListAdapter(list)
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
-            val bean = adapter.getItem(position) as DeviceOperationProtocolBean
-            gotoAddDevice.launch(Intent(this, OperationListFieldsActivity::class.java).putExtra(DEVICE, mDeviceBean).putExtra(PROTOCOL_BEAN, bean))
+            val bean = adapter.getItem(position) as DeviceOperationFieldsBean
+            selectData(bean, position)
         }
     }
 
-    private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val device = it.data?.getStringExtra(DEVICE_RESULT) ?: ""
-            val deviceBean = it.data?.getParcelableExtra(DEVICE_BEAN_RESULT) ?: SceneLinkedBean()
-            if (device == DEVICE_RESULT) {
-                setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
-                finish()
+    private fun selectData(bean: DeviceOperationFieldsBean, position: Int) {
+        if (!bean.enumeration.isNullOrEmpty()) {
+            val names = bean.enumeration.map { it.desc }
+            selector("", names) { dialog, i ->
+                val selectData = bean.enumeration[i]
+                bean.selectValue = selectData.value.toString()
+                bean.selectedDesc = selectData.desc
+                mAdapter.notifyItemChanged(position)
+                dialog.dismiss()
             }
+        } else {
+            val dialog = SeekBarBottomDialog(this)
+            dialog.show()
+            dialog.setTitleSubName(bean.desc)
+            dialog.setCurrProgress(bean.selectValue.toInt())
+            dialog.setMaxProgress(bean.maxValue.toInt())
+            dialog.setMinProgress(bean.minValue)
+            dialog.setOnDialogClickListener(object : SeekBarBottomDialog.OnDialogClickListener {
+                override fun onFinishClick(selectProgress: Int) {
+                    bean.selectValue = selectProgress.toString()
+                    bean.selectedDesc = selectProgress.toString()
+                    mAdapter.notifyItemChanged(position)
+                }
+
+                override fun onDismissClick() {
+                }
+            })
         }
     }
 
@@ -70,8 +158,5 @@ class OperationListActivity : BaseActivity() {
 
         const val DEVICE = "device"
         const val PROTOCOL_BEAN = "protocol_bean"
-
-        const val DEVICE_RESULT = "device_result"
-        const val DEVICE_BEAN_RESULT = "device_bean_result"
     }
 }

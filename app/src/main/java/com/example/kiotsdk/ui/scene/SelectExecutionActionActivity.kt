@@ -4,15 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySelectExecutionActionBinding
 import com.example.kiotsdk.ui.operation.OperationListActivity
 import com.example.kiotsdk.util.DemoUtils
 import com.example.kiotsdk.widget.SelectTimeDialog
+import com.kunluiot.sdk.bean.scene.SceneCustomFieldsBeanNew
+import com.kunluiot.sdk.bean.scene.SceneIftttTasksListBeanNew
+import com.kunluiot.sdk.bean.scene.SceneIftttTasksParamBeanNew
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeyCustomParam
 
 /**
  * User: Chris
@@ -45,7 +46,7 @@ class SelectExecutionActionActivity : BaseActivity() {
     private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(OperationListActivity.DEVICE) ?: ""
-            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneLinkedBean()
+            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
             if (device == OperationListActivity.DEVICE) {
                 setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
                 finish()
@@ -63,7 +64,7 @@ class SelectExecutionActionActivity : BaseActivity() {
             }
             val sceneLink = it.data?.getStringExtra(SelectSceneActivity.SCENE_LINK) ?: ""
             if (sceneLink == SelectSceneActivity.SCENE_LINK) {
-                val sceneLinkBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_LINK_BEAN) ?: SceneLinkedBean()
+                val sceneLinkBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_LINK_BEAN) ?: SceneIftttTasksListBeanNew()
                 setResult(Activity.RESULT_OK, intent.putExtra(SCENE_LINK, SCENE_LINK).putExtra(SCENE_LINK_BEAN, sceneLinkBean))
                 finish()
             }
@@ -98,16 +99,20 @@ class SelectExecutionActionActivity : BaseActivity() {
             desc = desc + minute + "m"
         }
         desc = desc + second + "s"
-        val customParamBean = SceneOneKeyCustomParam()
-        customParamBean.name = resources.getString(R.string.delayed)
-        customParamBean.time = time
-        customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
-        val eventData = SceneLinkedBean()
-        eventData.customParam = customParamBean
-        eventData.desc = desc
-        eventData.time = time
-        eventData.type = "DALAYTIME"
-        setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, eventData))
+
+        val customFields = SceneCustomFieldsBeanNew()
+        customFields.name = resources.getString(R.string.delayed)
+        customFields.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
+
+        val iftttTasksParam = SceneIftttTasksParamBeanNew()
+        iftttTasksParam.time = time.toString()
+
+        val iftttTasksBean = SceneIftttTasksListBeanNew()
+        iftttTasksBean.customParam = customFields
+        iftttTasksBean.params = iftttTasksParam
+        iftttTasksBean.desc = desc
+        iftttTasksBean.type = "DALAYTIME"
+        setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, iftttTasksBean))
         finish()
     }
 

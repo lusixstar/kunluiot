@@ -17,8 +17,12 @@ class SceneSelectDeviceRoomItemAdapter(list: MutableList<DeviceNewBean>, private
 
         val text = holder.getView<TextView>(R.id.text)
         val next = holder.getView<TextView>(R.id.next)
-
-        holder.setText(R.id.text, "设备名称：${item.deviceName}")
+        val name = if (item.deviceName.isNotEmpty()) item.deviceName else item.name
+        if (item.devType == "GATEWAY") {
+            holder.setText(R.id.text, "网关设备名称：$name")
+        } else {
+            holder.setText(R.id.text, "设备名称：$name")
+        }
         getProtocol(item.productPublicKey, text, next, holder.itemView, item)
     }
 

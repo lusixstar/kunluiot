@@ -64,14 +64,14 @@ internal class KunLuSceneImpl : IKunLuScene {
     /**
      * 新增联动场景
      * */
-    override fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+    override fun addLinkageScene(bean: SceneLinkBeanNew, fail: OnFailResult, success: OnSuccessResult) {
         SceneRequestUtil.addLinkageScene(bean, fail, success)
     }
 
     /**
      * 编辑联动场景
      * */
-    override fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+    override fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBeanNew, fail: OnFailResult, success: OnSuccessResult) {
         SceneRequestUtil.updateLinkageScene(ruleId, enable, data, fail, success)
     }
 

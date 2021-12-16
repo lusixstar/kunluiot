@@ -4,17 +4,13 @@ import android.app.Activity
 import android.os.Bundle
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffOneKeyListCallback
-import com.example.kiotsdk.adapter.diff.DiffSceneLinkedListCallback
 import com.example.kiotsdk.adapter.scene.SelectSceneLinkedListAdapter
 import com.example.kiotsdk.adapter.scene.SelectSceneListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySelectSceneBinding
 import com.example.kiotsdk.util.DemoUtils
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.scene.SceneLinkBean
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeyCustomParam
+import com.kunluiot.sdk.bean.scene.*
 import org.jetbrains.anko.selector
 
 /**
@@ -58,7 +54,7 @@ class SelectSceneActivity : BaseActivity() {
     private fun initAdapter() {
         if (mIsOneKey) {
             mAdapter = SelectSceneListAdapter(arrayListOf())
-            mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
+//            mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
             mBinding.list.adapter = mAdapter
             mAdapter.setOnItemClickListener { adapter, _, position ->
                 val bean = adapter.getItem(position) as SceneLinkBean
@@ -76,16 +72,19 @@ class SelectSceneActivity : BaseActivity() {
     }
 
     private fun gotoNextLink(bean: SceneOneKeyBean) {
-        val customParamBean = SceneOneKeyCustomParam()
+        val customParamBean = SceneCustomFieldsBeanNew()
         customParamBean.name = bean.sceneName
         customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_scene)
-        val eventData = SceneLinkedBean()
-        eventData.customParam = customParamBean
-        eventData.desc = "开启"
-        eventData.type = "SCENETRIGGERSEND"
-        eventData.iftttId = bean.sceneId
-        eventData.enable = "ENABLE"
-        setResult(Activity.RESULT_OK, intent.putExtra(SCENE_LINK, SCENE_LINK).putExtra(SCENE_LINK_BEAN, eventData))
+
+        val iftttTasksParam = SceneIftttTasksParamBeanNew()
+        iftttTasksParam.sceneId = bean.sceneId
+
+        val iftttTasksBean = SceneIftttTasksListBeanNew()
+        iftttTasksBean.customParam = customParamBean
+        iftttTasksBean.params = iftttTasksParam
+        iftttTasksBean.desc = "执行场景"
+        iftttTasksBean.type = "SCENETRIGGERSEND"
+        setResult(Activity.RESULT_OK, intent.putExtra(SCENE_LINK, SCENE_LINK).putExtra(SCENE_LINK_BEAN, iftttTasksBean))
         finish()
     }
 

@@ -11,13 +11,11 @@ import com.example.kiotsdk.adapter.scene.SceneSelectDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneSelectDevicesBinding
 import com.example.kiotsdk.ui.operation.OperationLinkedListActivity
-import com.example.kiotsdk.ui.operation.OperationListActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
-import com.kunluiot.sdk.bean.scene.SceneConditionListParam
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
+import com.kunluiot.sdk.bean.scene.SceneConditionListBeanNew
 import org.jetbrains.anko.selector
 
 
@@ -28,6 +26,8 @@ class SceneSelectConditionDevicesActivity : BaseActivity() {
     private lateinit var mRoomAdapter: SceneSelectDeviceListAdapter
 
     private var mFamilyList = mutableListOf<FamilyBean>()
+
+    private var mKeyList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +40,11 @@ class SceneSelectConditionDevicesActivity : BaseActivity() {
 
         mBinding.title.setOnClickListener { selectFamily() }
 
+        intent?.let {
+            val list = it.getStringArrayExtra(HAS_ADD_LIST) ?: arrayOf()
+            mKeyList.addAll(list.toList())
+        }
+
         initAdapter()
         getFamilyData()
     }
@@ -48,7 +53,7 @@ class SceneSelectConditionDevicesActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(OperationLinkedListActivity.DEVICE) ?: ""
             if (device == OperationLinkedListActivity.DEVICE) {
-                val deviceBean = it.data?.getParcelableExtra(OperationLinkedListActivity.DEVICE_RESULT_BEAN) ?: SceneConditionListParam()
+                val deviceBean = it.data?.getParcelableExtra(OperationLinkedListActivity.DEVICE_RESULT_BEAN) ?: SceneConditionListBeanNew()
                 setResult(Activity.RESULT_OK, intent.putExtra(SceneAddConditionActivity.DEVICE, SceneAddConditionActivity.DEVICE).putExtra(SceneAddConditionActivity.DEVICE_BEAN, deviceBean))
                 finish()
             }
@@ -65,6 +70,7 @@ class SceneSelectConditionDevicesActivity : BaseActivity() {
             gotoAddDevice.launch(Intent(this, OperationLinkedListActivity::class.java).putExtra(OperationLinkedListActivity.LIST_BEAN, fList).putExtra(OperationLinkedListActivity.DEVICE_BEAN, bean))
         }
         mRoomAdapter.setDiffCallback(DiffRoomListCallback())
+        mRoomAdapter.setKeyList(mKeyList)
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         mBinding.list.adapter = mRoomAdapter
     }
@@ -103,5 +109,9 @@ class SceneSelectConditionDevicesActivity : BaseActivity() {
         if (!it.isNullOrEmpty()) {
             mRoomAdapter.setDiffNewData(it as MutableList<FolderBean>)
         }
+    }
+
+    companion object {
+        const val HAS_ADD_LIST = "has_add_list"
     }
 }

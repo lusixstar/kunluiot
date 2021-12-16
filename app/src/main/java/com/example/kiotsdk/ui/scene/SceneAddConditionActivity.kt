@@ -8,6 +8,7 @@ import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneAddConditionEditBinding
 import com.example.kiotsdk.ui.operation.OperationListActivity
 import com.kunluiot.sdk.bean.scene.AddTimeConditionEvent
+import com.kunluiot.sdk.bean.scene.SceneConditionListBeanNew
 import com.kunluiot.sdk.bean.scene.SceneConditionListParam
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 
@@ -38,7 +39,7 @@ class SceneAddConditionActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(DEVICE) ?: ""
             if (device == DEVICE) {
-                val deviceBean = it.data?.getParcelableExtra(DEVICE_BEAN) ?: SceneConditionListParam()
+                val deviceBean = it.data?.getParcelableExtra(DEVICE_BEAN) ?: SceneConditionListBeanNew()
                 setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
                 finish()
             }

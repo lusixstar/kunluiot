@@ -26,35 +26,35 @@ class DiffOneKeyListCallback : DiffUtil.ItemCallback<SceneOneKeyBean>() {
     }
 }
 
-class DiffSceneLinkedListCallback : DiffUtil.ItemCallback<SceneLinkBean>() {
+class DiffSceneLinkedListCallback : DiffUtil.ItemCallback<SceneLinkBeanNew>() {
 
-    override fun areItemsTheSame(oldItem: SceneLinkBean, newItem: SceneLinkBean): Boolean {
-        return oldItem.pid == newItem.pid
+    override fun areItemsTheSame(oldItem: SceneLinkBeanNew, newItem: SceneLinkBeanNew): Boolean {
+        return oldItem.ruleName == newItem.ruleName
     }
 
-    override fun areContentsTheSame(oldItem: SceneLinkBean, newItem: SceneLinkBean): Boolean {
-        return oldItem.pid == newItem.pid
-    }
-}
-
-class DiffSceneLinkedDeviceListCallback : DiffUtil.ItemCallback<SceneLinkedBean>() {
-
-    override fun areItemsTheSame(oldItem: SceneLinkedBean, newItem: SceneLinkedBean): Boolean {
-        return oldItem.taskId == newItem.taskId
-    }
-
-    override fun areContentsTheSame(oldItem: SceneLinkedBean, newItem: SceneLinkedBean): Boolean {
-        return oldItem.taskId == newItem.taskId
+    override fun areContentsTheSame(oldItem: SceneLinkBeanNew, newItem: SceneLinkBeanNew): Boolean {
+        return oldItem.ruleName == newItem.ruleName
     }
 }
 
-class DiffSceneLinkedConditionListCallback : DiffUtil.ItemCallback<SceneConditionListParam>() {
+class DiffSceneIftttTasksListCallback : DiffUtil.ItemCallback<SceneIftttTasksListBeanNew>() {
 
-    override fun areItemsTheSame(oldItem: SceneConditionListParam, newItem: SceneConditionListParam): Boolean {
+    override fun areItemsTheSame(oldItem: SceneIftttTasksListBeanNew, newItem: SceneIftttTasksListBeanNew): Boolean {
+        return oldItem.taskId == newItem.taskId
+    }
+
+    override fun areContentsTheSame(oldItem: SceneIftttTasksListBeanNew, newItem: SceneIftttTasksListBeanNew): Boolean {
+        return oldItem.taskId == newItem.taskId
+    }
+}
+
+class DiffSceneLinkedConditionListCallback : DiffUtil.ItemCallback<SceneConditionListBeanNew>() {
+
+    override fun areItemsTheSame(oldItem: SceneConditionListBeanNew, newItem: SceneConditionListBeanNew): Boolean {
         return oldItem.devTid == newItem.devTid
     }
 
-    override fun areContentsTheSame(oldItem: SceneConditionListParam, newItem: SceneConditionListParam): Boolean {
+    override fun areContentsTheSame(oldItem: SceneConditionListBeanNew, newItem: SceneConditionListBeanNew): Boolean {
         return oldItem.devTid == newItem.devTid
     }
 }

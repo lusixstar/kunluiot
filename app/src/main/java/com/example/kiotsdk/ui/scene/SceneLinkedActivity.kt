@@ -11,8 +11,7 @@ import com.example.kiotsdk.adapter.scene.SceneLinkedListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneLinkedBinding
 import com.kunluiot.sdk.KunLuHomeSdk
-import com.kunluiot.sdk.bean.scene.SceneLinkBean
-import com.kunluiot.sdk.callback.IResultCallback
+import com.kunluiot.sdk.bean.scene.SceneLinkBeanNew
 import org.jetbrains.anko.alert
 
 /**
@@ -52,9 +51,9 @@ class SceneLinkedActivity : BaseActivity() {
         KunLuHomeSdk.sceneImpl.getLinkageSceneList({ code, msg -> toastErrorMsg(code, msg) }, { setData(it) })
     }
 
-    private fun setData(list: List<SceneLinkBean> = listOf()) {
+    private fun setData(list: List<SceneLinkBeanNew> = listOf()) {
         mAdapter.data.clear()
-        mAdapter.addData(list as MutableList<SceneLinkBean>)
+        mAdapter.addData(list as MutableList<SceneLinkBeanNew>)
     }
 
     private fun initAdapter() {
@@ -64,7 +63,7 @@ class SceneLinkedActivity : BaseActivity() {
         mBinding.list.adapter = mAdapter
         mAdapter.addChildClickViewIds(R.id.edit, R.id.off)
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
-            val bean = adapter.getItem(position) as SceneLinkBean
+            val bean = adapter.getItem(position) as SceneLinkBeanNew
             when (view.id) {
                 R.id.edit -> {
                     gotoLinkedAddOrEdit.launch(Intent(this, SceneLinkedAddOrEditActivity::class.java).putExtra(SceneLinkedAddOrEditActivity.BEAN, bean))
@@ -75,13 +74,13 @@ class SceneLinkedActivity : BaseActivity() {
             }
         }
         mAdapter.setOnItemLongClickListener { adapter, _, position ->
-            val bean = adapter.getItem(position) as SceneLinkBean
+            val bean = adapter.getItem(position) as SceneLinkBeanNew
             gotoDelete(bean)
             false
         }
     }
 
-    private fun gotoDelete(bean: SceneLinkBean) {
+    private fun gotoDelete(bean: SceneLinkBeanNew) {
         alert(message = "是否删除") {
             positiveButton("确定") { dialog ->
                 KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, { c, m -> toastErrorMsg(c, m) }, { getData() })

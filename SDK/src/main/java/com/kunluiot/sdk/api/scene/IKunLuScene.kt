@@ -46,12 +46,12 @@ interface IKunLuScene {
     /**
      * 新增联动场景
      * */
-    fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult)
+    fun addLinkageScene(bean: SceneLinkBeanNew, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 编辑联动场景
      * */
-    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult)
+    fun updateLinkageScene(ruleId: String, enable: Boolean, data: SceneLinkBeanNew, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除联动场景

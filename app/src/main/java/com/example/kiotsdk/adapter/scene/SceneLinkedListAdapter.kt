@@ -4,26 +4,24 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.kiotsdk.R
-import com.example.kiotsdk.util.DemoUtils
-import com.kunluiot.sdk.bean.scene.SceneLinkBean
-import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
+import com.kunluiot.sdk.bean.scene.SceneLinkBeanNew
 
 
-class SceneLinkedListAdapter(list: MutableList<SceneLinkBean>) : BaseQuickAdapter<SceneLinkBean, BaseViewHolder>(R.layout.item_scene_linked, list) {
+class SceneLinkedListAdapter(list: MutableList<SceneLinkBeanNew>) : BaseQuickAdapter<SceneLinkBeanNew, BaseViewHolder>(R.layout.item_scene_linked, list) {
 
-    override fun convert(holder: BaseViewHolder, item: SceneLinkBean) {
+    override fun convert(holder: BaseViewHolder, item: SceneLinkBeanNew) {
 
         holder.setText(R.id.name, item.ruleName)
 
         var desc = ""
         if (item.triggerType == "SCHEDULER") {
             for (conditionItem in item.conditionList) {
-                desc = conditionItem.customFields?.name + conditionItem.conDesc
+                desc = conditionItem.customFields.name + conditionItem.conDesc
             }
         } else {
             for (conditionItem in item.conditionList) {
-                val subDesc: String = conditionItem.customFields?.desc ?: conditionItem.conDesc ?: ""
-                desc = conditionItem.customFields?.devName + subDesc
+                val subDesc: String = conditionItem.conDesc
+                desc = conditionItem.customFields.name + subDesc
             }
         }
         holder.setText(R.id.content, desc)

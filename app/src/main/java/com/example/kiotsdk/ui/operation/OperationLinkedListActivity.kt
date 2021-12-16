@@ -2,7 +2,7 @@ package com.example.kiotsdk.ui.operation
 
 import android.app.Activity
 import android.os.Bundle
-import com.elvishew.xlog.XLog
+import android.view.View
 import com.example.kiotsdk.adapter.operation.OperationLinkedListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationLinkedListBinding
@@ -26,9 +26,8 @@ class OperationLinkedListActivity : BaseActivity() {
     private lateinit var mAdapter: OperationLinkedListAdapter
 
     private var mList = mutableListOf<DeviceOperationFieldsBean>()
-    private var mDeviceBean = DeviceNewBean()
-
     private var mProtocolBean = DeviceOperationProtocolBean()
+    private var mDeviceBean = DeviceNewBean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,19 +38,20 @@ class OperationLinkedListActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
+        mBinding.finish.visibility = View.INVISIBLE
+
         intent?.let { it ->
             val list = it.getParcelableArrayListExtra<DeviceOperationProtocolBean>(LIST_BEAN) ?: mutableListOf()
-            if (list.size == 1) {
-                mProtocolBean = list[0]
-                XLog.e("mProtocolBean == $mProtocolBean")
-                val ll = list[0].fields.filter { it.usedForIFTTT }
-                ll.forEach {
-                    if (!it.enumeration.isNullOrEmpty()) {
-                        it.selectValue = it.enumeration.first().value.toString()
-                        it.selectedDesc = it.enumeration.first().desc
+            if (list.isNotEmpty()) mProtocolBean = list[0]
+            list.forEach {
+                val ll = it.fields.filter { field -> field.usedForIFTTT }
+                ll.forEach { field ->
+                    if (!field.enumeration.isNullOrEmpty()) {
+                        field.selectValue = field.enumeration.first().value.toString()
+                        field.selectedDesc = field.enumeration.first().desc
                     } else {
-                        it.selectValue = it.minValue.toString()
-                        it.selectedDesc = it.minValue.toString()
+                        field.selectValue = field.minValue.toString()
+                        field.selectedDesc = field.minValue.toString()
                     }
                 }
                 mList.addAll(ll)
@@ -59,72 +59,48 @@ class OperationLinkedListActivity : BaseActivity() {
             mDeviceBean = it.getParcelableExtra(DEVICE_BEAN) ?: DeviceNewBean()
         }
 
-        mBinding.finish.setOnClickListener { gotoNext() }
-
         initAdapter()
     }
 
-    private fun gotoNext() {
-        val list = mAdapter.data.filter { it.select }
-        if (list.isNullOrEmpty()) {
-            toastMsg("最少选择一项")
-            return
-        }
-        val bean = SceneConditionListParam()
-        val beanCf = SceneOneKeyCustomParam()
-        beanCf.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
-        beanCf.icon = mDeviceBean.logo
-        beanCf.mid = mDeviceBean.mid
+    private fun gotoNext(bean: DeviceOperationFieldsBean) {
+        val condBean = SceneConditionListBeanNew()
+
+        val customFields = SceneCustomFieldsBeanNew()
+        customFields.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+        customFields.devName = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+        customFields.icon = mDeviceBean.logo
+        customFields.desc = bean.desc + ":" + bean.selectedDesc
+        customFields.mid = mDeviceBean.mid
         val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
-        beanCf.family_folder = mDeviceBean.familyName + "-" + folder
-        bean.customFields = beanCf
+        customFields.family_folder = mDeviceBean.familyName + "-" + folder
+        condBean.customFields = customFields
+
         when (mDeviceBean.devType) {
             "SUB" -> {
-                bean.devTid = mDeviceBean.parentDevTid
-                bean.subDevTid = mDeviceBean.devTid
-                bean.ctrlKey = mDeviceBean.ctrlKey
+                condBean.devTid = mDeviceBean.parentDevTid
+                condBean.subDevTid = mDeviceBean.devTid
+                condBean.ctrlKey = mDeviceBean.parentCtrlKey
             }
             else -> {
-                bean.devTid = mDeviceBean.devTid
-                bean.ctrlKey = mDeviceBean.ctrlKey
+                condBean.devTid = mDeviceBean.devTid
+                condBean.ctrlKey = mDeviceBean.ctrlKey
             }
         }
-        bean.conDesc = getDesc()
-        bean.triggerParams = getCmdArgs()
-        bean.relation = "OR"
-        setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_RESULT_BEAN, bean))
+        condBean.conDesc = bean.desc + ":" + bean.selectedDesc
+        condBean.triggerParams = getCmdArgs()
+        setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_RESULT_BEAN, condBean))
         finish()
     }
 
-    private fun getDesc(): String {
-        var desc = ""
-        for (i in mList.indices) {
-            if (!mList[i].select || mList[i].selectValue.isEmpty() || mList[i].selectValue == "0") {
-                continue
-            }
-            if (i != 0) {
-                desc = "$desc,"
-            }
-            desc = desc + mAdapter.data[i].desc + ":" + mList[i].selectedDesc
-        }
-        if (desc.startsWith(",")) {
-            desc = desc.substring(1)
-        }
-        return desc
-    }
-
-    private fun getCmdArgs(): MutableList<SceneTriggerParam> {
-        val triggerParams = mutableListOf<SceneTriggerParam>()
-        val triggerParamsBean = SceneTriggerParam()
+    private fun getCmdArgs(): MutableList<SceneTriggerBeanNew> {
+        val triggerParams = mutableListOf<SceneTriggerBeanNew>()
+        val triggerParamsBean = SceneTriggerBeanNew()
         triggerParamsBean.left = "cmdId"
         triggerParamsBean.right = mProtocolBean.cmdId.toString()
         triggerParamsBean.operator = "=="
         triggerParams.add(triggerParamsBean)
         for (item in mList) {
-            if (!item.select || item.selectValue.isEmpty() || item.selectValue == "0") {
-                continue
-            }
-            val itemBean = SceneTriggerParam()
+            val itemBean = SceneTriggerBeanNew()
             itemBean.left = item.name
             itemBean.right = item.selectValue
             if (item.operator.isEmpty()) {
@@ -142,11 +118,11 @@ class OperationLinkedListActivity : BaseActivity() {
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
             val bean = adapter.getItem(position) as DeviceOperationFieldsBean
-            selectData(bean, position)
+            selectData(bean)
         }
     }
 
-    private fun selectData(bean: DeviceOperationFieldsBean, position: Int) {
+    private fun selectData(bean: DeviceOperationFieldsBean) {
         if (!bean.enumeration.isNullOrEmpty()) {
             val names = bean.enumeration.map { it.desc }
             selector(bean.desc, names) { dialog, i ->
@@ -154,15 +130,15 @@ class OperationLinkedListActivity : BaseActivity() {
                 bean.selectValue = selectData.value.toString()
                 bean.selectedDesc = selectData.desc
                 bean.select = true
-                mAdapter.notifyItemChanged(position)
+                gotoNext(bean)
                 dialog.dismiss()
             }
         } else {
-            showSeekBarBottomDialog(bean, position)
+            showSeekBarBottomDialog(bean)
         }
     }
 
-    private fun showSeekBarBottomDialog(bean: DeviceOperationFieldsBean, position: Int) {
+    private fun showSeekBarBottomDialog(bean: DeviceOperationFieldsBean) {
         if (bean.dataType == "INT" || bean.dataType == "NUMBER") {
             val curtainsDialog = SeekBarCurtainsBottomDialog(this)
             curtainsDialog.show()
@@ -191,7 +167,7 @@ class OperationLinkedListActivity : BaseActivity() {
                             bean.selectedDesc = "(" + curtainsDialog.min.toString() + "," + curtainsDialog.max.toString() + ")"
                         }
                     }
-                    mAdapter.notifyItemChanged(position)
+                    gotoNext(bean)
                 }
 
                 override fun onDismissClick() {}

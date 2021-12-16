@@ -1,12 +1,10 @@
 package com.kunluiot.sdk.request
 
-import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.common.OnSuccessResult
-import com.kunluiot.sdk.callback.scene.ISceneNewPlayCallback
 import com.kunluiot.sdk.callback.scene.SceneLinkedListResult
 import com.kunluiot.sdk.callback.scene.SceneListResult
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
@@ -217,7 +215,7 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<List<SceneLinkBean>>(response.succeed()).let { success.success(it) }
+                    KotlinSerializationUtils.getJsonData<List<SceneLinkBeanNew>>(response.succeed()).let { success.success(it) }
                 }
             }
         })
@@ -226,7 +224,7 @@ object SceneRequestUtil {
     /**
      * 新增联动场景
      * */
-    fun addLinkageScene(bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+    fun addLinkageScene(bean: SceneLinkBeanNew, fail: OnFailResult, success: OnSuccessResult) {
 
         val info = SceneStackLinkedBean()
         info.timeZoneOffset = bean.timeZoneOffset
@@ -239,6 +237,7 @@ object SceneRequestUtil {
         info.triggerType = bean.triggerType
 
         if (!bean.iftttTasks.isNullOrEmpty()) {
+            SceneIftttTasksListBeanNew
             val iftttTasks = mutableListOf<SceneStackLinkedIftttTask>()
             bean.iftttTasks.forEach { ifttt ->
                 val cp = SceneStackLinkedCustomParam()
@@ -248,14 +247,13 @@ object SceneRequestUtil {
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
                 val p = SceneStackLinkedParams()
-                if (ifttt.time != 0) p.time = ifttt.time
-                if (ifttt.iftttId.isNotEmpty()) p.sceneId = ifttt.iftttId
-                if (ifttt.devTid.isNotEmpty()) p.devTid = ifttt.devTid
-                if (ifttt.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.ctrlKey
-                if (ifttt.subDevTid.isNotEmpty()) p.subDevTid = ifttt.subDevTid
-                if (!ifttt.cmdArgsLink.isNullOrEmpty()) {
+                if (ifttt.params.time != "") p.time = ifttt.params.time.toInt()
+                if (ifttt.params.devTid.isNotEmpty()) p.devTid = ifttt.params.devTid
+                if (ifttt.params.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.params.ctrlKey
+                if (ifttt.params.subDevTid.isNotEmpty()) p.subDevTid = ifttt.params.subDevTid
+                if (!ifttt.params.data.isNullOrEmpty()) {
                     val da = mutableMapOf<String, Long>()
-                    ifttt.cmdArgsLink.forEach { (t, u) -> da[t] = u.toLong() }
+                    ifttt.params.data.forEach { (t, u) -> da[t] = u.toLong() }
                     p.data = da
                 }
                 val b = SceneStackLinkedIftttTask()
@@ -272,12 +270,11 @@ object SceneRequestUtil {
             val conditionList = mutableListOf<SceneStackLinkedCondition>()
             bean.conditionList.forEach { cond ->
                 val sct = SceneStackLinkedCondition()
-                cond.devTid?.let { sct.devTid = cond.devTid }
-                cond.ctrlKey?.let { sct.ctrlKey = cond.ctrlKey }
-                cond.conDesc?.let { sct.conDesc = cond.conDesc }
-                cond.relation?.let { sct.relation = cond.relation }
+                cond.devTid.let { sct.devTid = cond.devTid }
+                cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
+                cond.conDesc.let { sct.conDesc = cond.conDesc }
                 val cf = SceneStackLinkedCustomFields()
-                cond.customFields?.let { condcf ->
+                cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
                     if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
@@ -286,11 +283,11 @@ object SceneRequestUtil {
                 sct.customFields = cf
                 if (!cond.triggerParams.isNullOrEmpty()) {
                     val stpList = mutableListOf<SceneStackLinkedTriggerParam>()
-                    cond.triggerParams!!.forEach { condstp ->
+                    cond.triggerParams.forEach { condstp ->
                         val stp = SceneStackLinkedTriggerParam()
-                        condstp.left?.let { stp.left = condstp.left }
-                        condstp.right?.let { stp.right = condstp.right }
-                        condstp.operator?.let { stp.operator = condstp.operator }
+                        condstp.left.let { stp.left = condstp.left }
+                        condstp.right.let { stp.right = condstp.right }
+                        condstp.operator.let { stp.operator = condstp.operator }
                         stpList.add(stp)
                     }
                     sct.triggerParams = stpList
@@ -311,7 +308,7 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<SceneLinkBean>(response.succeed()).let { success.success() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkBeanNew>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -320,7 +317,7 @@ object SceneRequestUtil {
     /**
      * 编辑联动场景
      * */
-    fun updateLinkageScene(ruleId: String, enable: Boolean, bean: SceneLinkBean, fail: OnFailResult, success: OnSuccessResult) {
+    fun updateLinkageScene(ruleId: String, enable: Boolean, bean: SceneLinkBeanNew, fail: OnFailResult, success: OnSuccessResult) {
 
         val info = SceneStackLinkedBean()
         info.timeZoneOffset = bean.timeZoneOffset
@@ -342,8 +339,7 @@ object SceneRequestUtil {
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
                 val p = SceneStackLinkedParams()
-                if (ifttt.params.time != 0) p.time = ifttt.params.time
-                if (ifttt.customParam.time != 0) p.time = ifttt.customParam.time
+                if (ifttt.params.time != "") p.time = ifttt.params.time.toInt()
                 if (ifttt.params.sceneId.isNotEmpty()) p.sceneId = ifttt.params.sceneId
                 if (ifttt.params.devTid.isNotEmpty()) p.devTid = ifttt.params.devTid
                 if (ifttt.params.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.params.ctrlKey
@@ -367,12 +363,11 @@ object SceneRequestUtil {
             val conditionList = mutableListOf<SceneStackLinkedCondition>()
             bean.conditionList.forEach { cond ->
                 val sct = SceneStackLinkedCondition()
-                cond.devTid?.let { sct.devTid = cond.devTid }
-                cond.ctrlKey?.let { sct.ctrlKey = cond.ctrlKey }
-                cond.conDesc?.let { sct.conDesc = cond.conDesc }
-                cond.relation?.let { sct.relation = cond.relation }
+                cond.devTid.let { sct.devTid = cond.devTid }
+                cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
+                cond.conDesc.let { sct.conDesc = cond.conDesc }
                 val cf = SceneStackLinkedCustomFields()
-                cond.customFields?.let { condcf ->
+                cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
                     if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
@@ -383,9 +378,9 @@ object SceneRequestUtil {
                     val stpList = mutableListOf<SceneStackLinkedTriggerParam>()
                     cond.triggerParams!!.forEach { condstp ->
                         val stp = SceneStackLinkedTriggerParam()
-                        condstp.left?.let { stp.left = condstp.left }
-                        condstp.right?.let { stp.right = condstp.right }
-                        condstp.operator?.let { stp.operator = condstp.operator }
+                        condstp.left.let { stp.left = condstp.left }
+                        condstp.right.let { stp.right = condstp.right }
+                        condstp.operator.let { stp.operator = condstp.operator }
                         stpList.add(stp)
                     }
                     sct.triggerParams = stpList
@@ -407,7 +402,7 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<SceneLinkBean>(response.succeed()).let { success.success() }
+                    KotlinSerializationUtils.getJsonData<SceneLinkBeanNew>(response.succeed()).let { success.success() }
                 }
             }
         })

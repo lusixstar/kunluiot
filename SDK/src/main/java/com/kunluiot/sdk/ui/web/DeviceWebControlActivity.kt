@@ -100,7 +100,6 @@ class DeviceWebControlActivity : AppCompatActivity() {
         if (cansend) {
             val header = "javascript:document.dispatchEvent(new CustomEvent('notifyDevEvent', {detail:$message}));"
             mWebView.loadUrl(header)
-            XLog.e("js = $header")
         }
     }
 
