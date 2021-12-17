@@ -328,7 +328,7 @@ object SceneRequestUtil {
             bean.iftttTasks.forEach { ifttt ->
                 val cp = SceneStackLinkedCustomParam()
                 if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
-                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+//                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
                 if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
@@ -339,8 +339,8 @@ object SceneRequestUtil {
                 if (ifttt.params.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.params.ctrlKey
                 if (ifttt.params.subDevTid.isNotEmpty()) p.subDevTid = ifttt.params.subDevTid
                 if (!ifttt.params.data.isNullOrEmpty()) {
-                    val da = mutableMapOf<String, String>()
-                    ifttt.params.data.forEach { (t, u) -> da[t] = u }
+                    val da = mutableMapOf<String, Long>()
+                    ifttt.params.data.forEach { (t, u) -> da[t] = u.toLong() }
                     p.data = da
                 }
                 val b = SceneStackLinkedIftttTask()
@@ -364,13 +364,13 @@ object SceneRequestUtil {
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
-                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+//                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
                     if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
                 }
                 sct.customFields = cf
                 if (!cond.triggerParams.isNullOrEmpty()) {
                     val stpList = mutableListOf<SceneStackLinkedTriggerParam>()
-                    cond.triggerParams!!.forEach { condstp ->
+                    cond.triggerParams.forEach { condstp ->
                         val stp = SceneStackLinkedTriggerParam()
                         condstp.left.let { stp.left = condstp.left }
                         condstp.right.let { stp.right = condstp.right }
