@@ -51,6 +51,13 @@ fun interface DevicePinCodeResult {
     fun success(info: DevicePinCodeBean)
 }
 
+/**
+ * 设备删除
+ */
+fun interface DeviceDeleteResult {
+    fun success(info: DeviceDeleteBean)
+}
+
 // ------------------------------------------
 
 /**
@@ -58,14 +65,6 @@ fun interface DevicePinCodeResult {
  * */
 interface IDeviceListCallback {
     fun onSuccess(bean: List<DeviceNewBean>)
-    fun onError(code: String, error: String)
-}
-
-/**
- * 获取pinCode
- * */
-interface IPinCodeCallback {
-    fun onSuccess(bean: DevicePinCodeBean)
     fun onError(code: String, error: String)
 }
 

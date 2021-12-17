@@ -91,12 +91,12 @@ class DeviceManagerActivity : BaseActivity() {
         alert("是否删除设备") {
             positiveButton("确定") { dialog ->
                 if (it.devType == KunLuDeviceType.DEVICE_SUB) {
-                    KunLuHomeSdk.deviceImpl.deletesSubDevice(it.parentDevTid, it.parentCtrlKey, it.devTid, { code, msg -> toastErrorMsg(code, msg) }, {
+                    KunLuHomeSdk.deviceImpl.deletesSubDevice(it.parentDevTid, it.parentCtrlKey, it.devTid, "", { code, msg -> toastErrorMsg(code, msg) }, { delete ->
                         val params: MutableMap<String, Any> = HashMap()
                         params["devTid"] = it.parentDevTid
                         params["ctrlKey"] = it.parentCtrlKey
                         params["subDevTid"] = it.devTid
-                        params["randomToken"] = ""
+                        if (delete.randomToken.isNotEmpty()) params["randomToken"] = delete.randomToken
                         val resp: MutableMap<String, Any> = HashMap()
                         resp["action"] = "devDelete"
                         resp["params"] = params
@@ -104,7 +104,15 @@ class DeviceManagerActivity : BaseActivity() {
                     })
                 } else {
                     if (userId == it.ownerUid) {
-                        KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
+                        KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, "", { code, msg -> toastErrorMsg(code, msg) }, { delete ->
+                            if (delete.randomToken.isNotEmpty()) {
+                                KunLuHomeSdk.deviceImpl.deleteDevice(it.devTid, it.bindKey, delete.randomToken, { code, msg -> toastErrorMsg(code, msg) }, {
+                                    getFamilyData()
+                                })
+                            } else {
+                                getFamilyData()
+                            }
+                        })
                     } else {
                         KunLuHomeSdk.deviceImpl.deleteAuthorizationDevice(it.ownerUid, it.ctrlKey, userId, it.devTid, "", { code, msg -> toastErrorMsg(code, msg) }, { getFamilyData() })
                     }

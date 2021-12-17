@@ -16,12 +16,18 @@ interface IKunLuDevice {
     /**
      * 删除设备
      */
-    fun deleteDevice(delDevTid: String, bindKey: String, fail: OnFailResult, success: OnSuccessResult)
+    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult)
 
     /**
      * 删除子设备
      */
-    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult)
+    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult)
+
+    /**
+     * 删除授权设备
+     */
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult)
+
 
     /**
      * 设备配网
@@ -42,11 +48,6 @@ interface IKunLuDevice {
      * 房间中设备列表
      * */
     fun getRoomsDevices(folderId: String, quickOperation: Boolean, fail: OnFailResult, success: DeviceListResult)
-
-    /**
-     * 删除授权设备
-     */
-    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 检查设备固件是否需要升级

@@ -2,9 +2,12 @@ package com.example.kiotsdk.ui.operation
 
 import android.app.Activity
 import android.os.Bundle
+import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.operation.OperationFieldsListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationListBinding
+import com.example.kiotsdk.ui.scene.SelectExecutionActionActivity
+import com.example.kiotsdk.util.DemoUtils
 import com.example.kiotsdk.widget.SeekBarBottomDialog
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceOperationFieldsBean
@@ -25,6 +28,8 @@ class OperationListActivity : BaseActivity() {
 
     private lateinit var mAdapter: OperationFieldsListAdapter
 
+    private var mIsOneKey = false
+
     private var mList = mutableListOf<DeviceOperationProtocolBean>()
     private var mDeviceBean = DeviceNewBean()
 
@@ -40,6 +45,7 @@ class OperationListActivity : BaseActivity() {
         intent?.let { it ->
             mList = it.getParcelableArrayListExtra(LIST_BEAN) ?: mutableListOf()
             mDeviceBean = it.getParcelableExtra(DEVICE_BEAN) ?: DeviceNewBean()
+            mIsOneKey = it.getBooleanExtra(SelectExecutionActionActivity.IS_ONE_KEY, false)
         }
 
         mBinding.btnFinish.setOnClickListener { gotoNext() }
@@ -47,39 +53,69 @@ class OperationListActivity : BaseActivity() {
     }
 
     private fun gotoNext() {
-        val customFields = SceneCustomFieldsBeanNew()
-        customFields.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
-        customFields.devName = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
-        customFields.icon = mDeviceBean.logo
-        customFields.mid = mDeviceBean.mid
-        customFields.desc = getDesc()
-        val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
-        customFields.family_folder = mDeviceBean.familyName + "-" + folder
+        if (mIsOneKey) {
+            val customFields = SceneCustomFieldsBeanNew()
+            customFields.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+            customFields.devName = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+            customFields.icon = mDeviceBean.logo
+            customFields.mid = mDeviceBean.mid
+            customFields.desc = getDesc()
+            val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
+            customFields.family_folder = mDeviceBean.familyName + "-" + folder
 
-        val iftttTasksBean = SceneIftttTasksListBeanNew()
-        iftttTasksBean.desc = getDesc()
-
-        val iftttTasksParam = SceneIftttTasksParamBeanNew()
-
-        when (mDeviceBean.devType) {
-            "SUB" -> {
-                iftttTasksBean.type = "APPSUBSEND"
-                iftttTasksParam.devTid = mDeviceBean.parentDevTid
-                iftttTasksParam.subDevTid = mDeviceBean.devTid
-                iftttTasksParam.ctrlKey = mDeviceBean.parentCtrlKey
+            val oneKeyTask = SceneOneKeyTaskListBean()
+            oneKeyTask.customParam = customFields
+            oneKeyTask.desc = getDesc()
+            when (mDeviceBean.devType) {
+                "SUB" -> {
+                    oneKeyTask.devTid = mDeviceBean.parentDevTid
+                    oneKeyTask.subDevTid = mDeviceBean.devTid
+                    oneKeyTask.ctrlKey = mDeviceBean.parentCtrlKey
+                }
+                else -> {
+                    oneKeyTask.devTid = mDeviceBean.devTid
+                    oneKeyTask.ctrlKey = mDeviceBean.ctrlKey
+                }
             }
-            else -> {
-                iftttTasksBean.type = "APPSEND"
-                iftttTasksParam.devTid = mDeviceBean.devTid
-                iftttTasksParam.ctrlKey = mDeviceBean.ctrlKey
+            oneKeyTask.cmdArgs = getCmdArgs()
+
+            setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, oneKeyTask))
+            finish()
+        } else {
+            val customFields = SceneCustomFieldsBeanNew()
+            customFields.name = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+            customFields.devName = if (mDeviceBean.deviceName.isNotEmpty()) mDeviceBean.deviceName else mDeviceBean.name
+            customFields.icon = mDeviceBean.logo
+            customFields.mid = mDeviceBean.mid
+            customFields.desc = getDesc()
+            val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
+            customFields.family_folder = mDeviceBean.familyName + "-" + folder
+
+            val iftttTasksBean = SceneIftttTasksListBeanNew()
+            iftttTasksBean.desc = getDesc()
+
+            val iftttTasksParam = SceneIftttTasksParamBeanNew()
+
+            when (mDeviceBean.devType) {
+                "SUB" -> {
+                    iftttTasksBean.type = "APPSUBSEND"
+                    iftttTasksParam.devTid = mDeviceBean.parentDevTid
+                    iftttTasksParam.subDevTid = mDeviceBean.devTid
+                    iftttTasksParam.ctrlKey = mDeviceBean.parentCtrlKey
+                }
+                else -> {
+                    iftttTasksBean.type = "APPSEND"
+                    iftttTasksParam.devTid = mDeviceBean.devTid
+                    iftttTasksParam.ctrlKey = mDeviceBean.ctrlKey
+                }
             }
+            iftttTasksParam.data = getCmdArgs()
+            iftttTasksBean.params = iftttTasksParam
+            iftttTasksBean.customParam = customFields
+
+            setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, iftttTasksBean))
+            finish()
         }
-        iftttTasksParam.data = getCmdArgs()
-        iftttTasksBean.params = iftttTasksParam
-        iftttTasksBean.customParam = customFields
-
-        setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, iftttTasksBean))
-        finish()
     }
 
     private fun getCmdArgs(): Map<String, String> {

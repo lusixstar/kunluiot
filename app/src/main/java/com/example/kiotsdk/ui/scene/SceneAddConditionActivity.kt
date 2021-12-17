@@ -6,11 +6,8 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneAddConditionEditBinding
-import com.example.kiotsdk.ui.operation.OperationListActivity
 import com.kunluiot.sdk.bean.scene.AddTimeConditionEvent
 import com.kunluiot.sdk.bean.scene.SceneConditionListBeanNew
-import com.kunluiot.sdk.bean.scene.SceneConditionListParam
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
 
 /**
  * User: Chris

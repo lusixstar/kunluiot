@@ -21,12 +21,12 @@ interface IKunLuScene {
     /**
      * 新增手动场景
      */
-    fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult)
+    fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneOneKeyTaskListBean>, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 编辑手动场景
      */
-    fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult)
+    fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneOneKeyTaskListBean>, fail: OnFailResult, success: OnSuccessResult)
 
     /**
      * 删除手动场景

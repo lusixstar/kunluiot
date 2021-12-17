@@ -13,7 +13,7 @@ import com.example.kiotsdk.widget.SelectTimeDialog
 import com.kunluiot.sdk.bean.scene.SceneCustomFieldsBeanNew
 import com.kunluiot.sdk.bean.scene.SceneIftttTasksListBeanNew
 import com.kunluiot.sdk.bean.scene.SceneIftttTasksParamBeanNew
-import com.kunluiot.sdk.bean.scene.SceneLinkedBean
+import com.kunluiot.sdk.bean.scene.SceneOneKeyTaskListBean
 
 /**
  * User: Chris
@@ -37,7 +37,7 @@ class SelectExecutionActionActivity : BaseActivity() {
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         mBinding.delay.setOnClickListener { showSeekBarBottomDialog() }
-        mBinding.device.setOnClickListener { gotoAddDevice.launch(Intent(this, SceneSelectDevicesActivity::class.java)) }
+        mBinding.device.setOnClickListener { gotoAddDevice.launch(Intent(this, SceneSelectDevicesActivity::class.java).putExtra(IS_ONE_KEY, mIsOneKey)) }
         mBinding.scene.setOnClickListener { gotoAddScene.launch(Intent(this, SelectSceneActivity::class.java).putExtra(IS_ONE_KEY, mIsOneKey)) }
 
         intent?.let { mIsOneKey = it.getBooleanExtra(IS_ONE_KEY, false) }
@@ -46,10 +46,16 @@ class SelectExecutionActionActivity : BaseActivity() {
     private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(OperationListActivity.DEVICE) ?: ""
-            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
             if (device == OperationListActivity.DEVICE) {
-                setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
-                finish()
+                if (mIsOneKey) {
+                    val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneOneKeyTaskListBean()
+                    setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
+                    finish()
+                } else {
+                    val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
+                    setResult(Activity.RESULT_OK, intent.putExtra(DEVICE, DEVICE).putExtra(DEVICE_BEAN, deviceBean))
+                    finish()
+                }
             }
         }
     }
@@ -58,7 +64,7 @@ class SelectExecutionActionActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val scene = it.data?.getStringExtra(SelectSceneActivity.SCENE) ?: ""
             if (scene == SelectSceneActivity.SCENE) {
-                val sceneBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_BEAN) ?: SceneLinkedBean()
+                val sceneBean = it.data?.getParcelableExtra(SelectSceneActivity.SCENE_BEAN) ?: SceneOneKeyTaskListBean()
                 setResult(Activity.RESULT_OK, intent.putExtra(SCENE, SCENE).putExtra(SCENE_BEAN, sceneBean))
                 finish()
             }
@@ -100,20 +106,33 @@ class SelectExecutionActionActivity : BaseActivity() {
         }
         desc = desc + second + "s"
 
-        val customFields = SceneCustomFieldsBeanNew()
-        customFields.name = resources.getString(R.string.delayed)
-        customFields.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
+        if (mIsOneKey) {
+            val customFields = SceneCustomFieldsBeanNew()
+            customFields.name = resources.getString(R.string.delayed)
+            customFields.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
 
-        val iftttTasksParam = SceneIftttTasksParamBeanNew()
-        iftttTasksParam.time = time.toString()
+            val oneKeyTask = SceneOneKeyTaskListBean()
+            oneKeyTask.customParam = customFields
+            oneKeyTask.time = time.toString()
+            oneKeyTask.desc = desc
+            setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, oneKeyTask))
+            finish()
+        } else {
+            val customFields = SceneCustomFieldsBeanNew()
+            customFields.name = resources.getString(R.string.delayed)
+            customFields.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_delay)
 
-        val iftttTasksBean = SceneIftttTasksListBeanNew()
-        iftttTasksBean.customParam = customFields
-        iftttTasksBean.params = iftttTasksParam
-        iftttTasksBean.desc = desc
-        iftttTasksBean.type = "DALAYTIME"
-        setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, iftttTasksBean))
-        finish()
+            val iftttTasksParam = SceneIftttTasksParamBeanNew()
+            iftttTasksParam.time = time.toString()
+
+            val iftttTasksBean = SceneIftttTasksListBeanNew()
+            iftttTasksBean.customParam = customFields
+            iftttTasksBean.params = iftttTasksParam
+            iftttTasksBean.desc = desc
+            iftttTasksBean.type = "DALAYTIME"
+            setResult(Activity.RESULT_OK, intent.putExtra(DELAY, DELAY).putExtra(DELAY_BEAN, iftttTasksBean))
+            finish()
+        }
     }
 
     companion object {

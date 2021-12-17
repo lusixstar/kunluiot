@@ -61,17 +61,22 @@ object DeviceRequestUtil {
     /**
      * 删除设备
      */
-    fun deleteDevice(delDevTid: String, bindKey: String, fail: OnFailResult, success: OnSuccessResult) {
+    fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
         val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$delDevTid")
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.urlParam("bindKey", bindKey)
+        if (randomToken.isNotEmpty()) kalle.urlParam("randomToken", randomToken)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                    if (response.succeed().isEmpty()) {
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success(DeviceDeleteBean()) }
+                    } else {
+                        KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { success.success(it) }
+                    }
                 }
             }
         })
@@ -80,17 +85,46 @@ object DeviceRequestUtil {
     /**
      * 删除子设备
      */
-    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult) {
+    fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
         val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_SUB_DEVICE)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.urlParam("devTid", devTid).urlParam("ctrlKey", ctrlKey).urlParam("subDevTid", subDevTid)
+        if (randomToken.isNotEmpty()) kalle.urlParam("randomToken", randomToken)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                    if (response.succeed().isEmpty()) {
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success(DeviceDeleteBean()) }
+                    } else {
+                        KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { success.success(it) }
+                    }
+                }
+            }
+        })
+    }
+
+    /**
+     * 删除授权设备
+     */
+    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
+        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE)
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        if (randomToken.isNotEmpty()) kalle.urlParam("randomToken", randomToken)
+        kalle.urlParam("grantor", grantor).urlParam("ctrlKey", ctrlKey).urlParam("grantee", grantee).urlParam("devTid", devTid)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    if (response.succeed().isEmpty()) {
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success(DeviceDeleteBean()) }
+                    } else {
+                        KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { success.success(it) }
+                    }
                 }
             }
         })
@@ -165,25 +199,6 @@ object DeviceRequestUtil {
                     fail.fail(response.code().toString(), failed)
                 } else {
                     KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { success.success(it) }
-                }
-            }
-        })
-    }
-
-    /**
-     * 删除授权设备
-     */
-    fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: OnSuccessResult) {
-        val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DELETE_AUTHORIZATION_DEVICE)
-        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
-        kalle.urlParam("grantor", grantor).urlParam("ctrlKey", ctrlKey).urlParam("grantee", grantee).urlParam("devTid", devTid)
-        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
-            override fun onResponse(response: SimpleResponse<String, String>) {
-                val failed = response.failed()
-                if (!failed.isNullOrEmpty()) {
-                    fail.fail(response.code().toString(), failed)
-                } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
                 }
             }
         })

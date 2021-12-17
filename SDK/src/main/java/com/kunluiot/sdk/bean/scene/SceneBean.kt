@@ -92,81 +92,6 @@ data class AddTimeConditionEvent(
     var customFields: SceneCustomFieldsBeanNew? = null,
 ) : Parcelable
 
-// ---------------------------------------------------
-@Parcelize
-@Serializable
-data class SceneLinkBean(
-    var conditionList: List<SceneConditionListParam> = listOf(),
-    var conditionLogic: String = "",
-    val createTime: Long = 0,
-    var cronExpr: String = "",
-    var desc: String = "",
-    val enabled: Boolean = false,
-    var iftttTasks: List<SceneLinkedBean> = listOf(),
-    var iftttType: String = "",
-    val intervalTime: Int = 0,
-    val objectId: ObjectId = ObjectId(),
-    val pid: String = "",
-    val pushMsg: PushMsg = PushMsg(),
-    val ruleId: String = "",
-    var ruleName: String = "",
-    val ruleSort: Int = 0,
-    var timeZoneOffset: Int = 0,
-    var triggerType: String = "",
-    val uid: String = "",
-    val updateTime: Long = 0,
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class IftttTask(
-    val customParam: CustomParam = CustomParam(),
-    val desc: String = "",
-    val params: Params = Params(),
-    val taskId: String = "",
-    val type: String = "",
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class ObjectId(
-    val counter: Int = 0,
-    val date: Long = 0,
-    val machineIdentifier: Int = 0,
-    val processIdentifier: Int = 0,
-    val time: Long = 0,
-    val timeSecond: Int = 0,
-    val timestamp: Int = 0,
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class PushMsg(
-    val alarm: Boolean = false,
-    val pushEnable: Boolean = false,
-    val pushTemplateId: String = "",
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class CustomParam(
-    val devName: String = "",
-    val family_folder: String = "",
-    val icon: String = "",
-    val mid: String = "",
-    val name: String = "",
-) : Parcelable
-
-@Parcelize
-@Serializable
-data class Params(
-    val ctrlKey: String = "",
-    val `data`: Map<String, String> = mapOf(),
-    val devTid: String = "",
-    val subDevTid: String = "",
-    val time: Int = 0,
-) : Parcelable
-
 // -------------------------------------------------------
 
 @Parcelize
@@ -193,6 +118,9 @@ data class SceneOneKeyTaskListBean(
     var devTid: String = "",
     var ctrlKey: String = "",
     var subDevTid: String = "",
+    var iftttId: String = "",
+    var enable: String = "",
+    var time: String = "",
     var customParam: SceneCustomFieldsBeanNew = SceneCustomFieldsBeanNew(),
     var cmdArgs: Map<String, String> = mapOf(),
 ) : Parcelable

@@ -18,6 +18,7 @@ import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.bean.scene.SceneIftttTasksListBeanNew
 import com.kunluiot.sdk.bean.scene.SceneIftttTasksParamBeanNew
 import com.kunluiot.sdk.bean.scene.SceneLinkedBean
+import com.kunluiot.sdk.bean.scene.SceneOneKeyTaskListBean
 import org.jetbrains.anko.selector
 
 
@@ -29,6 +30,8 @@ class SceneSelectDevicesActivity : BaseActivity() {
 
     private var mFamilyList = mutableListOf<FamilyBean>()
 
+    private var mIsOneKey = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +41,7 @@ class SceneSelectDevicesActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
+        intent?.let { mIsOneKey = it.getBooleanExtra(SelectExecutionActionActivity.IS_ONE_KEY, false) }
         mBinding.title.setOnClickListener { selectFamily() }
 
         initAdapter()
@@ -47,10 +51,16 @@ class SceneSelectDevicesActivity : BaseActivity() {
     private val gotoAddDevice = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val device = it.data?.getStringExtra(OperationListActivity.DEVICE) ?: ""
-            val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
             if (device == OperationListActivity.DEVICE) {
-                setResult(Activity.RESULT_OK, intent.putExtra(OperationListActivity.DEVICE, OperationListActivity.DEVICE).putExtra(OperationListActivity.DEVICE_BEAN, deviceBean))
-                finish()
+                if (mIsOneKey) {
+                    val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneOneKeyTaskListBean()
+                    setResult(Activity.RESULT_OK, intent.putExtra(OperationListActivity.DEVICE, OperationListActivity.DEVICE).putExtra(OperationListActivity.DEVICE_BEAN, deviceBean))
+                    finish()
+                } else {
+                    val deviceBean = it.data?.getParcelableExtra(OperationListActivity.DEVICE_BEAN) ?: SceneIftttTasksListBeanNew()
+                    setResult(Activity.RESULT_OK, intent.putExtra(OperationListActivity.DEVICE, OperationListActivity.DEVICE).putExtra(OperationListActivity.DEVICE_BEAN, deviceBean))
+                    finish()
+                }
             }
         }
     }
@@ -62,7 +72,7 @@ class SceneSelectDevicesActivity : BaseActivity() {
             protocol.forEach { (_, u) -> run { if (!u.fields.isNullOrEmpty()) list.add(u) } }
             val l = list.filter { it.usedForIFTTT && it.frameType == 2 }
             fList.addAll(l)
-            gotoAddDevice.launch(Intent(this, OperationListActivity::class.java).putExtra(OperationListActivity.LIST_BEAN, fList).putExtra(OperationListActivity.DEVICE_BEAN, bean))
+            gotoAddDevice.launch(Intent(this, OperationListActivity::class.java).putExtra(OperationListActivity.LIST_BEAN, fList).putExtra(OperationListActivity.DEVICE_BEAN, bean).putExtra(SelectExecutionActionActivity.IS_ONE_KEY, mIsOneKey))
         }
         mRoomAdapter.setDiffCallback(DiffRoomListCallback())
         (mBinding.list.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false

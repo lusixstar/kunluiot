@@ -155,12 +155,6 @@ data class DeviceFrameBean(
 )
 
 @Serializable
-data class ConfigNetworkBean(
-    val ctrlKey: String = "",
-    val result: String = "",
-)
-
-@Serializable
 data class DevicePinCodeBean(
     var PINCode: String = "",
     var ssid: String = "",

@@ -19,15 +19,22 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 删除设备
      */
-    override fun deleteDevice(delDevTid: String, bindKey: String, fail: OnFailResult, success: OnSuccessResult) {
-        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, fail, success)
+    override fun deleteDevice(delDevTid: String, bindKey: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
+        DeviceRequestUtil.deleteDevice(delDevTid, bindKey, randomToken, fail, success)
     }
 
     /**
      * 删除子设备
      */
-    override fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, fail: OnFailResult, success: OnSuccessResult) {
-        DeviceRequestUtil.deletesSubDevice(devTid, ctrlKey, subDevTid, fail, success)
+    override fun deletesSubDevice(devTid: String, ctrlKey: String, subDevTid: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
+        DeviceRequestUtil.deletesSubDevice(devTid, ctrlKey, subDevTid, randomToken, fail, success)
+    }
+
+    /**
+     * 删除授权设备
+     */
+    override fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
+        DeviceRequestUtil.deleteAuthorizationDevice(grantor, ctrlKey, grantee, devTid, randomToken, fail, success)
     }
 
     /**
@@ -49,13 +56,6 @@ internal class KunLuDeviceImpl : IKunLuDevice {
      * */
     override fun getRoomsDevices(folderId: String, quickOperation: Boolean, fail: OnFailResult, success: DeviceListResult) {
         DeviceRequestUtil.getRoomsDevices(folderId, quickOperation, fail, success)
-    }
-
-    /**
-     * 删除授权设备
-     */
-    override fun deleteAuthorizationDevice(grantor: String, ctrlKey: String, grantee: String, devTid: String, randomToken: String, fail: OnFailResult, success: OnSuccessResult) {
-        DeviceRequestUtil.deleteAuthorizationDevice(grantor, ctrlKey, grantee, devTid, randomToken, fail, success)
     }
 
     /**
@@ -108,7 +108,7 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 设备配网成功后将设备配置到某个家庭下某个房间
      * */
-    override fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String,fail: OnFailResult, success: OnSuccessResult) {
+    override fun deviceConfigFinish(devTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, fail: OnFailResult, success: OnSuccessResult) {
         DeviceRequestUtil.deviceConfigFinish(devTid, ctrlKey, deviceName, familyId, folderId, fail, success)
     }
 

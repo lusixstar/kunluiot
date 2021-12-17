@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.R
-import com.example.kiotsdk.adapter.scene.SceneDeviceListAdapter
+import com.example.kiotsdk.adapter.diff.DiffSceneTasksListCallback
+import com.example.kiotsdk.adapter.scene.SceneTaskListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivitySceneOneKeyEditOrAddBinding
 import com.example.kiotsdk.util.DemoUtils
+import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.scene.SceneOneKeyBean
+import com.kunluiot.sdk.bean.scene.SceneOneKeyTaskListBean
 import org.jetbrains.anko.alert
 
 /**
@@ -30,7 +33,7 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
     private var mOneKeyType = 0
     private var mSelectIcon: String = ""
 
-    private lateinit var mAdapter: SceneDeviceListAdapter
+    private lateinit var mAdapter: SceneTaskListAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,26 +69,26 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
             return
         }
         if (mIsAdd) {
-//            KunLuHomeSdk.sceneImpl.addOneKeyScene(mSelectIcon, mSceneName, mAdapter.data.toList(), { c, m -> toastErrorMsg(c, m) }, {
-//                toastMsg("success")
-//                setResult(Activity.RESULT_OK)
-//                finish()
-//            })
+            KunLuHomeSdk.sceneImpl.addOneKeyScene(mSelectIcon, mSceneName, mAdapter.data.toList(), { c, m -> toastErrorMsg(c, m) }, {
+                toastMsg("success")
+                setResult(Activity.RESULT_OK)
+                finish()
+            })
         } else {
-//            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mSelectIcon, mSceneName, mAdapter.data.toList(), { c, m -> toastErrorMsg(c, m) }, {
-//                toastMsg("success")
-//                setResult(Activity.RESULT_OK)
-//                finish()
-//            })
+            KunLuHomeSdk.sceneImpl.updateOneKeyScene(mBean.sceneId, mSelectIcon, mSceneName, mAdapter.data.toList(), { c, m -> toastErrorMsg(c, m) }, {
+                toastMsg("success")
+                setResult(Activity.RESULT_OK)
+                finish()
+            })
         }
     }
 
     private fun initAdapter() {
-        mAdapter = SceneDeviceListAdapter(arrayListOf())
-//        mAdapter.setDiffCallback(DiffSceneLinkedDeviceListCallback())
+        mAdapter = SceneTaskListAdapter(arrayListOf())
+        mAdapter.setDiffCallback(DiffSceneTasksListCallback())
         mBinding.list.adapter = mAdapter
         if (!mIsAdd) {
-//            mAdapter.setDiffNewData(mBean.sceneTaskList.toMutableList())
+            mAdapter.setDiffNewData(mBean.sceneTaskList.toMutableList())
         }
         mAdapter.setOnItemClickListener { _, _, position ->
             alert("是否删除") {
@@ -101,21 +104,21 @@ class SceneOneKeyAddOrEditActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val delay = it.data?.getStringExtra(SelectExecutionActionActivity.DELAY) ?: ""
             if (delay.isNotEmpty()) {
-//                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneLinkedBean()
-//                mAdapter.data.add(mAdapter.data.size, bean)
-//                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
+                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DELAY_BEAN) ?: SceneOneKeyTaskListBean()
+                mAdapter.data.add(mAdapter.data.size, bean)
+                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
             }
             val scene = it.data?.getStringExtra(SelectExecutionActionActivity.SCENE) ?: ""
             if (scene.isNotEmpty()) {
-//                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_BEAN) ?: SceneLinkedBean()
-//                mAdapter.data.add(mAdapter.data.size, bean)
-//                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
+                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.SCENE_BEAN) ?: SceneOneKeyTaskListBean()
+                mAdapter.data.add(mAdapter.data.size, bean)
+                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
             }
             val device = it.data?.getStringExtra(SelectExecutionActionActivity.DEVICE) ?: ""
             if (device.isNotEmpty()) {
-//                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneLinkedBean()
-//                mAdapter.data.add(mAdapter.data.size, bean)
-//                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
+                val bean = it.data?.getParcelableExtra(SelectExecutionActionActivity.DEVICE_BEAN) ?: SceneOneKeyTaskListBean()
+                mAdapter.data.add(mAdapter.data.size, bean)
+                mAdapter.notifyItemRangeChanged(0, mAdapter.data.size)
             }
         }
     }

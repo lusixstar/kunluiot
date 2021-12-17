@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.diff.DiffOneKeyListCallback
+import com.example.kiotsdk.adapter.diff.DiffSceneLinkedListCallback
 import com.example.kiotsdk.adapter.scene.SelectSceneLinkedListAdapter
 import com.example.kiotsdk.adapter.scene.SelectSceneListAdapter
 import com.example.kiotsdk.base.BaseActivity
@@ -45,7 +46,7 @@ class SelectSceneActivity : BaseActivity() {
 
     private fun getData() {
         if (mIsOneKey) {
-            KunLuHomeSdk.sceneImpl.getLinkageSceneList({ code, msg -> toastErrorMsg(code, msg) }, { mAdapter.setDiffNewData(it as MutableList<SceneLinkBean>) })
+            KunLuHomeSdk.sceneImpl.getLinkageSceneList({ code, msg -> toastErrorMsg(code, msg) }, { mAdapter.setDiffNewData(it as MutableList<SceneLinkBeanNew>) })
         } else {
             KunLuHomeSdk.sceneImpl.getOneKeySceneList({ code, msg -> toastErrorMsg(code, msg) }, { mLinkedAdapter.setDiffNewData(it as MutableList<SceneOneKeyBean>) })
         }
@@ -54,10 +55,10 @@ class SelectSceneActivity : BaseActivity() {
     private fun initAdapter() {
         if (mIsOneKey) {
             mAdapter = SelectSceneListAdapter(arrayListOf())
-//            mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
+            mAdapter.setDiffCallback(DiffSceneLinkedListCallback())
             mBinding.list.adapter = mAdapter
             mAdapter.setOnItemClickListener { adapter, _, position ->
-                val bean = adapter.getItem(position) as SceneLinkBean
+                val bean = adapter.getItem(position) as SceneLinkBeanNew
                 gotoNext(bean)
             }
         } else {
@@ -88,23 +89,22 @@ class SelectSceneActivity : BaseActivity() {
         finish()
     }
 
-    private fun gotoNext(bean: SceneLinkBean) {
+    private fun gotoNext(bean: SceneLinkBeanNew) {
         selector("场景开关设置", listOf("开启", "关闭")) { dialog, i ->
-            val customParamBean = SceneOneKeyCustomParam()
+            val customParamBean = SceneCustomFieldsBeanNew()
             customParamBean.name = bean.ruleName
             customParamBean.icon = "data:image/png;base64," + DemoUtils.bitmapToBase64(this, R.mipmap.ic_scene_select_scene)
-            val eventData = SceneLinkedBean()
-            eventData.customParam = customParamBean
-            eventData.iftttId = bean.ruleId
+            val oneKeyTask = SceneOneKeyTaskListBean()
+            oneKeyTask.customParam = customParamBean
+            oneKeyTask.iftttId = bean.ruleId
             if (i == 0) {
-                eventData.desc = "开启"
-                eventData.enable = "ENABLE"
+                oneKeyTask.desc = "开启"
+                oneKeyTask.enable = "ENABLE"
             } else {
-                eventData.desc = "关闭"
-                eventData.enable = "DISABLE"
+                oneKeyTask.desc = "关闭"
+                oneKeyTask.enable = "DISABLE"
             }
-            eventData.type = "SCENETRIGGERSEND"
-            setResult(Activity.RESULT_OK, intent.putExtra(SCENE, SCENE).putExtra(SCENE_BEAN, eventData))
+            setResult(Activity.RESULT_OK, intent.putExtra(SCENE, SCENE).putExtra(SCENE_BEAN, oneKeyTask))
             dialog.dismiss()
             finish()
         }

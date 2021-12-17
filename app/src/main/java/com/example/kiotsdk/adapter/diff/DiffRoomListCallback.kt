@@ -48,6 +48,17 @@ class DiffSceneIftttTasksListCallback : DiffUtil.ItemCallback<SceneIftttTasksLis
     }
 }
 
+class DiffSceneTasksListCallback : DiffUtil.ItemCallback<SceneOneKeyTaskListBean>() {
+
+    override fun areItemsTheSame(oldItem: SceneOneKeyTaskListBean, newItem: SceneOneKeyTaskListBean): Boolean {
+        return oldItem.taskId == newItem.taskId
+    }
+
+    override fun areContentsTheSame(oldItem: SceneOneKeyTaskListBean, newItem: SceneOneKeyTaskListBean): Boolean {
+        return oldItem.taskId == newItem.taskId
+    }
+}
+
 class DiffSceneLinkedConditionListCallback : DiffUtil.ItemCallback<SceneConditionListBeanNew>() {
 
     override fun areItemsTheSame(oldItem: SceneConditionListBeanNew, newItem: SceneConditionListBeanNew): Boolean {

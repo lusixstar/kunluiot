@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.kiotsdk.R
 import com.example.kiotsdk.util.DemoUtils
 import com.kunluiot.sdk.bean.scene.SceneConditionListBeanNew
-import com.kunluiot.sdk.bean.scene.SceneConditionListParam
 
 
 class SceneConditionListAdapter(list: MutableList<SceneConditionListBeanNew>) : BaseQuickAdapter<SceneConditionListBeanNew, BaseViewHolder>(R.layout.item_scene_condition, list) {

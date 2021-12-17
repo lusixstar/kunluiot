@@ -56,41 +56,40 @@ object SceneRequestUtil {
     /**
      * 手动场景列表
      * */
-    fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult) {
+    fun addOneKeyScene(icon: String, sceneName: String, sceneTaskList: List<SceneOneKeyTaskListBean>, fail: OnFailResult, success: OnSuccessResult) {
 
         val list = mutableListOf<SceneStackClassBean>()
         sceneTaskList.forEach {
             val bean = SceneStackClassBean()
+
             val item = SceneStackCustomParam()
-            item.name = it.customParam.name
-            item.icon = it.customParam.icon
-            if (it.time != 0 && it.customParam.name.isNotEmpty()) {
-                bean.time = it.time
-            } else if (it.iftttId.isNotEmpty() && it.customParam.name.isNotEmpty()) {
-                bean.enable = it.enable
-                bean.iftttId = it.iftttId
-            } else {
-                item.mid = it.customParam.mid
-                item.family_folder = it.customParam.family_folder
-                if (it.devTid.isNotEmpty()) bean.devTid = it.devTid
-                if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
-                if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
-                bean.newDesc = it.newDesc
-                val map = mutableMapOf<String, Long>()
-                it.cmdArgs.forEach { (t, u) ->
-                    map[t] = u.toLong()
-                }
-                if (map.isNullOrEmpty()) bean.cmdArgs = map
-            }
+            if (it.customParam.name.isNotEmpty()) item.name = it.customParam.name
+//            if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
+            if (it.customParam.mid.isNotEmpty()) item.icon = it.customParam.mid
+            if (it.customParam.devName.isNotEmpty()) item.devName = it.customParam.devName
+            if (it.customParam.family_folder.isNotEmpty()) item.family_folder = it.customParam.family_folder
+            if (it.customParam.desc.isNotEmpty()) item.desc = it.customParam.desc
             bean.customParam = item
-            bean.desc = it.desc
+
+            if (it.time.isNotEmpty()) bean.time = it.time.toInt()
+            if (it.desc.isNotEmpty()) bean.desc = it.desc
+            if (it.devTid.isNotEmpty()) bean.devTid = it.devTid
+            if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
+            if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
+            if (it.iftttId.isNotEmpty()) bean.iftttId = it.iftttId
+            if (it.enable.isNotEmpty()) bean.enable = it.enable
+            val map = mutableMapOf<String, Long>()
+            it.cmdArgs.forEach { (t, u) ->
+                map[t] = u.toLong()
+            }
+            if (!map.isNullOrEmpty()) bean.cmdArgs = map
             list.add(bean)
         }
 
         val map = HashMap<String, Any>()
         map["sceneName"] = sceneName
         map["sceneTaskList"] = list
-        if (icon.isNotEmpty()) map["icon"] = icon
+//        map["icon"] = icon
         val json: String = JsonUtils.toJson(map)
 
         val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
@@ -102,7 +101,7 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { success.success() }
+                    KotlinSerializationUtils.getJsonData<SceneOneKeyBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -111,41 +110,40 @@ object SceneRequestUtil {
     /**
      * 编辑手动场景
      * */
-    fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneLinkedBean>, fail: OnFailResult, success: OnSuccessResult) {
+    fun updateOneKeyScene(sceneId: String, icon: String, sceneName: String, sceneTaskList: List<SceneOneKeyTaskListBean>, fail: OnFailResult, success: OnSuccessResult) {
 
         val list = mutableListOf<SceneStackClassBean>()
         sceneTaskList.forEach {
             val bean = SceneStackClassBean()
+
             val item = SceneStackCustomParam()
-            item.name = it.customParam.name
-            item.icon = it.customParam.icon
-            if (it.time != 0 && it.customParam.name.isNotEmpty()) {
-                bean.time = it.time
-            } else if (it.iftttId.isNotEmpty() && it.customParam.name.isNotEmpty()) {
-                bean.enable = it.enable
-                bean.iftttId = it.iftttId
-            } else {
-                item.mid = it.customParam.mid
-                item.family_folder = it.customParam.family_folder
-                if (it.devTid.isNotEmpty()) bean.devTid = it.devTid
-                if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
-                if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
-                bean.newDesc = it.newDesc
-                val map = mutableMapOf<String, Long>()
-                it.cmdArgs.forEach { (t, u) ->
-                    map[t] = u.toLong()
-                }
-                if (map.isNullOrEmpty()) bean.cmdArgs = map
-            }
+            if (it.customParam.name.isNotEmpty()) item.name = it.customParam.name
+//            if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
+            if (it.customParam.mid.isNotEmpty()) item.icon = it.customParam.mid
+            if (it.customParam.devName.isNotEmpty()) item.devName = it.customParam.devName
+            if (it.customParam.family_folder.isNotEmpty()) item.family_folder = it.customParam.family_folder
+            if (it.customParam.desc.isNotEmpty()) item.desc = it.customParam.desc
             bean.customParam = item
-            bean.desc = it.desc
+
+            if (it.time.isNotEmpty()) bean.time = it.time.toInt()
+            if (it.desc.isNotEmpty()) bean.desc = it.desc
+            if (it.devTid.isNotEmpty()) bean.devTid = it.devTid
+            if (it.subDevTid.isNotEmpty()) bean.subDevTid = it.subDevTid
+            if (it.ctrlKey.isNotEmpty()) bean.ctrlKey = it.ctrlKey
+            if (it.iftttId.isNotEmpty()) bean.iftttId = it.iftttId
+            if (it.enable.isNotEmpty()) bean.enable = it.enable
+            val map = mutableMapOf<String, Long>()
+            it.cmdArgs.forEach { (t, u) ->
+                map[t] = u.toLong()
+            }
+            if (!map.isNullOrEmpty()) bean.cmdArgs = map
             list.add(bean)
         }
 
         val map = HashMap<String, Any>()
         map["sceneId"] = sceneId
         map["sceneName"] = sceneName
-        if (icon.isNotEmpty()) map["icon"] = icon
+//        map["icon"] = icon
         map["sceneTaskList"] = list
 
         val json: String = JsonUtils.toJson(map)
@@ -158,7 +156,7 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<SceneLinkedBean>(response.succeed()).let { success.success() }
+                    KotlinSerializationUtils.getJsonData<SceneOneKeyBean>(response.succeed()).let { success.success() }
                 }
             }
         })
@@ -181,10 +179,6 @@ object SceneRequestUtil {
             }
         })
     }
-
-
-    // ----------------------------------------------------------
-
 
     /**
      * 删除使用中的手动场景
