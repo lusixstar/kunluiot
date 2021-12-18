@@ -1,8 +1,9 @@
 package com.example.kiotsdk.ui.feedback
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.elvishew.xlog.XLog
+import com.blankj.utilcode.util.RegexUtils
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.feedback.FeedbackAdapter
 import com.example.kiotsdk.app.GlideEngine
@@ -15,6 +16,7 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.listener.OnResultCallbackListener
+import org.jetbrains.anko.toast
 
 /**
  * User: Chris
@@ -30,6 +32,8 @@ class FeedbackActivity : BaseActivity() {
 
     private var mSelectImg = mutableListOf<LocalMedia>()
 
+    private lateinit var mProgress: ProgressDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,6 +45,9 @@ class FeedbackActivity : BaseActivity() {
 
         mBinding.btn.setOnClickListener { gotoNext() }
         initAdapter()
+
+        mProgress = ProgressDialog(this)
+        mProgress.setCanceledOnTouchOutside(false)
     }
 
     private fun gotoNext() {
@@ -54,18 +61,36 @@ class FeedbackActivity : BaseActivity() {
             toastMsg("phone is empty")
             return
         }
+        if (!RegexUtils.isMobileSimple(phone)) {
+            toast("phone error")
+            return
+        }
+        mProgress.setMessage("正在加载中")
+        mProgress.show()
         val images = mutableListOf<String>()
         val urls = mSelectImg.map { it.realPath }
         urls.forEach {
             KunLuHomeSdk.userImpl.uploadHeader(it, { _, _ -> }, { url ->
                 images.add(url.fileCDNUrl)
                 if (images.size == urls.size) {
-                    KunLuHomeSdk.commonImpl.feedback(content, images, phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
+                    KunLuHomeSdk.commonImpl.feedback(content, images, phone, { c, m ->
+                        mProgress.hide()
+                        toastErrorMsg(c, m)
+                    }, {
+                        mProgress.hide()
+                        toastMsg("success")
+                    })
                 }
             })
         }
         if (urls.isEmpty()) {
-            KunLuHomeSdk.commonImpl.feedback(content, listOf(), phone, { c, m -> toastErrorMsg(c, m) }, { toastMsg("success") })
+            KunLuHomeSdk.commonImpl.feedback(content, listOf(), phone, { c, m ->
+                mProgress.hide()
+                toastErrorMsg(c, m)
+            }, {
+                mProgress.hide()
+                toastMsg("success")
+            })
         }
     }
 
@@ -95,15 +120,7 @@ class FeedbackActivity : BaseActivity() {
     }
 
     private fun selectImg() {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofAll())
-            .isCamera(false)
-            .isCompress(true)
-            .selectionData(mSelectImg)
-            .imageEngine(GlideEngine.createGlideEngine())
-            .maxSelectNum(3)
-            .selectionMode(PictureConfig.MULTIPLE)
-            .forResult(object : OnResultCallbackListener<LocalMedia> {
+        PictureSelector.create(this).openGallery(PictureMimeType.ofAll()).isCamera(false).isCompress(true).selectionData(mSelectImg).imageEngine(GlideEngine.createGlideEngine()).maxSelectNum(3).selectionMode(PictureConfig.MULTIPLE).forResult(object : OnResultCallbackListener<LocalMedia> {
             override fun onResult(result: List<LocalMedia>) {
                 mSelectImg = result as MutableList<LocalMedia>
                 val list = mSelectImg.map { FeedbackImgBean(type = "img", url = it.realPath) } as MutableList
