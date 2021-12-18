@@ -30,6 +30,10 @@ class FamilyCreateActivity : BaseActivity() {
             toast("name is empty")
             return
         }
+        if (city.isEmpty()) {
+            toast("city is empty")
+            return
+        }
         KunLuHomeSdk.familyImpl.addFamily(name, city, { code, msg -> toastErrorMsg(code, msg) }, {
             setResult(Activity.RESULT_OK)
             finish()

@@ -49,12 +49,17 @@ class MemberCreateActivity : BaseActivity() {
     private fun gotoNext() {
         val phone = mBinding.phone.text.toString()
         val name = mBinding.name.text.toString()
+        val gender = mBinding.gender.text.toString()
         if (phone.isEmpty()) {
             toast("phone is empty")
             return
         }
         if (name.isEmpty()) {
             toast("name is empty")
+            return
+        }
+        if (gender.isEmpty()) {
+            toast("gender is empty")
             return
         }
         if (mType.isEmpty()) {

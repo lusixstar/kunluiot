@@ -1,10 +1,13 @@
 package com.example.kiotsdk.ui.device
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceConfigFinishBinding
+import com.example.kiotsdk.ui.MainNewActivity
+import com.example.kiotsdk.ui.SplashActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
@@ -51,6 +54,10 @@ class DeviceConfigFinishActivity : BaseActivity() {
             mCtrlKey = it.getStringExtra(CTRL_KEY) ?: ""
             mBranchNames = it.getStringExtra(BRANCH_NAMES) ?: ""
             mBean = it.getParcelableExtra(DEVICE) ?: DeviceNewBean()
+            if (mDeviceName.isEmpty()) {
+                mDeviceName = mBean.name
+                mBinding.deviceValue.setText(mDeviceName)
+            }
         }
 
         mBinding.finish.setOnClickListener { gotoNext() }
@@ -107,7 +114,13 @@ class DeviceConfigFinishActivity : BaseActivity() {
             toast("family or room is empty")
             return
         }
-        KunLuHomeSdk.deviceImpl.deviceConfigFinish(mDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, { c, m -> toastErrorMsg(c, m) }, { toastMsg("set success") })
+        KunLuHomeSdk.deviceImpl.deviceConfigFinish(mDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, { c, m -> toastErrorMsg(c, m) }, {
+            val intent = Intent()
+            intent.setClass(this, MainNewActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            toastMsg("set success")
+        })
     }
 
     private fun getFamilyData() {
