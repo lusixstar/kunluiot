@@ -328,7 +328,7 @@ object SceneRequestUtil {
             bean.iftttTasks.forEach { ifttt ->
                 val cp = SceneStackLinkedCustomParam()
                 if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
-//                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
                 if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
@@ -364,7 +364,7 @@ object SceneRequestUtil {
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
-//                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
                     if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
                 }
                 sct.customFields = cf
