@@ -122,7 +122,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
         mConditionAdapter.setOnItemClickListener { _, _, position ->
             alert("是否删除") {
                 positiveButton("确定") { dialog ->
-                    mAdapter.removeAt(position)
+                    mConditionAdapter.removeAt(position)
                     dialog.dismiss()
                 }
             }.show()
