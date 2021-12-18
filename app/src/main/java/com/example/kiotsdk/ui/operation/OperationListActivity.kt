@@ -2,6 +2,8 @@ package com.example.kiotsdk.ui.operation
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.View
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.operation.OperationFieldsListAdapter
 import com.example.kiotsdk.base.BaseActivity
@@ -46,6 +48,9 @@ class OperationListActivity : BaseActivity() {
             mList = it.getParcelableArrayListExtra(LIST_BEAN) ?: mutableListOf()
             mDeviceBean = it.getParcelableExtra(DEVICE_BEAN) ?: DeviceNewBean()
             mIsOneKey = it.getBooleanExtra(SelectExecutionActionActivity.IS_ONE_KEY, false)
+            if (mDeviceBean.devType == "INDEPENDENT") {
+                mBinding.btnFinish.visibility = View.GONE
+            }
         }
 
         mBinding.btnFinish.setOnClickListener { gotoNext() }
@@ -122,7 +127,11 @@ class OperationListActivity : BaseActivity() {
         val cmdArgMap: MutableMap<String, String> = HashMap()
         cmdArgMap["cmdId"] = mList.first().cmdId.toString()
         for (item in mAdapter.data) {
-            cmdArgMap[item.name] = item.selectValue
+            if (mDeviceBean.devType == "INDEPENDENT") {
+                if (item.select) cmdArgMap[item.name] = item.selectValue
+            } else {
+                cmdArgMap[item.name] = item.selectValue
+            }
         }
         return cmdArgMap
     }
@@ -130,10 +139,14 @@ class OperationListActivity : BaseActivity() {
     private fun getDesc(): String {
         var desc = ""
         for (i in mAdapter.data.indices) {
-            if (i != 0) {
-                desc = "$desc,"
+            if (mDeviceBean.devType == "INDEPENDENT") {
+                if (mAdapter.data[i].select) desc = desc + mAdapter.data[i].desc + ":" + mAdapter.data[i].selectedDesc
+            } else {
+                if (i != 0) {
+                    desc = "$desc,"
+                }
+                desc = desc + mAdapter.data[i].desc + ":" + mAdapter.data[i].selectedDesc
             }
-            desc = desc + mAdapter.data[i].desc + ":" + mAdapter.data[i].selectedDesc
         }
         return desc
     }
@@ -165,7 +178,12 @@ class OperationListActivity : BaseActivity() {
                 val selectData = bean.enumeration[i]
                 bean.selectValue = selectData.value.toString()
                 bean.selectedDesc = selectData.desc
-                mAdapter.notifyItemChanged(position)
+                if (mDeviceBean.devType == "INDEPENDENT") {
+                    bean.select = true
+                    gotoNext()
+                } else {
+                    mAdapter.notifyItemChanged(position)
+                }
                 dialog.dismiss()
             }
         } else {
@@ -179,7 +197,12 @@ class OperationListActivity : BaseActivity() {
                 override fun onFinishClick(selectProgress: Int) {
                     bean.selectValue = selectProgress.toString()
                     bean.selectedDesc = selectProgress.toString()
-                    mAdapter.notifyItemChanged(position)
+                    if (mDeviceBean.devType == "INDEPENDENT") {
+                        bean.select = true
+                        gotoNext()
+                    } else {
+                        mAdapter.notifyItemChanged(position)
+                    }
                 }
 
                 override fun onDismissClick() {

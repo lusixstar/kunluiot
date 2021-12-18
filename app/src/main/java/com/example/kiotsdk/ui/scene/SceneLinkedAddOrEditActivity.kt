@@ -123,6 +123,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
             alert("是否删除") {
                 positiveButton("确定") { dialog ->
                     mConditionAdapter.removeAt(position)
+                    if (mConditionAdapter.data.isEmpty()) mTriggerType = ""
                     dialog.dismiss()
                 }
             }.show()
