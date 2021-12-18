@@ -83,7 +83,15 @@ class SceneLinkedActivity : BaseActivity() {
     private fun gotoDelete(bean: SceneLinkBeanNew) {
         alert(message = "是否删除") {
             positiveButton("确定") { dialog ->
-                KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, { c, m -> toastErrorMsg(c, m) }, { getData() })
+                KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, "", { c, m -> toastErrorMsg(c, m) }, {
+                    if (it.randomToken.isNotEmpty()) {
+                        KunLuHomeSdk.sceneImpl.deleteLinkageScene(bean.ruleId, it.randomToken, { c, m -> toastErrorMsg(c, m) }, {
+                            getData()
+                        })
+                    } else {
+                        getData()
+                    }
+                })
                 dialog.dismiss()
             }
             negativeButton("取消") { dialog -> dialog.dismiss() }

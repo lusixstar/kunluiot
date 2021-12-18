@@ -1,10 +1,12 @@
 package com.kunluiot.sdk.request
 
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.device.DeviceDeleteBean
 import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.common.OnSuccessResult
+import com.kunluiot.sdk.callback.device.DeviceDeleteResult
 import com.kunluiot.sdk.callback.scene.SceneLinkedListResult
 import com.kunluiot.sdk.callback.scene.SceneListResult
 import com.kunluiot.sdk.thirdlib.kalle.JsonBody
@@ -405,17 +407,22 @@ object SceneRequestUtil {
     /**
      * 删除联动场景
      * */
-    fun deleteLinkageScene(ruleId: String, fail: OnFailResult, success: OnSuccessResult) {
+    fun deleteLinkageScene(ruleId: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult) {
         val kalle = Kalle.delete(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_DELETE_LINKAGE_SCENE)
         kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
         kalle.urlParam("ruleId", ruleId)
+        if (randomToken.isNotEmpty()) kalle.urlParam("randomToken", randomToken)
         kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                    if (response.succeed().isEmpty()) {
+                        KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success(DeviceDeleteBean()) }
+                    } else {
+                        KotlinSerializationUtils.getJsonData<DeviceDeleteBean>(response.succeed()).let { success.success(it) }
+                    }
                 }
             }
         })

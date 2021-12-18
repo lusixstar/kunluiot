@@ -1,9 +1,11 @@
 package com.kunluiot.sdk.api.scene
 
+import com.kunluiot.sdk.bean.device.DeviceDeleteBean
 import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.common.OnFailResult
 import com.kunluiot.sdk.callback.common.OnSuccessResult
+import com.kunluiot.sdk.callback.device.DeviceDeleteResult
 import com.kunluiot.sdk.callback.scene.*
 
 interface IKunLuScene {
@@ -56,7 +58,7 @@ interface IKunLuScene {
     /**
      * 删除联动场景
      * */
-    fun deleteLinkageScene(ruleId: String, fail: OnFailResult, success: OnSuccessResult)
+    fun deleteLinkageScene(ruleId: String, randomToken: String, fail: OnFailResult, success: DeviceDeleteResult)
 
     /**
      * 删除已使用的联动场景
