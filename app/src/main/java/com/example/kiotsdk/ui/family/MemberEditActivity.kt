@@ -3,10 +3,9 @@ package com.example.kiotsdk.ui.family
 import android.app.Activity
 import android.os.Bundle
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.elvishew.xlog.XLog
-import com.example.kiotsdk.adapter.device.DeviceRoomItemAdapter
 import com.example.kiotsdk.adapter.family.FamilyMemberDeviceListAdapter
 import com.example.kiotsdk.base.BaseActivity
+import com.example.kiotsdk.bean.MemberCtrlKeysBean
 import com.example.kiotsdk.databinding.ActivityFamilyMemberEditBinding
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceNewBean
@@ -29,6 +28,9 @@ class MemberEditActivity : BaseActivity() {
     private var mType = ""
 
     private var mFolderList = arrayListOf<FolderBean>()
+    private var mAllDeviceList = arrayListOf<MemberCtrlKeysBean>()
+
+    private var mCtrlKeys = mutableSetOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,20 +55,33 @@ class MemberEditActivity : BaseActivity() {
 
         initAdapter()
         if (!mFolderList.isNullOrEmpty()) {
-            mBinding.room.text = mFolderList.first().folderName
-            KunLuHomeSdk.deviceImpl.getRoomsDevices(mFolderList.first().folderId, true, { c, m -> toastErrorMsg(c, m) }, { list ->
-                val l = list.filter { it.devType != "SUB" }.filter { it.bindKey.isNotEmpty() }.filter { it.ctrlKey.isNotEmpty() }
-                l.forEach { if (mBean.ctrlKeys.contains(it.ctrlKey)) it.select = true }
-                mAdapter.data.clear()
-                mAdapter.addData(l)
-            })
+            mFolderList.forEachIndexed { index, folderBean ->
+                KunLuHomeSdk.deviceImpl.getRoomsDevices(folderBean.folderId, true, { c, m -> toastErrorMsg(c, m) }, { list ->
+                    val l = list.filter { it.devType != "SUB" }.filter { it.bindKey.isNotEmpty() }.filter { it.ctrlKey.isNotEmpty() }
+                    l.forEach {
+                        if (mBean.ctrlKeys.contains(it.ctrlKey)) {
+                            if (!mCtrlKeys.contains(it.ctrlKey)) mCtrlKeys.add(it.ctrlKey)
+                            it.select = true
+                        }
+                    }
+                    mAllDeviceList.add(MemberCtrlKeysBean(folderBean.folderName, l))
+                    if (index == 0) {
+                        mBinding.room.text = folderBean.folderName
+                        mAdapter.data.clear()
+                        mAdapter.addData(l)
+                    }
+                })
+            }
         }
     }
 
     private fun gotoAuthorize() {
         if (!mAdapter.data.isNullOrEmpty()) {
-            val list = mAdapter.data.map { it.ctrlKey }
-            KunLuHomeSdk.familyImpl.updateMemberCtrlKeys(mFamilyId, mBean.uid, list, { c, m -> toastErrorMsg(c, m) }, { toastMsg("change success") })
+            KunLuHomeSdk.familyImpl.updateMemberCtrlKeys(mFamilyId, mBean.uid, mCtrlKeys.toList(), { c, m -> toastErrorMsg(c, m) }, {
+                toastMsg("change success")
+                setResult(Activity.RESULT_OK)
+                finish()
+            })
         }
     }
 
@@ -77,21 +92,26 @@ class MemberEditActivity : BaseActivity() {
         mAdapter.setOnItemClickListener { adapter, _, position ->
             val bean = adapter.getItem(position) as DeviceNewBean
             bean.select = !bean.select
+            if (bean.select) {
+                if (!mCtrlKeys.contains(bean.ctrlKey)) mCtrlKeys.add(bean.ctrlKey)
+            } else {
+                if (mCtrlKeys.contains(bean.ctrlKey)) mCtrlKeys.remove(bean.ctrlKey)
+            }
             adapter.notifyItemChanged(position)
         }
     }
 
     private fun selectRoom() {
-        val list = mFolderList.map { it.folderName }
+        if (mAllDeviceList.isNullOrEmpty()) {
+            toastMsg("list is empty")
+            return
+        }
+        val list = mAllDeviceList.map { it.name }
         selector("选择房间", list) { dialog, i ->
-            val bean = mFolderList[i]
-            mBinding.room.text = list[i]
-            KunLuHomeSdk.deviceImpl.getRoomsDevices(bean.folderId, true, { c, m -> toastErrorMsg(c, m) }, { list ->
-                val l = list.filter { it.devType != "SUB" }.filter { it.bindKey.isNotEmpty() }.filter { it.ctrlKey.isNotEmpty() }
-                l.forEach { if (mBean.ctrlKeys.contains(it.ctrlKey)) it.select = true }
-                mAdapter.data.clear()
-                mAdapter.addData(l)
-            })
+            val bean = mAllDeviceList[i]
+            mBinding.room.text = bean.name
+            mAdapter.data.clear()
+            mAdapter.addData(bean.devices)
             dialog.dismiss()
         }
     }
