@@ -74,6 +74,7 @@ class OperationLinkedListActivity : BaseActivity() {
         val folder = if (mDeviceBean.folderName == "root") "默认房间" else mDeviceBean.folderName
         customFields.family_folder = mDeviceBean.familyName + "-" + folder
         condBean.customFields = customFields
+        condBean.relation = "OR"
 
         when (mDeviceBean.devType) {
             "SUB" -> {

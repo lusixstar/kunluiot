@@ -1,7 +1,9 @@
 package com.example.kiotsdk.ui.msg
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.kiotsdk.adapter.msg.MsgListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityMsgListBinding
@@ -21,6 +23,8 @@ class MsgListActivity : BaseActivity() {
     private lateinit var mAdapter: MsgListAdapter
 
     private var mType = ""
+
+    private var mMsgBean = CommonMsgContentBean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,8 +79,13 @@ class MsgListActivity : BaseActivity() {
         mBinding.list.adapter = mAdapter
         mAdapter.setOnItemClickListener { adapter, _, position ->
             val bean = adapter.getItem(position) as CommonMsgContentBean
-            if (!bean.isRead) readMsg(bean)
+            mMsgBean = bean
+            gotoNext.launch(Intent(this, MsgDetailsActivity::class.java).putExtra(MsgDetailsActivity.CONTENT, bean.content))
         }
+    }
+
+    private val gotoNext = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (!mMsgBean.isRead) readMsg(mMsgBean)
     }
 
     private fun readMsg(bean: CommonMsgContentBean) {

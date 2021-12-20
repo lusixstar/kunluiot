@@ -271,6 +271,7 @@ object SceneRequestUtil {
                 cond.devTid.let { sct.devTid = cond.devTid }
                 cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
                 cond.conDesc.let { sct.conDesc = cond.conDesc }
+                cond.relation.let { sct.relation = cond.relation }
                 val cf = SceneStackLinkedCustomFields()
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
@@ -343,8 +344,8 @@ object SceneRequestUtil {
                 if (ifttt.params.ctrlKey.isNotEmpty()) p.ctrlKey = ifttt.params.ctrlKey
                 if (ifttt.params.subDevTid.isNotEmpty()) p.subDevTid = ifttt.params.subDevTid
                 if (!ifttt.params.data.isNullOrEmpty()) {
-                    val da = mutableMapOf<String, Long>()
-                    ifttt.params.data.forEach { (t, u) -> da[t] = u.toLong() }
+                    val da = mutableMapOf<String, Any>()
+                    ifttt.params.data.forEach { (t, u) -> da[t] = u }
                     p.data = da
                 }
                 val b = SceneStackLinkedIftttTask()
@@ -364,6 +365,7 @@ object SceneRequestUtil {
                 cond.devTid.let { sct.devTid = cond.devTid }
                 cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
                 cond.conDesc.let { sct.conDesc = cond.conDesc }
+                cond.relation.let { sct.relation = cond.relation }
                 val cf = SceneStackLinkedCustomFields()
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name

@@ -105,6 +105,9 @@
         <activity
             android:name=".ui.msg.MsgListActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.msg.MsgDetailsActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.feedback.FeedbackActivity"
@@ -235,9 +238,9 @@
             android:name=".ui.operation.OperationListActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.operation.OperationListFieldsActivity"
-            android:screenOrientation="portrait" />
+<!--        <activity-->
+<!--            android:name=".ui.operation.OperationListFieldsActivity"-->
+<!--            android:screenOrientation="portrait" />-->
 
         <activity
             android:name=".ui.operation.OperationLinkedListActivity"

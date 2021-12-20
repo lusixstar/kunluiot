@@ -41,6 +41,7 @@ data class SceneConditionListBeanNew(
     var ctrlKey: String = "",
     var subDevTid: String = "",
     var conDesc: String = "",
+    var relation: String = "",
     var triggerParams: List<SceneTriggerBeanNew> = listOf(),
     var customFields: SceneCustomFieldsBeanNew = SceneCustomFieldsBeanNew(),
 ) : Parcelable
