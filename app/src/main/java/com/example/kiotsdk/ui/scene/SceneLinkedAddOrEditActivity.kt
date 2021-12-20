@@ -112,6 +112,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
             alert("是否删除") {
                 positiveButton("确定") { dialog ->
                     mAdapter.removeAt(position)
+                    mBean.iftttTasks = mAdapter.data
                     dialog.dismiss()
                 }
             }.show()
@@ -124,6 +125,7 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
                 positiveButton("确定") { dialog ->
                     mConditionAdapter.removeAt(position)
                     if (mConditionAdapter.data.isEmpty()) mTriggerType = ""
+                    mBean.conditionList = mConditionAdapter.data
                     dialog.dismiss()
                 }
             }.show()

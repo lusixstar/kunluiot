@@ -1,6 +1,5 @@
 package com.kunluiot.sdk.request
 
-import com.elvishew.xlog.XLog
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceDeleteBean
 import com.kunluiot.sdk.bean.scene.*
@@ -345,7 +344,13 @@ object SceneRequestUtil {
                 if (ifttt.params.subDevTid.isNotEmpty()) p.subDevTid = ifttt.params.subDevTid
                 if (!ifttt.params.data.isNullOrEmpty()) {
                     val da = mutableMapOf<String, Any>()
-                    ifttt.params.data.forEach { (t, u) -> da[t] = u }
+                    ifttt.params.data.forEach { (t, u) ->
+                        if (u.matches(Regex("^[0-9]*$"))) {
+                            da[t] = u.toLong()
+                        } else {
+                            da[t] = u
+                        }
+                    }
                     p.data = da
                 }
                 val b = SceneStackLinkedIftttTask()
