@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceInfoBinding
 import com.kunluiot.sdk.KunLuHomeSdk
@@ -16,7 +18,6 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.ui.web.DeviceWebControlActivity
 import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.util.Tools
 import org.java_websocket.framing.Framedata
 import org.jetbrains.anko.startActivity
 import java.nio.ByteBuffer
@@ -56,11 +57,10 @@ class DeviceInfoActivity : BaseActivity() {
             }
         }
         mBinding.btnUpdate.setOnClickListener {
-            if (mBean.devType == "GATEWAY" && mBean.zigOtaBinVer.isNotEmpty()) {
-                updateCoordinatorFirmware()
-            } else {
-                updateFirmware()
-            }
+            updateFirmware()
+        }
+        mBinding.btnCoordinatorUpdate.setOnClickListener {
+            updateCoordinatorFirmware()
         }
         mBinding.tvName.setOnClickListener {
             val devTid = if (mBean.devType == "SUB") mBean.parentDevTid else mBean.devTid
@@ -79,10 +79,22 @@ class DeviceInfoActivity : BaseActivity() {
     }
 
     private fun checkDeviceIsUpdate() {
+        KunLuHomeSdk.deviceImpl.checkDeviceIsUpdate(if (mBean.binVer.isEmpty()) mBean.binVersion else mBean.binVer, mBean.binType, mBean.binVersion, mBean.productPublicKey, mBean.devTid, mBean.ctrlKey, { c, m -> toastErrorMsg(c, m) }, {
+            mCheckUpdateBean = it.first()
+            if (mCheckUpdateBean.update) {
+                mBinding.tvDeviceInfoValue.text = "有更新"
+            }
+        })
         if (mBean.devType == "GATEWAY" && mBean.zigOtaBinVer.isNotEmpty()) {
-            KunLuHomeSdk.deviceImpl.checkZigVer(mBean.zigOtaBinVer, mBean.productPublicKey, { c, m -> toastErrorMsg(c, m) }, { mCoordinatorCheckUpdate = it.first() })
-        } else {
-            KunLuHomeSdk.deviceImpl.checkDeviceIsUpdate(if (mBean.binVer.isEmpty()) mBean.binVersion else mBean.binVer, mBean.binType, mBean.binVersion, mBean.productPublicKey, mBean.devTid, mBean.ctrlKey, { c, m -> toastErrorMsg(c, m) }, { mCheckUpdateBean = it.first() })
+            mBinding.coordinatorInfoLayout.visibility = View.VISIBLE
+            mBinding.btnCoordinatorUpdate.visibility = View.VISIBLE
+            mBinding.tvCoordinatorInfoValue.text = mBean.zigOtaBinVer
+            KunLuHomeSdk.deviceImpl.checkZigVer(mBean.zigOtaBinVer, mBean.productPublicKey, { c, m -> toastErrorMsg(c, m) }, {
+                mCoordinatorCheckUpdate = it.first()
+                if (mCoordinatorCheckUpdate.update) {
+                    mBinding.tvCoordinatorInfoValue.text = "有更新"
+                }
+            })
         }
     }
 
@@ -102,14 +114,15 @@ class DeviceInfoActivity : BaseActivity() {
         devInfoMap["binUrl"] = bean.binUrl
         devInfoMap["md5"] = bean.md5
         devInfoMap["binType"] = bean.latestBinType
-//        devInfoMap["appTid"] = Tools.getAppTid().toString() + "web"
-        devInfoMap["appTid"] =  Build.BRAND + Build.MODEL
+        devInfoMap["appTid"] = Build.BRAND + Build.MODEL
         devInfoMap["size"] = bean.size.toString() + ""
         devInfoMap["ctrlKey"] = mBean.ctrlKey
         val map = HashMap<String, Any>()
         map["msgId"] = KunLuHomeSdk.instance.getMsgId()
         map["action"] = "zigBeeDevUpgrade"
         map["params"] = devInfoMap
+        toastMsg("开始升级")
+        mBinding.tvCoordinatorInfoValue.text = "正在升级中"
         KunLuHomeSdk.instance.getWebSocketManager()?.send(JsonUtils.toJson(map))
     }
 
@@ -129,8 +142,7 @@ class DeviceInfoActivity : BaseActivity() {
         devInfoMap["binUrl"] = bean.binUrl
         devInfoMap["md5"] = bean.md5
         devInfoMap["binType"] = bean.latestBinType
-//        devInfoMap["appTid"] = Tools.getAppTid().toString() + "web"
-        devInfoMap["appTid"] =  Build.BRAND + Build.MODEL
+        devInfoMap["appTid"] = Build.BRAND + Build.MODEL
         devInfoMap["size"] = bean.size
         devInfoMap["ctrlKey"] = mBean.ctrlKey
         val map = HashMap<String, Any>()
@@ -138,6 +150,8 @@ class DeviceInfoActivity : BaseActivity() {
         map["action"] = "devUpgrade"
         map["params"] = devInfoMap
         KunLuHomeSdk.instance.getMsgId()
+        toastMsg("开始升级")
+        mBinding.tvDeviceInfoValue.text = "正在升级中"
         KunLuHomeSdk.instance.getWebSocketManager()?.send(JsonUtils.toJson(map))
     }
 
@@ -165,7 +179,7 @@ class DeviceInfoActivity : BaseActivity() {
                 val d = msgData["upgradeProgress"] as Double
                 if (d >= 100) {
                     toastMsg("固件升级成功")
-                    mBinding.tvDeviceInfoValue.text = getDeviceFirmwareInfo()
+                    mBinding.tvDeviceInfoValue.text = "升级成功"
                 }
             }
         } else if (map["action"].toString() == "devUpgradeResp") {
@@ -173,6 +187,8 @@ class DeviceInfoActivity : BaseActivity() {
                 val code = (map["code"] as Double?)!!.toInt()
                 if (code != 200) {
                     toastMsg("固件升级失败")
+                    mBinding.tvDeviceInfoValue.text = "升级失败"
+
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -182,8 +198,10 @@ class DeviceInfoActivity : BaseActivity() {
                 val code = map["code"] as Double
                 if (code != 200.0) {
                     toastMsg("协调器升级失败")
+                    mBinding.tvDeviceInfoValue.text = "升级失败"
                 } else {
                     toastMsg("协调器升级成功")
+                    mBinding.tvDeviceInfoValue.text = "升级成功"
                 }
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
@@ -210,6 +228,7 @@ class DeviceInfoActivity : BaseActivity() {
         mBinding.tvRoomValue.text = mBean.folderName
         mBinding.tvDeviceIdValue.text = mBean.devTid
         mBinding.tvDeviceInfoValue.text = getDeviceFirmwareInfo()
+        XLog.e(mBean)
     }
 
     private fun getDeviceFirmwareInfo(): String {
