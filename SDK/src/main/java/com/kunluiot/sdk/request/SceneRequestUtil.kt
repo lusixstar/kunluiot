@@ -238,7 +238,7 @@ object SceneRequestUtil {
             bean.iftttTasks.forEach { ifttt ->
                 val cp = SceneStackLinkedCustomParam()
                 if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
-                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+//                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
                 if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
@@ -271,11 +271,12 @@ object SceneRequestUtil {
                 cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
                 cond.conDesc.let { sct.conDesc = cond.conDesc }
                 cond.relation.let { sct.relation = cond.relation }
+                cond.subDevTid.let { sct.subDevTid = cond.subDevTid }
                 val cf = SceneStackLinkedCustomFields()
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
-                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+//                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
                     if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
                 }
                 sct.customFields = cf
@@ -332,7 +333,7 @@ object SceneRequestUtil {
             bean.iftttTasks.forEach { ifttt ->
                 val cp = SceneStackLinkedCustomParam()
                 if (ifttt.customParam.name.isNotEmpty()) cp.name = ifttt.customParam.name
-                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
+//                if (ifttt.customParam.icon.isNotEmpty()) cp.icon = ifttt.customParam.icon
                 if (ifttt.customParam.mid.isNotEmpty()) cp.mid = ifttt.customParam.mid
                 if (ifttt.customParam.devName.isNotEmpty()) cp.devName = ifttt.customParam.devName
                 if (ifttt.customParam.family_folder.isNotEmpty()) cp.family_folder = ifttt.customParam.family_folder
@@ -345,7 +346,7 @@ object SceneRequestUtil {
                 if (!ifttt.params.data.isNullOrEmpty()) {
                     val da = mutableMapOf<String, Any>()
                     ifttt.params.data.forEach { (t, u) ->
-                        if (u.matches(Regex("^[0-9]*$"))) {
+                        if (u.matches(Regex("^[0-9]*+$"))) {
                             da[t] = u.toLong()
                         } else {
                             da[t] = u
@@ -369,13 +370,14 @@ object SceneRequestUtil {
                 val sct = SceneStackLinkedCondition()
                 cond.devTid.let { sct.devTid = cond.devTid }
                 cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
+                cond.subDevTid.let { sct.subDevTid = cond.subDevTid }
                 cond.conDesc.let { sct.conDesc = cond.conDesc }
                 cond.relation.let { sct.relation = cond.relation }
                 val cf = SceneStackLinkedCustomFields()
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
                     if (condcf.mid.isNotEmpty()) cf.mid = condcf.mid
-                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
+//                    if (condcf.icon.isNotEmpty()) cf.icon = condcf.icon
                     if (condcf.family_folder.isNotEmpty()) cf.family_folder = condcf.family_folder
                 }
                 sct.customFields = cf
