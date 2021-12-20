@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceNewBean
@@ -31,6 +32,7 @@ class SceneSelectDeviceRoomItemAdapter(list: MutableList<DeviceNewBean>, private
             text.setTextColor(text.context.resources.getColor(R.color.picture_color_light_grey))
             next.isGone = true
             if (!info.protocol.isNullOrEmpty()) {
+//                XLog.e(info)
                 info.protocol.forEach { (_, u) ->
                     if (!u.fields.isNullOrEmpty() && u.usedForIFTTT) {
                         text.setTextColor(text.context.resources.getColor(R.color.black))

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceConfigFinishBinding
 import com.example.kiotsdk.ui.MainNewActivity
@@ -54,7 +55,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
             mCtrlKey = it.getStringExtra(CTRL_KEY) ?: ""
             mBranchNames = it.getStringExtra(BRANCH_NAMES) ?: ""
             mBean = it.getParcelableExtra(DEVICE) ?: DeviceNewBean()
-            if (mDeviceName.isEmpty()) {
+            if (mDeviceName.isNotEmpty()) {
                 mDeviceName = mBean.name
                 mBinding.deviceValue.setText(mDeviceName)
             }

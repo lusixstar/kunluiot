@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.view.View
 import android.widget.ImageView
+import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceSetWifiDetailsBinding
@@ -92,6 +93,7 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
                         DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
                         DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
                         DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+                        DeviceConfigFinishActivity.DEVICE to bean,
                     )
                     return
                 }
