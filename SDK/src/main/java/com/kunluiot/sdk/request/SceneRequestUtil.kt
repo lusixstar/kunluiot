@@ -67,7 +67,7 @@ object SceneRequestUtil {
 
             val item = SceneStackCustomParam()
             if (it.customParam.name.isNotEmpty()) item.name = it.customParam.name
-//            if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
+            if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
             if (it.customParam.mid.isNotEmpty()) item.icon = it.customParam.mid
             if (it.customParam.devName.isNotEmpty()) item.devName = it.customParam.devName
             if (it.customParam.family_folder.isNotEmpty()) item.family_folder = it.customParam.family_folder
@@ -92,7 +92,7 @@ object SceneRequestUtil {
         val map = HashMap<String, Any>()
         map["sceneName"] = sceneName
         map["sceneTaskList"] = list
-//        map["icon"] = icon
+        map["icon"] = icon
         val json: String = JsonUtils.toJson(map)
 
         val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + SceneApi.KHA_API_ONE_KEY_SCENE_LIST)
@@ -121,7 +121,7 @@ object SceneRequestUtil {
 
             val item = SceneStackCustomParam()
             if (it.customParam.name.isNotEmpty()) item.name = it.customParam.name
-//            if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
+            if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
             if (it.customParam.mid.isNotEmpty()) item.icon = it.customParam.mid
             if (it.customParam.devName.isNotEmpty()) item.devName = it.customParam.devName
             if (it.customParam.family_folder.isNotEmpty()) item.family_folder = it.customParam.family_folder
@@ -146,7 +146,7 @@ object SceneRequestUtil {
         val map = HashMap<String, Any>()
         map["sceneId"] = sceneId
         map["sceneName"] = sceneName
-//        map["icon"] = icon
+        map["icon"] = icon
         map["sceneTaskList"] = list
 
         val json: String = JsonUtils.toJson(map)
