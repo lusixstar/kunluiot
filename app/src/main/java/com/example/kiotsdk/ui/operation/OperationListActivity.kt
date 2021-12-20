@@ -51,6 +51,8 @@ class OperationListActivity : BaseActivity() {
             if (mDeviceBean.devType == "INDEPENDENT") {
                 mBinding.btnFinish.visibility = View.GONE
             }
+            XLog.e("mDeviceBean == $mDeviceBean")
+            XLog.e("mList == $mList")
         }
 
         mBinding.btnFinish.setOnClickListener { gotoNext() }
@@ -128,6 +130,7 @@ class OperationListActivity : BaseActivity() {
         cmdArgMap["cmdId"] = mList.first().cmdId.toString()
         for (item in mAdapter.data) {
             if (mDeviceBean.devType == "INDEPENDENT") {
+                mList.forEach { if (it.cmdTag == item.name && item.select) cmdArgMap["cmdId"] = it.cmdId.toString() }
                 if (item.select) cmdArgMap[item.name] = item.selectValue
             } else {
                 cmdArgMap[item.name] = item.selectValue
