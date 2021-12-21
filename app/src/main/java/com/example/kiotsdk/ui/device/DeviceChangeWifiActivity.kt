@@ -48,7 +48,6 @@ class DeviceChangeWifiActivity : BaseActivity() {
         }
 
         mBinding.finish.setOnClickListener { gotoNext() }
-        getPermissions()
     }
 
     private fun gotoNext() {
@@ -73,9 +72,6 @@ class DeviceChangeWifiActivity : BaseActivity() {
     }
 
     private fun initWifiInfo() {
-        val str = SPUtil.get(this, SPUtil.DEVICE_WIFI_INFO, "") as String
-        val info = JsonUtils.fromJson(str, DeviceWifiBean::class.java)
-
         var currentName = getWifiSsid()
 //        var currentName = DemoUtils.getCurrentSSID(this)
         if (currentName == "<unknown ssid>") {
@@ -83,9 +79,6 @@ class DeviceChangeWifiActivity : BaseActivity() {
             mBinding.etAccount.hint = resources.getString(R.string.please_select_a_wifi_network)
         }
         mBinding.etAccount.setText(currentName)
-        if (info != null && info.name.isNotEmpty()) {
-            mBinding.etAccount.setText(info.name)
-        }
     }
 
     private fun getPermissions() {
@@ -100,6 +93,11 @@ class DeviceChangeWifiActivity : BaseActivity() {
 
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getPermissions()
     }
 
     private fun getWifiSsid(): String {
