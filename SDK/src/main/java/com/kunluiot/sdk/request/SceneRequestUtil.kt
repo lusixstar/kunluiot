@@ -249,8 +249,14 @@ object SceneRequestUtil {
                 if (ifttt.params.subDevTid.isNotEmpty()) p.subDevTid = ifttt.params.subDevTid
                 if (ifttt.params.sceneId.isNotEmpty()) p.sceneId = ifttt.params.sceneId
                 if (!ifttt.params.data.isNullOrEmpty()) {
-                    val da = mutableMapOf<String, Long>()
-                    ifttt.params.data.forEach { (t, u) -> da[t] = u.toLong() }
+                    val da = mutableMapOf<String, Any>()
+                    ifttt.params.data.forEach { (t, u) ->
+                        if (u.matches(Regex("^[0-9]$"))) {
+                            da[t] = u.toLong()
+                        } else {
+                            da[t] = u
+                        }
+                    }
                     p.data = da
                 }
                 val b = SceneStackLinkedIftttTask()
@@ -267,11 +273,11 @@ object SceneRequestUtil {
             val conditionList = mutableListOf<SceneStackLinkedCondition>()
             bean.conditionList.forEach { cond ->
                 val sct = SceneStackLinkedCondition()
-                cond.devTid.let { sct.devTid = cond.devTid }
-                cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
-                cond.conDesc.let { sct.conDesc = cond.conDesc }
-                cond.relation.let { sct.relation = cond.relation }
-                cond.subDevTid.let { sct.subDevTid = cond.subDevTid }
+                if (cond.devTid.isNotEmpty()) sct.devTid = cond.devTid
+                if (cond.ctrlKey.isNotEmpty()) sct.ctrlKey = cond.ctrlKey
+                if (cond.subDevTid.isNotEmpty()) sct.subDevTid = cond.subDevTid
+                if (cond.conDesc.isNotEmpty()) sct.conDesc = cond.conDesc
+                if (cond.relation.isNotEmpty()) sct.relation = cond.relation
                 val cf = SceneStackLinkedCustomFields()
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
@@ -346,7 +352,7 @@ object SceneRequestUtil {
                 if (!ifttt.params.data.isNullOrEmpty()) {
                     val da = mutableMapOf<String, Any>()
                     ifttt.params.data.forEach { (t, u) ->
-                        if (u.matches(Regex("^[0-9]*+$"))) {
+                        if (u.matches(Regex("^[0-9]$"))) {
                             da[t] = u.toLong()
                         } else {
                             da[t] = u
@@ -368,11 +374,11 @@ object SceneRequestUtil {
             val conditionList = mutableListOf<SceneStackLinkedCondition>()
             bean.conditionList.forEach { cond ->
                 val sct = SceneStackLinkedCondition()
-                cond.devTid.let { sct.devTid = cond.devTid }
-                cond.ctrlKey.let { sct.ctrlKey = cond.ctrlKey }
-                cond.subDevTid.let { sct.subDevTid = cond.subDevTid }
-                cond.conDesc.let { sct.conDesc = cond.conDesc }
-                cond.relation.let { sct.relation = cond.relation }
+                if (cond.devTid.isNotEmpty()) sct.devTid = cond.devTid
+                if (cond.ctrlKey.isNotEmpty()) sct.ctrlKey = cond.ctrlKey
+                if (cond.subDevTid.isNotEmpty()) sct.subDevTid = cond.subDevTid
+                if (cond.conDesc.isNotEmpty()) sct.conDesc = cond.conDesc
+                if (cond.relation.isNotEmpty()) sct.relation = cond.relation
                 val cf = SceneStackLinkedCustomFields()
                 cond.customFields.let { condcf ->
                     if (condcf.name.isNotEmpty()) cf.name = condcf.name
