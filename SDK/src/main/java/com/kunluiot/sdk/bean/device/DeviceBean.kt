@@ -224,6 +224,7 @@ data class DeviceNewBean(
     val devType: String = "",
     val pid: String = "",
     var registerId: String = "",
+    var ssid: String = "",
     var subDevTid: String = "",
     var parentDevTid: String = "",
     var parentCtrlKey: String = "",
@@ -239,7 +240,7 @@ data class DeviceNewBean(
     val bindResultCode: Int = 0,
     var bindResultMsg: String = "",
     var binVer: String = "",
-    var zigOtaBinVer : String= "", //zigbee协调器版本
+    var zigOtaBinVer: String = "", //zigbee协调器版本
     val name: String = "",
     val ownerUid: String = "",
     val familyName: String = "",
@@ -283,6 +284,18 @@ data class DeviceDevFirmwareOTARawRuleVO(
     val latestBinType: String = "",
     val latestBinVer: String = "",
     val size: Int = 0,
+)
+
+@Serializable
+data class DeviceChangeWifiBean(
+    val changeWIFI: DeviceChangeWifiItemBean = DeviceChangeWifiItemBean(),
+)
+
+@Serializable
+data class DeviceChangeWifiItemBean(
+    val timestamp: String = "",
+    val status: Int = 0,
+    val ssid: String = "",
 )
 
 

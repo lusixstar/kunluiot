@@ -8,7 +8,6 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceInfoBinding
 import com.kunluiot.sdk.KunLuHomeSdk
@@ -48,6 +47,10 @@ class DeviceInfoActivity : BaseActivity() {
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         intent?.let { mBean = it.getParcelableExtra(BEAN) ?: DeviceNewBean() }
+        if (mBean.ssid.isNotEmpty()) {
+            mBinding.wifiLayout.visibility = View.VISIBLE
+            mBinding.tvWifiValue.text = mBean.ssid
+        }
 
         mBinding.btnControl.setOnClickListener {
             if (mBean.androidPageZipURL.isNotEmpty()) {
@@ -66,9 +69,21 @@ class DeviceInfoActivity : BaseActivity() {
             val devTid = if (mBean.devType == "SUB") mBean.parentDevTid else mBean.devTid
             gotoName.launch(Intent(this, DeviceEditActivity::class.java).putExtra(DeviceEditActivity.CTRL_KEY, mBean.ctrlKey).putExtra(DeviceEditActivity.DEV_TID, devTid))
         }
+        mBinding.wifiLayout.setOnClickListener {
+            if (mBean.online) gotoChange.launch(Intent(this, DeviceChangeWifiActivity::class.java).putExtra(DeviceChangeWifiActivity.CTRL_KEY, mBean.ctrlKey).putExtra(DeviceChangeWifiActivity.SSID, mBean.ssid))
+            else toastMsg("设备不在线")
+        }
+
         KunLuHomeSdk.instance.getWebSocketManager()?.addListener(webSocketListener)
         setData()
         checkDeviceIsUpdate()
+    }
+
+    private val gotoChange = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
     }
 
     private val gotoName = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -228,7 +243,6 @@ class DeviceInfoActivity : BaseActivity() {
         mBinding.tvRoomValue.text = mBean.folderName
         mBinding.tvDeviceIdValue.text = mBean.devTid
         mBinding.tvDeviceInfoValue.text = getDeviceFirmwareInfo()
-        XLog.e(mBean)
     }
 
     private fun getDeviceFirmwareInfo(): String {

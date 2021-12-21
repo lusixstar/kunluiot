@@ -443,18 +443,39 @@ object DeviceRequestUtil {
     /**
      * 设备详情-更换WiFi
      */
-    fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
+    fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, fail: OnFailResult, success: OnSuccessResult) {
         val map = mutableMapOf<String, String>()
         map["ssid"] = ssid
         map["password"] = password
         val param = JsonUtils.toJson(map)
-        Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$ctrlKey/wifi").setHeaders(KunLuHelper.getSign()).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).body(JsonBody(param)).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val kalle = Kalle.post(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$ctrlKey/wifi")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
-                    callback.onError(response.code().toString(), failed)
+                    fail.fail(response.code().toString(), failed)
                 } else {
-                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { callback.onSuccess() }
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                }
+            }
+        })
+    }
+
+    /**
+     * 每隔3秒轮询查询更换WiFi状态
+     */
+    fun pollingDeviceWifi(ctrlKey: String, fail: OnFailResult, success: DeviceChangeWifiResult) {
+        val kalle = Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$ctrlKey/features")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<DeviceChangeWifiBean>(response.succeed()).let { success.success(it) }
                 }
             }
         })

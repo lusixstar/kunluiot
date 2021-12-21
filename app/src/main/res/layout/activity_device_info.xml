@@ -117,12 +117,58 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wifi_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_layout">
+
+        <TextView
+            android:id="@+id/tv_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="当前连接路由器:"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_wifi_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/img_next"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="123" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_next"
+            android:layout_width="11dp"
+            android:layout_marginEnd="15dp"
+            android:layout_height="11dp"
+            android:src="@mipmap/ic_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/device_id_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/room_layout">
+        app:layout_constraintTop_toBottomOf="@id/wifi_layout">
 
         <TextView
             android:id="@+id/tv_device_id"
@@ -188,8 +234,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/coordinator_info_layout"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/device_info_layout">
@@ -251,9 +297,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="协调器升级"
-        android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="15sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_update" />

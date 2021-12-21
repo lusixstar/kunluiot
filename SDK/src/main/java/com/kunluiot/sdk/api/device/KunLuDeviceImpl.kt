@@ -151,8 +151,15 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 设备详情-更换WiFi
      */
-    override fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback) {
-        DeviceRequestUtil.switchDeviceWifi(ctrlKey, ssid, password, callback)
+    override fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.switchDeviceWifi(ctrlKey, ssid, password, fail, success)
+    }
+
+    /**
+     * 每隔3秒轮询查询更换WiFi状态
+     */
+    override fun pollingDeviceWifi(ctrlKey: String, fail: OnFailResult, success: DeviceChangeWifiResult) {
+        DeviceRequestUtil.pollingDeviceWifi(ctrlKey, fail, success)
     }
 
     /**

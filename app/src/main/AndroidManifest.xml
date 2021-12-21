@@ -98,6 +98,9 @@
         <activity
             android:name=".ui.device.DeviceEditActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.device.DeviceChangeWifiActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.msg.MsgActivity"

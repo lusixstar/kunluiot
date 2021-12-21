@@ -58,6 +58,13 @@ fun interface DeviceDeleteResult {
     fun success(info: DeviceDeleteBean)
 }
 
+/**
+ * 设备修改wifi
+ */
+fun interface DeviceChangeWifiResult {
+    fun success(info: DeviceChangeWifiBean)
+}
+
 // ------------------------------------------
 
 /**

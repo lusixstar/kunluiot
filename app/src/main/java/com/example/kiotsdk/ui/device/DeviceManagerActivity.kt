@@ -1,6 +1,9 @@
 package com.example.kiotsdk.ui.device
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.kiotsdk.adapter.device.DeviceRoomListAdapter
 import com.example.kiotsdk.adapter.diff.DiffRoomListCallback
@@ -83,7 +86,13 @@ class DeviceManagerActivity : BaseActivity() {
     }
 
     private fun gotoNext(bean: DeviceNewBean) {
-        startActivity<DeviceInfoActivity>(DeviceInfoActivity.BEAN to bean)
+        gotoChange.launch(Intent(this, DeviceInfoActivity::class.java).putExtra(DeviceInfoActivity.BEAN, bean))
+    }
+
+    private val gotoChange = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            getFamilyData()
+        }
     }
 
     private fun gotoDelete(it: DeviceNewBean) {

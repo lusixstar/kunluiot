@@ -76,7 +76,7 @@ interface IKunLuDevice {
     /**
      * 获取网关
      */
-    fun getGateway(fail: OnFailResult,  success: DeviceListResult)
+    fun getGateway(fail: OnFailResult, success: DeviceListResult)
 
     /**
      *  获取子设备信息
@@ -113,7 +113,12 @@ interface IKunLuDevice {
     /**
      * 设备详情-更换WiFi
      */
-    fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, callback: IResultCallback)
+    fun switchDeviceWifi(ctrlKey: String, ssid: String, password: String, fail: OnFailResult, success: OnSuccessResult)
+
+    /**
+     * 每隔3秒轮询查询更换WiFi状态
+     */
+    fun pollingDeviceWifi(ctrlKey: String, fail: OnFailResult, success: DeviceChangeWifiResult)
 
     /**
      * 设备操作模板
