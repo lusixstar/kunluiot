@@ -67,7 +67,7 @@ object SceneRequestUtil {
             val item = SceneStackCustomParam()
             if (it.customParam.name.isNotEmpty()) item.name = it.customParam.name
             if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
-            if (it.customParam.mid.isNotEmpty()) item.icon = it.customParam.mid
+            if (it.customParam.mid.isNotEmpty()) item.mid = it.customParam.mid
             if (it.customParam.devName.isNotEmpty()) item.devName = it.customParam.devName
             if (it.customParam.family_folder.isNotEmpty()) item.family_folder = it.customParam.family_folder
             if (it.customParam.desc.isNotEmpty()) item.desc = it.customParam.desc
@@ -121,7 +121,7 @@ object SceneRequestUtil {
             val item = SceneStackCustomParam()
             if (it.customParam.name.isNotEmpty()) item.name = it.customParam.name
             if (it.customParam.icon.isNotEmpty()) item.icon = it.customParam.icon
-            if (it.customParam.mid.isNotEmpty()) item.icon = it.customParam.mid
+            if (it.customParam.mid.isNotEmpty()) item.mid = it.customParam.mid
             if (it.customParam.devName.isNotEmpty()) item.devName = it.customParam.devName
             if (it.customParam.family_folder.isNotEmpty()) item.family_folder = it.customParam.family_folder
             if (it.customParam.desc.isNotEmpty()) item.desc = it.customParam.desc
