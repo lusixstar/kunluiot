@@ -62,9 +62,7 @@ class DeviceChangeWifiActivity : BaseActivity() {
             return
         }
         val key = mCtrlKey.substring(0, 4) + mCtrlKey.substring(mCtrlKey.length - 4)
-        XLog.e("key = $key")
         val pwd: String = DESUtil.encryptDES(password, key)
-        XLog.e("password = $pwd")
         KunLuHomeSdk.deviceImpl.switchDeviceWifi(mCtrlKey, account, pwd, { c, m -> toastErrorMsg(c, m) }, {
             toastMsg("请稍后")
             countDownTimer.start()

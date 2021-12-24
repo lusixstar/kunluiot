@@ -30,19 +30,16 @@ object ReqApi {
 //    public static String INTERNATIONDOMAIN = "arenlink.com";
     /********************************* 测试地址 end ************************************************/
 
-
-    const val KHA_DOMAIN = "creoiot.com"
-    const val INTERNATIONDOMAIN = "arenlink.com"
-
     //new-test-url
     const val IS_NEW_TEST = true
-    private const val KHA_TEST_URL = "https://api.kunluiot.com"
+//    private const val KHA_TEST_URL = "https://api.kunluiot.com"
+    private const val KHA_TEST_URL = "http://api-kl.creoiot.com"
     private const val KHA_BASE_URL = KHA_TEST_URL
     const val KHA_UAA_BASE_URL = "$KHA_BASE_URL/uaa"
     const val KHA_WEB_BASE_URL = "$KHA_BASE_URL/webapi"
     const val KHA_CONSOLE_BASE_URL = "$KHA_BASE_URL/console"
-//    const val KHA_WEB_SOCKET_URL = "wss://hub-kl.$KHA_DOMAIN:2186"
-    const val KHA_WEB_SOCKET_URL = "ws://hub.kunluiot.com:86"
+    const val KHA_WEB_SOCKET_URL = "wss://hub-kl.creoiot.com:2186"
+//    const val KHA_WEB_SOCKET_URL = "ws://hub.kunluiot.com:86"
 
     //old-test-url
 //    const val IS_NEW_TEST = false
