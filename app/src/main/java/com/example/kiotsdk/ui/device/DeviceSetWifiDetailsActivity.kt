@@ -87,11 +87,15 @@ class DeviceSetWifiDetailsActivity : BaseActivity() {
             RESP_SUCCESS -> {
                 if (mNewDeviceBean.isNotEmpty()) {
                     val bean = mNewDeviceBean.first()
+                    var deviceName: String = bean.deviceName
+                    if (deviceName.isEmpty()) {
+                        deviceName = bean.name
+                    }
                     startActivity<DeviceConfigFinishActivity>(
                         DeviceConfigFinishActivity.DEV_TID to bean.devTid,
                         DeviceConfigFinishActivity.MID to bean.mid,
                         DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
-                        DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
+                        DeviceConfigFinishActivity.DEVICE_NAME to deviceName,
                         DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
                         DeviceConfigFinishActivity.DEVICE to bean,
                     )

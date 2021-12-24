@@ -77,7 +77,6 @@ class OperationLinkedListActivity : BaseActivity() {
         condBean.customFields = customFields
         condBean.relation = "OR"
 
-        XLog.e("mDeviceBean == $mDeviceBean")
         when (mDeviceBean.devType) {
             "SUB" -> {
                 condBean.devTid = mDeviceBean.parentDevTid
@@ -103,6 +102,7 @@ class OperationLinkedListActivity : BaseActivity() {
         triggerParamsBean.operator = "=="
         triggerParams.add(triggerParamsBean)
         for (item in mList) {
+            if (!item.select) continue
             val itemBean = SceneTriggerBeanNew()
             itemBean.left = item.name
             itemBean.right = item.selectValue

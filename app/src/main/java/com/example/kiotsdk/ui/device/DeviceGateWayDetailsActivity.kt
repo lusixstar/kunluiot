@@ -128,9 +128,9 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
                 if (mSubDeviceList.isNotEmpty()) {
                     val bean = mSubDeviceList.first()
                     val devType: String = bean.devType
-                    var deviceName: String = bean.name
+                    var deviceName: String = bean.deviceName
                     if (deviceName.isEmpty()) {
-                        deviceName = bean.productName.zh_CN
+                        deviceName = bean.name
                     }
                     if (devType == KunLuDeviceType.DEVICE_SUB) {
                         startActivity<DeviceConfigFinishActivity>(

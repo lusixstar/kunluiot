@@ -56,7 +56,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
             mBranchNames = it.getStringExtra(BRANCH_NAMES) ?: ""
             mBean = it.getParcelableExtra(DEVICE) ?: DeviceNewBean()
             if (mDeviceName.isNotEmpty()) {
-                mDeviceName = mBean.name
+                mDeviceName = mBean.deviceName
                 mBinding.deviceValue.setText(mDeviceName)
             }
         }
