@@ -26,6 +26,8 @@ class DeviceEditActivity : BaseActivity() {
         intent?.let {
             mCtrlKey = it.getStringExtra(CTRL_KEY) ?: ""
             mDevTid = it.getStringExtra(DEV_TID) ?: ""
+            val name  = it.getStringExtra(NAME) ?: ""
+            mBinding.etName.setText(name)
         }
         mBinding.finish.setOnClickListener { updateFamily() }
     }

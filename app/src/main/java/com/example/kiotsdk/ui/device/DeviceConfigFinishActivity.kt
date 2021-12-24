@@ -28,7 +28,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
     private var mRegisterId = ""
     private var mDeviceName = ""
     private var mCtrlKey = ""
-    private var mBean = DeviceNewBean()
+//    private var mBean = DeviceNewBean()
     private var mBranchNames = ""
 
     private var mFamilyId = ""
@@ -54,9 +54,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
             mDeviceName = it.getStringExtra(DEVICE_NAME) ?: ""
             mCtrlKey = it.getStringExtra(CTRL_KEY) ?: ""
             mBranchNames = it.getStringExtra(BRANCH_NAMES) ?: ""
-            mBean = it.getParcelableExtra(DEVICE) ?: DeviceNewBean()
             if (mDeviceName.isNotEmpty()) {
-                mDeviceName = mBean.deviceName
                 mBinding.deviceValue.setText(mDeviceName)
             }
         }
@@ -115,13 +113,24 @@ class DeviceConfigFinishActivity : BaseActivity() {
             toast("family or room is empty")
             return
         }
-        KunLuHomeSdk.deviceImpl.deviceConfigFinish(mDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, { c, m -> toastErrorMsg(c, m) }, {
-            val intent = Intent()
-            intent.setClass(this, MainNewActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
-            toastMsg("set success")
-        })
+        if (mSubDevTid.isNotEmpty()) {
+            KunLuHomeSdk.deviceImpl.subDeviceConfigFinish(mDevTid, mSubDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, { c, m -> toastErrorMsg(c, m) }, {
+                val intent = Intent()
+                intent.setClass(this, MainNewActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+                toastMsg("set success")
+            })
+        } else {
+            KunLuHomeSdk.deviceImpl.deviceConfigFinish(mDevTid, mCtrlKey, mDeviceName, mFamilyId, mRoomId, { c, m -> toastErrorMsg(c, m) }, {
+                val intent = Intent()
+                intent.setClass(this, MainNewActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+                toastMsg("set success")
+            })
+        }
+
     }
 
     private fun getFamilyData() {

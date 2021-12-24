@@ -67,7 +67,10 @@ class DeviceInfoActivity : BaseActivity() {
         }
         mBinding.tvName.setOnClickListener {
             val devTid = if (mBean.devType == "SUB") mBean.parentDevTid else mBean.devTid
-            gotoName.launch(Intent(this, DeviceEditActivity::class.java).putExtra(DeviceEditActivity.CTRL_KEY, mBean.ctrlKey).putExtra(DeviceEditActivity.DEV_TID, devTid))
+            gotoName.launch(Intent(this, DeviceEditActivity::class.java)
+                .putExtra(DeviceEditActivity.CTRL_KEY, mBean.ctrlKey)
+                .putExtra(DeviceEditActivity.DEV_TID, devTid)
+                .putExtra(DeviceEditActivity.NAME, mBinding.tvName.text))
         }
         mBinding.wifiLayout.setOnClickListener {
             if (mBean.online) gotoChange.launch(Intent(this, DeviceChangeWifiActivity::class.java).putExtra(DeviceChangeWifiActivity.CTRL_KEY, mBean.ctrlKey).putExtra(DeviceChangeWifiActivity.SSID, mBean.ssid))

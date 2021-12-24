@@ -115,8 +115,8 @@ internal class KunLuDeviceImpl : IKunLuDevice {
     /**
      * 子设备配网成功后将设备配置到某个家庭下某个房间
      * */
-    override fun subDeviceConfigFinish(devTid: String, subDevTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, branchNames: List<String>, anotherNames: List<Map<String, Any>>, callback: IResultCallback) {
-        DeviceRequestUtil.subDeviceConfigFinish(devTid, subDevTid, ctrlKey, deviceName, familyId, folderId, branchNames, anotherNames, callback)
+    override fun subDeviceConfigFinish(devTid: String, subDevTid: String, ctrlKey: String, deviceName: String, familyId: String, folderId: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.subDeviceConfigFinish(devTid, subDevTid, ctrlKey, deviceName, familyId, folderId, fail, success)
     }
 
     /**
