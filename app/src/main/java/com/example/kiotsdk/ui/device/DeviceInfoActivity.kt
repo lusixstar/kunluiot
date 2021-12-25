@@ -67,8 +67,9 @@ class DeviceInfoActivity : BaseActivity() {
         }
         mBinding.tvName.setOnClickListener {
             val devTid = if (mBean.devType == "SUB") mBean.parentDevTid else mBean.devTid
+            val ctrlKey = if (mBean.devType == "SUB") mBean.parentCtrlKey else mBean.ctrlKey
             gotoName.launch(Intent(this, DeviceEditActivity::class.java)
-                .putExtra(DeviceEditActivity.CTRL_KEY, mBean.ctrlKey)
+                .putExtra(DeviceEditActivity.CTRL_KEY, ctrlKey)
                 .putExtra(DeviceEditActivity.DEV_TID, devTid)
                 .putExtra(DeviceEditActivity.NAME, mBinding.tvName.text))
         }
