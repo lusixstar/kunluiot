@@ -103,6 +103,16 @@ class SceneAddTimeConditionActivity : BaseActivity() {
 
         initView()
         initAdapter()
+
+        intent?.let {
+            val time = it.getStringExtra(TIME_SELECT) ?: ""
+            when {
+                time.contains("每天") -> selectDay(mBinding.everydayNext)
+                time.contains("工作日") -> selectDay(mBinding.workingDayNext)
+                time.contains("周末") -> selectDay(mBinding.weekendNext)
+                else -> selectDay(mBinding.customNext)
+            }
+        }
     }
 
     private fun initAdapter() {

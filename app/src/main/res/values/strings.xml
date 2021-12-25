@@ -107,7 +107,7 @@
     <string name="please_select_the_time_">请选择时间</string>
     <string name="select_the_time">选择时间</string>
     <string name="please_select_duplicate_setting">请选择重复设置！</string>
-    <string name="rest_day">休息日</string>
+    <string name="rest_day">周末</string>
     <string name="all_day">全天</string>
     <string name="timing_trigger">定时触发</string>
     <string name="effective_period">生效时间段</string>
