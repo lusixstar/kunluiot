@@ -79,6 +79,13 @@ internal class KunLuDeviceImpl : IKunLuDevice {
         DeviceRequestUtil.editDeviceName(deviceName, ctrlKey, devTid, fail, success)
     }
 
+    /**
+     * 修改子设备名称
+     */
+    override fun editSubDeviceName(deviceName: String, devTid: String, ctrlKey: String, devSubTid: String, fail: OnFailResult, success: OnSuccessResult) {
+        DeviceRequestUtil.editSubDeviceName(deviceName, devTid, ctrlKey, devSubTid, fail, success)
+    }
+
 
     //-----------------------------------------------
 

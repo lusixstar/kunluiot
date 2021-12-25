@@ -282,6 +282,29 @@ object DeviceRequestUtil {
         })
     }
 
+    /**
+     *  修改子设备名称
+     */
+    fun editSubDeviceName(deviceName: String, devTid: String, ctrlKey: String, devSubTid: String, fail: OnFailResult, success: OnSuccessResult) {
+        val map = mutableMapOf<String, String>()
+        map["deviceName"] = deviceName
+        map["ctrlKey"] = ctrlKey
+        val param = JsonUtils.toJson(map)
+        val kalle = Kalle.patch(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_DEVICE + "/$devTid/$devSubTid")
+        kalle.addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken)
+        kalle.body(JsonBody(param))
+        kalle.perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+            override fun onResponse(response: SimpleResponse<String, String>) {
+                val failed = response.failed()
+                if (!failed.isNullOrEmpty()) {
+                    fail.fail(response.code().toString(), failed)
+                } else {
+                    KotlinSerializationUtils.getJsonData<String>(response.succeed()).let { success.success() }
+                }
+            }
+        })
+    }
+
     //------------------------------------------------------------
 
 

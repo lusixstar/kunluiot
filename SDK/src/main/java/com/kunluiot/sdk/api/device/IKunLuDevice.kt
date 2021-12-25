@@ -64,6 +64,11 @@ interface IKunLuDevice {
      */
     fun editDeviceName(deviceName: String, ctrlKey: String, devTid: String, fail: OnFailResult, success: OnSuccessResult)
 
+    /**
+     * 修改子设备名称
+     */
+    fun editSubDeviceName(deviceName: String, devTid: String, ctrlKey: String, devSubTid: String, fail: OnFailResult, success: OnSuccessResult)
+
     // ------------------------------------------------
 
 

@@ -13,6 +13,8 @@ class DeviceEditActivity : BaseActivity() {
 
     private var mCtrlKey = ""
     private var mDevTid = ""
+    private var mSubDevTid = ""
+    private var mType = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +28,13 @@ class DeviceEditActivity : BaseActivity() {
         intent?.let {
             mCtrlKey = it.getStringExtra(CTRL_KEY) ?: ""
             mDevTid = it.getStringExtra(DEV_TID) ?: ""
-            val name  = it.getStringExtra(NAME) ?: ""
-            mBinding.etName.setText(name)
+            mSubDevTid = it.getStringExtra(SUB_DEV_TID) ?: ""
+            mType = it.getStringExtra(TYPE) ?: ""
+            val name = it.getStringExtra(NAME) ?: ""
+            if (name.isNotEmpty()) {
+                mBinding.etName.setText(name)
+                mBinding.etName.setSelection(name.length)
+            }
         }
         mBinding.finish.setOnClickListener { updateFamily() }
     }
@@ -38,15 +45,24 @@ class DeviceEditActivity : BaseActivity() {
             toast("name is empty")
             return
         }
-        KunLuHomeSdk.deviceImpl.editDeviceName(name, mCtrlKey, mDevTid, { code, msg -> toastErrorMsg(code, msg) }, {
-            setResult(Activity.RESULT_OK, intent.putExtra(NAME, name))
-            finish()
-        })
+        if (mType == "SUB") {
+            KunLuHomeSdk.deviceImpl.editSubDeviceName(name, mDevTid, mCtrlKey, mSubDevTid, { code, msg -> toastErrorMsg(code, msg) }, {
+                setResult(Activity.RESULT_OK, intent.putExtra(NAME, name))
+                finish()
+            })
+        } else {
+            KunLuHomeSdk.deviceImpl.editDeviceName(name, mCtrlKey, mDevTid, { code, msg -> toastErrorMsg(code, msg) }, {
+                setResult(Activity.RESULT_OK, intent.putExtra(NAME, name))
+                finish()
+            })
+        }
     }
 
     companion object {
         const val CTRL_KEY = "ctrlKey"
         const val DEV_TID = "devTid"
+        const val SUB_DEV_TID = "SubDevTid"
         const val NAME = "name"
+        const val TYPE = "type"
     }
 }

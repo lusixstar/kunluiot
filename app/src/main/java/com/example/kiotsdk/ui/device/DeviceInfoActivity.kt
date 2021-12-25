@@ -66,12 +66,8 @@ class DeviceInfoActivity : BaseActivity() {
             updateCoordinatorFirmware()
         }
         mBinding.tvName.setOnClickListener {
-            val devTid = if (mBean.devType == "SUB") mBean.parentDevTid else mBean.devTid
             val ctrlKey = if (mBean.devType == "SUB") mBean.parentCtrlKey else mBean.ctrlKey
-            gotoName.launch(Intent(this, DeviceEditActivity::class.java)
-                .putExtra(DeviceEditActivity.CTRL_KEY, ctrlKey)
-                .putExtra(DeviceEditActivity.DEV_TID, devTid)
-                .putExtra(DeviceEditActivity.NAME, mBinding.tvName.text))
+            gotoName.launch(Intent(this, DeviceEditActivity::class.java).putExtra(DeviceEditActivity.CTRL_KEY, ctrlKey).putExtra(DeviceEditActivity.DEV_TID, if (mBean.devType == "SUB") mBean.parentDevTid else mBean.devTid).putExtra(DeviceEditActivity.SUB_DEV_TID, if (mBean.devType == "SUB") mBean.devTid else "").putExtra(DeviceEditActivity.TYPE, mBean.devType).putExtra(DeviceEditActivity.NAME, mBinding.tvName.text))
         }
         mBinding.wifiLayout.setOnClickListener {
             if (mBean.online) gotoChange.launch(Intent(this, DeviceChangeWifiActivity::class.java).putExtra(DeviceChangeWifiActivity.CTRL_KEY, mBean.ctrlKey).putExtra(DeviceChangeWifiActivity.SSID, mBean.ssid))
@@ -94,6 +90,7 @@ class DeviceInfoActivity : BaseActivity() {
         if (it.resultCode == Activity.RESULT_OK) {
             val name = it.data?.getStringExtra(DeviceEditActivity.NAME) ?: ""
             mBinding.tvName.text = name
+            setResult(Activity.RESULT_OK)
         }
     }
 
