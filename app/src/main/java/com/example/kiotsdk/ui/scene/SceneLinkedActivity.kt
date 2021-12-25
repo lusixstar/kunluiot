@@ -69,6 +69,14 @@ class SceneLinkedActivity : BaseActivity() {
                     gotoLinkedAddOrEdit.launch(Intent(this, SceneLinkedAddOrEditActivity::class.java).putExtra(SceneLinkedAddOrEditActivity.BEAN, bean))
                 }
                 R.id.off -> {
+                    if (bean.conditionList.isNullOrEmpty()) {
+                        toastMsg("请添加条件")
+                        return@setOnItemChildClickListener
+                    }
+                    if (bean.iftttTasks.isNullOrEmpty()) {
+                        toastMsg("请添加执行动作")
+                        return@setOnItemChildClickListener
+                    }
                     KunLuHomeSdk.sceneImpl.updateLinkageScene(bean.ruleId, !bean.enabled, bean, { code, msg -> toastErrorMsg(code, msg) }, { getData() })
                 }
             }

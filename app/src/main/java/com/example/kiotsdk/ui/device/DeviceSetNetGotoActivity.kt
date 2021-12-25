@@ -63,14 +63,16 @@ class DeviceSetNetGotoActivity : BaseActivity() {
     }
 
     private fun gotoNext(bean: DeviceNewBean) {
-        startActivity<DeviceConfigFinishActivity>(
-            DeviceConfigFinishActivity.DEV_TID to bean.devTid,
-            DeviceConfigFinishActivity.DEVICE to bean,
-            DeviceConfigFinishActivity.MID to bean.mid,
-            DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
-            DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
-            DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
-            DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
-        )
+//        startActivity<DeviceConfigFinishActivity>(
+//            DeviceConfigFinishActivity.DEV_TID to bean.devTid,
+//            DeviceConfigFinishActivity.DEVICE to bean,
+//            DeviceConfigFinishActivity.MID to bean.mid,
+//            DeviceConfigFinishActivity.REGISTER_ID to bean.registerId,
+//            DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
+//            DeviceConfigFinishActivity.DEVICE_NAME to bean.deviceName,
+//            DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
+//        )
+        toastMsg("bind success")
+        finish()
     }
 }
