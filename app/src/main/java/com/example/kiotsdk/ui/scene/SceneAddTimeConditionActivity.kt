@@ -14,7 +14,10 @@ import com.example.kiotsdk.databinding.ActivitySceneAddTimeConditionEditBinding
 import com.example.kiotsdk.util.DemoUtils
 import com.example.kiotsdk.widget.SelectHourDialog
 import com.example.kiotsdk.widget.SelectTimeDialog
-import com.kunluiot.sdk.bean.scene.*
+import com.kunluiot.sdk.bean.scene.AddTimeConditionEvent
+import com.kunluiot.sdk.bean.scene.SceneCustomFieldsBeanNew
+import com.kunluiot.sdk.bean.scene.SceneTriggerBeanNew
+import com.kunluiot.sdk.bean.scene.TimeConditionBean
 import java.util.*
 
 /**
@@ -54,13 +57,47 @@ class SceneAddTimeConditionActivity : BaseActivity() {
         intent?.let {
             mIsTimeSlot = it.getBooleanExtra(TIME_SLOT, false)
             val time = it.getStringExtra(TIME_SELECT) ?: ""
-            if (time.isNotEmpty() && time.contains(":")) {
+            if (time.isNotEmpty() && time.contains(":") && !mIsTimeSlot) {
                 mStartHour = time.substring(0, 2)
                 mStartMinute = time.substring(3, 5)
                 mTime = "$mStartHour:$mStartMinute"
                 mBinding.timeValue.text = mTime
                 mTimeList.clear()
                 mTimeList.add(TimeConditionBean(true, mTime))
+            }
+            if (time.isNotEmpty() && time.contains(":") && mIsTimeSlot) {
+                when {
+                    time.contains("到第二天") && time.length >= 14 -> {
+                        mStartHour = time.substring(0, 2)
+                        mStartMinute = time.substring(3, 5)
+                        mEndHour = time.substring(9, 11)
+                        mEndMinute = time.substring(12, 14)
+                        mTime = "$mStartHour:$mStartMinute - $mEndHour:$mEndMinute"
+                        mBinding.timeValue.text = mTime
+                        mTimeList.clear()
+                        mTimeList.add(TimeConditionBean(true, mTime))
+                    }
+                    time.contains("到") && time.length >= 11 -> {
+                        mStartHour = time.substring(0, 2)
+                        mStartMinute = time.substring(3, 5)
+                        mEndHour = time.substring(6, 8)
+                        mEndMinute = time.substring(9, 11)
+                        mTime = "$mStartHour:$mStartMinute - $mEndHour:$mEndMinute"
+                        mBinding.timeValue.text = mTime
+                        mTimeList.clear()
+                        mTimeList.add(TimeConditionBean(true, mTime))
+                    }
+                    time.length >= 10 -> {
+                        mStartHour = time.substring(0, 2)
+                        mStartMinute = time.substring(3, 5)
+                        mEndHour = time.substring(5, 7)
+                        mEndMinute = time.substring(8, 10)
+                        mTime = "$mStartHour:$mStartMinute - $mEndHour:$mEndMinute"
+                        mBinding.timeValue.text = mTime
+                        mTimeList.clear()
+                        mTimeList.add(TimeConditionBean(true, mTime))
+                    }
+                }
             }
         }
 
@@ -211,6 +248,8 @@ class SceneAddTimeConditionActivity : BaseActivity() {
         val dialog = SelectHourDialog(this)
         dialog.show()
         dialog.setTitleName(getString(R.string.select_the_time))
+        dialog.setStartHour("$mStartHour:$mStartMinute")
+        dialog.setEndHour("$mEndHour:$mEndMinute")
         dialog.setOnDialogClickListener(object : SelectHourDialog.OnDialogClickListener {
             override fun onFinishClick(startHour: String, endHour: String) {
                 mStartHour = startHour.substring(0, 2)

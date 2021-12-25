@@ -59,9 +59,13 @@ class SceneLinkedAddOrEditActivity : BaseActivity() {
 
         mBinding.titleLayout.setOnClickListener { gotoEditName.launch(Intent(this, SceneNameEditActivity::class.java).putExtra(SceneNameEditActivity.NAME, mSceneName)) }
         mBinding.timeLayout.setOnClickListener {
-            gotoTime.launch(Intent(this, SceneAddTimeConditionActivity::class.java).putExtra(SceneAddTimeConditionActivity.TIME_SELECT, mBinding.timeValue.text))
+            gotoTime.launch(Intent(this, SceneAddTimeConditionActivity::class.java)
+                .putExtra(SceneAddTimeConditionActivity.TIME_SELECT, mBinding.timeValue.text))
         }
-        mBinding.dateLayout.setOnClickListener { gotoDate.launch(Intent(this, SceneAddTimeConditionActivity::class.java).putExtra(SceneAddTimeConditionActivity.TIME_SLOT, true)) }
+        mBinding.dateLayout.setOnClickListener { gotoDate.launch(Intent(this, SceneAddTimeConditionActivity::class.java)
+            .putExtra(SceneAddTimeConditionActivity.TIME_SLOT, true)
+            .putExtra(SceneAddTimeConditionActivity.TIME_SELECT, mBinding.dateValue.text)
+        ) }
         mBinding.modeLayout.setOnClickListener { showTriggerModeDialog() }
         mBinding.addCondition.setOnClickListener { clickAddCondition() }
         mBinding.addDevices.setOnClickListener { gotoAddDevices.launch(Intent(this, SelectExecutionActionActivity::class.java)) }

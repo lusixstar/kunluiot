@@ -163,7 +163,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
         KunLuHomeSdk.familyImpl.getRooms(familyId, 0, 20, { c, m -> toastErrorMsg(c, m) }, { bean ->
             mFolderList.clear()
             mFolderList.addAll(bean)
-            val info = bean.first()
+            val info = bean.first { it.folderName == "root" }
             mRoomId = info.folderId
             mBinding.roomValue.text = if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
         })
