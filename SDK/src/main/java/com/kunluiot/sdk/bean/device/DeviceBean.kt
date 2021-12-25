@@ -64,6 +64,7 @@ data class DeviceOperationProtocolBean(
 @Parcelize
 @Serializable
 data class DeviceOperationFieldsBean(
+    var cmdId: Int = 0,
     var selectedDesc: String = "",
     var selectValue: String = "",
     var operator: String = "",

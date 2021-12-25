@@ -51,8 +51,6 @@ class OperationListActivity : BaseActivity() {
             if (mDeviceBean.devType == "INDEPENDENT") {
                 mBinding.btnFinish.visibility = View.GONE
             }
-            XLog.e("mDeviceBean == $mDeviceBean")
-            XLog.e("mList == $mList")
         }
 
         mBinding.btnFinish.setOnClickListener { gotoNext() }

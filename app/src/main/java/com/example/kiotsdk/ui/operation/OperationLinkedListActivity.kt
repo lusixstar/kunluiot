@@ -27,7 +27,6 @@ class OperationLinkedListActivity : BaseActivity() {
     private lateinit var mAdapter: OperationLinkedListAdapter
 
     private var mList = mutableListOf<DeviceOperationFieldsBean>()
-    private var mProtocolBean = DeviceOperationProtocolBean()
     private var mDeviceBean = DeviceNewBean()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +42,11 @@ class OperationLinkedListActivity : BaseActivity() {
 
         intent?.let { it ->
             val list = it.getParcelableArrayListExtra<DeviceOperationProtocolBean>(LIST_BEAN) ?: mutableListOf()
-            if (list.isNotEmpty()) mProtocolBean = list[0]
             list.forEach {
+
                 val ll = it.fields.filter { field -> field.usedForIFTTT }
                 ll.forEach { field ->
+                    field.cmdId = it.cmdId
                     if (!field.enumeration.isNullOrEmpty()) {
                         field.selectValue = field.enumeration.first().value.toString()
                         field.selectedDesc = field.enumeration.first().desc
@@ -96,11 +96,7 @@ class OperationLinkedListActivity : BaseActivity() {
 
     private fun getCmdArgs(): MutableList<SceneTriggerBeanNew> {
         val triggerParams = mutableListOf<SceneTriggerBeanNew>()
-        val triggerParamsBean = SceneTriggerBeanNew()
-        triggerParamsBean.left = "cmdId"
-        triggerParamsBean.right = mProtocolBean.cmdId.toString()
-        triggerParamsBean.operator = "=="
-        triggerParams.add(triggerParamsBean)
+
         for (item in mList) {
             if (!item.select) continue
             val itemBean = SceneTriggerBeanNew()
@@ -112,6 +108,12 @@ class OperationLinkedListActivity : BaseActivity() {
                 itemBean.operator = item.operator
             }
             triggerParams.add(itemBean)
+
+            val triggerParamsBean = SceneTriggerBeanNew()
+            triggerParamsBean.left = "cmdId"
+            triggerParamsBean.right = item.cmdId.toString()
+            triggerParamsBean.operator = "=="
+            triggerParams.add(triggerParamsBean)
         }
         return triggerParams
     }
