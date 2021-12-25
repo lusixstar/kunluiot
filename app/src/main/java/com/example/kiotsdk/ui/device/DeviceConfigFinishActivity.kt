@@ -4,16 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityDeviceConfigFinishBinding
 import com.example.kiotsdk.ui.MainNewActivity
-import com.example.kiotsdk.ui.SplashActivity
 import com.kunluiot.sdk.KunLuHomeSdk
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
-import com.kunluiot.sdk.callback.IResultCallback
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.toast
 
@@ -28,7 +25,9 @@ class DeviceConfigFinishActivity : BaseActivity() {
     private var mRegisterId = ""
     private var mDeviceName = ""
     private var mCtrlKey = ""
-//    private var mBean = DeviceNewBean()
+
+    //    private var mBean = DeviceNewBean()
+    private var mGatewayBean: DeviceNewBean = DeviceNewBean()
     private var mBranchNames = ""
 
     private var mFamilyId = ""
@@ -54,6 +53,7 @@ class DeviceConfigFinishActivity : BaseActivity() {
             mDeviceName = it.getStringExtra(DEVICE_NAME) ?: ""
             mCtrlKey = it.getStringExtra(CTRL_KEY) ?: ""
             mBranchNames = it.getStringExtra(BRANCH_NAMES) ?: ""
+            mGatewayBean = it.getParcelableExtra(GATEWAY_BEAN) ?: DeviceNewBean()
             if (mDeviceName.isNotEmpty()) {
                 mBinding.deviceValue.setText(mDeviceName)
             }
@@ -79,9 +79,14 @@ class DeviceConfigFinishActivity : BaseActivity() {
 
     private fun selectRoom() {
         if (!mFolderList.isNullOrEmpty()) {
-            val list = mFolderList.map { it.folderName }
+            val list = if (mSubDevTid.isNotEmpty()) {
+                mFolderList.filter { mGatewayBean.folderName == it.folderName }.map { it.folderName }
+            } else {
+                mFolderList.map { it.folderName }
+            }
             selector("选择房间", list) { dialog, i ->
-                val info = mFolderList[i]
+                val name = list[i]
+                val info = mFolderList.first { it.folderName == name }
                 mBinding.roomValue.text = if (info.folderName == "root") "默认房间" else "当前房间: ${info.folderName}"
                 mRoomId = info.folderId
                 dialog.dismiss()
@@ -91,9 +96,14 @@ class DeviceConfigFinishActivity : BaseActivity() {
 
     private fun selectFamily() {
         if (!mFamilyList.isNullOrEmpty()) {
-            val list = mFamilyList.map { it.familyName }
+            val list = if (mSubDevTid.isNotEmpty()) {
+                mFamilyList.filter { mGatewayBean.familyName == it.familyName }.map { it.familyName }
+            } else {
+                mFamilyList.map { it.familyName }
+            }
             selector("选择家庭", list) { dialog, i ->
-                val info = mFamilyList[i]
+                val name = list[i]
+                val info = mFamilyList.first { it.familyName == name }
                 mBinding.familyValue.text = "${info.familyName}"
                 mFamilyId = info.familyId
                 getRoomData(info.familyId)
@@ -137,7 +147,11 @@ class DeviceConfigFinishActivity : BaseActivity() {
         KunLuHomeSdk.familyImpl.getFamilyList({ code, msg -> toastErrorMsg(code, msg) }, { bean ->
             if (!bean.isNullOrEmpty()) {
                 mFamilyList.addAll(bean)
-                val info = bean.first()
+                val info = if (mSubDevTid.isNotEmpty()) {
+                    bean.first { it.familyName == mGatewayBean.familyName }
+                } else {
+                    bean.first()
+                }
                 mBinding.familyValue.text = "当前家庭: ${info.familyName}"
                 mFamilyId = info.familyId
                 getRoomData(info.familyId)
@@ -164,5 +178,6 @@ class DeviceConfigFinishActivity : BaseActivity() {
         const val DEVICE_NAME = "deviceName"
         const val CTRL_KEY = "ctrlKey"
         const val SUB_DEV_TID = "subDevTid"
+        const val GATEWAY_BEAN = "gateway_bean"
     }
 }

@@ -141,6 +141,7 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
                             DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
                             DeviceConfigFinishActivity.DEVICE_NAME to deviceName,
                             DeviceConfigFinishActivity.CTRL_KEY to bean.parentCtrlKey,
+                            DeviceConfigFinishActivity.GATEWAY_BEAN to mGatewayBean,
                         )
                     } else {
                         startActivity<DeviceConfigFinishActivity>(
@@ -150,7 +151,8 @@ class DeviceGateWayDetailsActivity : BaseActivity() {
                             DeviceConfigFinishActivity.BRANCH_NAMES to JsonUtils.toJson(bean.branchNames),
                             DeviceConfigFinishActivity.DEVICE_NAME to deviceName,
                             DeviceConfigFinishActivity.CTRL_KEY to bean.ctrlKey,
-                        )
+                            DeviceConfigFinishActivity.GATEWAY_BEAN to mGatewayBean,
+                            )
                     }
                     return
                 }
