@@ -240,7 +240,7 @@ class DeviceWebControlActivity : AppCompatActivity() {
             val indexHtml = cacheDir + File.separator + KunLuHelper.CACHE_INDEX_HTML
             val isOk = isFileExist(indexHtml)
             if (!isOk) {
-                KunLuHomeSdk.commonImpl.downloadsUrlFile(mBean.androidPageZipURL, { code, msg -> XLog.e("code == $code, msg == $msg") }, {
+                KunLuHomeSdk.commonImpl.downloadsUrlFile(mBean.androidPageZipURL, { code, msg -> XLog.d("code == $code, msg == $msg") }, {
                     mUrl = KunLuHelper.LOCAL_FILE_PRE + it
                     initWebView()
                 })
@@ -264,7 +264,7 @@ class DeviceWebControlActivity : AppCompatActivity() {
                 mProtocolMap = stateResult.protocol
                 getZipUrl()
             }
-            KunLuHomeSdk.deviceImpl.getDeviceOperationList(mBean.productPublicKey, { code, msg -> XLog.e("code == $code, msg == $msg") }, {
+            KunLuHomeSdk.deviceImpl.getDeviceOperationList(mBean.productPublicKey, { code, msg -> XLog.d("code == $code, msg == $msg") }, {
                 mProtocolBean = it
                 mProtocolMap = it.protocol
                 val json = JsonUtils.toJson(mProtocolBean)

@@ -19,14 +19,14 @@ class JSBridge {
 
     @JavascriptInterface
     fun __syncCall(message: String): String {
-        XLog.e("__syncCall---->$message")
+//        XLog.e("__syncCall---->$message")
         val bean: WebBridgeBean = JsonUtils.fromJson(message, WebBridgeBean::class.java)
         return sync?.call(bean) ?: ""
     }
 
     @JavascriptInterface
     fun __voidCall(message: String) {
-        XLog.e("__voidCall---->$message")
+//        XLog.e("__voidCall---->$message")
         val bean: WebBridgeBean = JsonUtils.fromJson(message, WebBridgeBean::class.java)
         void?.call(bean)
     }

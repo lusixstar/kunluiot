@@ -1,7 +1,6 @@
 package com.kunluiot.sdk.thirdlib.ws;
 
 
-import com.elvishew.xlog.XLog;
 import com.kunluiot.sdk.KunLuHomeSdk;
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener;
 import com.kunluiot.sdk.thirdlib.ws.websocket.WebSocketHandler;
@@ -60,7 +59,7 @@ public class WebsocketUtil {
             cloudManager.addListener(new SocketListener() {
                 @Override
                 public void onConnected() {
-                    XLog.e("onConnected start login");
+//                    XLog.e("onConnected start login");
                     websocketLogin(cloudManager);
                 }
 
