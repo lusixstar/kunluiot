@@ -113,13 +113,13 @@ class DeviceWebControlActivity : AppCompatActivity() {
             val allMap: MutableMap<String, Any> = HashMap()
             when (bean.name) {
                 "getDomain" -> {
-                    val domain = "kunluiot.com"
+                    val domain = ReqApi.H5_DOMAIN
                     val domainMap: MutableMap<String, Any?> = HashMap()
                     domainMap["domain"] = domain
                     domainMap["test"] = false
-                    domainMap["user"] = "http://webapi-openapi.kunluiot.com"
-                    domainMap["uaa"] = "http://uaa-openapi.kunluiot.com"
-                    domainMap["console"] = "http://console-openapi.kunluiot.com"
+                    domainMap["user"] = ReqApi.H5_USER
+                    domainMap["uaa"] = ReqApi.H5_UAA
+                    domainMap["console"] = ReqApi.H5_CONSOLE
                     allMap["result"] = domainMap
                 }
                 "close" -> {
@@ -129,7 +129,6 @@ class DeviceWebControlActivity : AppCompatActivity() {
                     val userMap: MutableMap<String, Any> = HashMap()
                     userMap["token"] = KunLuHomeSdk.instance.getSessionBean()?.accessToken ?: ""
                     userMap["access_token"] = KunLuHomeSdk.instance.getSessionBean()?.accessToken ?: ""
-//                    userMap["appTid"] = Tools.getAppTid() + "web"
                     userMap["appTid"] = Build.BRAND + Build.MODEL
                     userMap["lang"] = Tools.getLanguage()
                     userMap["uid"] = KunLuHomeSdk.instance.getSessionBean()?.user ?: ""
