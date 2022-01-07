@@ -77,4 +77,6 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.31.0'
 
     implementation project(':SDK')
+//    implementation 'com.gitee.Chris___:iot:1.0.1'
+
 }
