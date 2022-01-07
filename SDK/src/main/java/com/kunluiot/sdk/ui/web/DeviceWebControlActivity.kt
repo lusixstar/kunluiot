@@ -219,6 +219,8 @@ class DeviceWebControlActivity : AppCompatActivity() {
         webSettings.builtInZoomControls = true
         webSettings.displayZoomControls = false
         webSettings.domStorageEnabled = true
+        webSettings.allowFileAccess = true
+        webSettings.allowContentAccess = true
         webSettings.useWideViewPort = false
         webSettings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
