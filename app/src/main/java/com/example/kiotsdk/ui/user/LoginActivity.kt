@@ -25,12 +25,6 @@ class LoginActivity : BaseActivity() {
         setSupportActionBar(mBinding.toolBar)
         mBinding.toolBar.setNavigationOnClickListener { onBackPressed() }
 
-//        mBinding.emailPhone.setText("18259158984")
-//        mBinding.password.setText("333333")
-
-//        mBinding.emailPhone.setText("15080301825")
-//        mBinding.password.setText("123123")
-
         mBinding.login.setOnClickListener { gotoNext() }
         mBinding.forget.setOnClickListener { startActivity<ForgetActivity>() }
 

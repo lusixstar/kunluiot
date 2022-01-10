@@ -7,12 +7,6 @@ plugins {
     id 'maven-publish'
 }
 
-task generateSourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier 'sources'
-}
-
-
 android {
     compileSdk 31
 
@@ -43,13 +37,23 @@ android {
 
     afterEvaluate {
         publishing {
-            def versionName = "1.0.0"
             publications {
                 release(MavenPublication) {
                     from components.release
-                    groupId = 'com.kunlu.iot'
-                    artifactId = 'iotsdk'
-                    version = versionName
+                    groupId =  PROJ_GROUP
+                    artifactId = PROJ_ARTIFACTID
+                    version = PROJ_VERSION
+                }
+            }
+            //设置存储库信息
+            repositories {
+                maven {
+                    url = LOCAL_REPO_URL //私有的Maven库地址
+                    //allowInsecureProtocol = true//允许非https链接
+//                    credentials {
+//                        username = MAVEN_PRIVATE_USERNAME//Maven分配的用户名
+//                        password = MAVEN_PRIVATE_PASSWORD//用户名对应的密码
+//                    }
                 }
             }
         }
