@@ -49,11 +49,11 @@ android {
             repositories {
                 maven {
                     url = LOCAL_REPO_URL //私有的Maven库地址
-                    //allowInsecureProtocol = true//允许非https链接
-//                    credentials {
-//                        username = MAVEN_PRIVATE_USERNAME//Maven分配的用户名
-//                        password = MAVEN_PRIVATE_PASSWORD//用户名对应的密码
-//                    }
+                    allowInsecureProtocol = true//允许非https链接
+                    credentials {
+                        username = MAVEN_PRIVATE_USERNAME//Maven分配的用户名
+                        password = MAVEN_PRIVATE_PASSWORD//用户名对应的密码
+                    }
                 }
             }
         }
