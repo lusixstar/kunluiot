@@ -1,8 +1,8 @@
 package com.kunluiot.sdk.thirdlib.ws.websocket.request;
 
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.framing.Framedata;
+import com.kunluiot.sdk.thirdlib.java_websocket.client.WebSocketClient;
+import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata;
 
 /**
  * 发送 {@link Framedata}

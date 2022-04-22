@@ -3,13 +3,10 @@ package com.example.kiotsdk.ui.operation
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import com.elvishew.xlog.XLog
-import com.example.kiotsdk.R
 import com.example.kiotsdk.adapter.operation.OperationFieldsListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationListBinding
 import com.example.kiotsdk.ui.scene.SelectExecutionActionActivity
-import com.example.kiotsdk.util.DemoUtils
 import com.example.kiotsdk.widget.SeekBarBottomDialog
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceOperationFieldsBean

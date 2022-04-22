@@ -9,7 +9,7 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.dispatcher.DefaultResponseDispatch
 import com.kunluiot.sdk.thirdlib.ws.websocket.dispatcher.IResponseDispatcher;
 import com.kunluiot.sdk.thirdlib.ws.websocket.dispatcher.ResponseDelivery;
 
-import org.java_websocket.drafts.Draft;
+import com.kunluiot.sdk.thirdlib.java_websocket.drafts.Draft;
 
 import java.net.Proxy;
 import java.util.Map;
@@ -157,7 +157,7 @@ public class WebSocketSetting {
     }
 
     /**
-     * ws 协议实现，默认为 {@link org.java_websocket.drafts.Draft_6455}，
+     * ws 协议实现，默认为 {@link com.kunluiot.sdk.thirdlib.java_websocket.drafts.Draft_6455}，
      * 框架也只提供了这一个实现，一般情况不需要设置。
      * 特殊需求可以自定义继承 {@link Draft} 的类
      */

@@ -17,7 +17,7 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse;
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.ThreadUtil;
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener;
 
-import org.java_websocket.framing.Framedata;
+import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;

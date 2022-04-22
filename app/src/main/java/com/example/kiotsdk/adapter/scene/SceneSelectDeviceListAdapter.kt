@@ -3,7 +3,6 @@ package com.example.kiotsdk.adapter.scene
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.R
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceOperationProtocolBean

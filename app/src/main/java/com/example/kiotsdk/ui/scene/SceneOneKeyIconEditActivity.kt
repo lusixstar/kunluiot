@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.scene.SceneOneKeyIconListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.bean.SceneIconBean

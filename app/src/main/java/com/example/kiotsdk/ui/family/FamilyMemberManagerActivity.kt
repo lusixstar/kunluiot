@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.family.FamilyMemberListMoreAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityFamilyMemberManagerBinding

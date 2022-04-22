@@ -27,7 +27,7 @@ import com.kunluiot.sdk.util.CacheUtils
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.MD5Util
 import com.kunluiot.sdk.util.Tools
-import org.java_websocket.framing.Framedata
+import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata
 import org.json.JSONObject
 import java.io.File
 import java.nio.ByteBuffer

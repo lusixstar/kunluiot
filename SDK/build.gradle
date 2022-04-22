@@ -63,7 +63,7 @@ android {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.4.0'
 
     //gson
@@ -75,14 +75,14 @@ dependencies {
 
 
     //WebSocket
-    api 'org.java-websocket:Java-WebSocket:1.5.1'
+//    api 'org.java-websocket:Java-WebSocket:1.5.2'
 
     //qrcode
     api 'com.google.zxing:core:3.3.3'
     api 'androidx.camera:camera-core:1.0.1'
     api 'androidx.camera:camera-camera2:1.0.1'
     api 'androidx.camera:camera-lifecycle:1.0.1'
-    api 'androidx.camera:camera-view:1.0.0-alpha28'
+    api 'androidx.camera:camera-view:1.0.0-alpha30'
 
     //log
     api 'com.elvishew:xlog:1.10.1'

@@ -3,7 +3,6 @@ package com.example.kiotsdk.ui.operation
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import com.elvishew.xlog.XLog
 import com.example.kiotsdk.adapter.operation.OperationLinkedListAdapter
 import com.example.kiotsdk.base.BaseActivity
 import com.example.kiotsdk.databinding.ActivityOperationLinkedListBinding
