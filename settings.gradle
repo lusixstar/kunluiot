@@ -12,5 +12,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "KIotSDK"
-include ':app'
 include ':SDK'
