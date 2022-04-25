@@ -4,7 +4,6 @@ plugins {
 
     id 'kotlin-parcelize'
     id 'kotlinx-serialization'
-    id 'maven-publish'
 }
 
 android {
@@ -33,30 +32,6 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    afterEvaluate {
-        publishing {
-            publications {
-                release(MavenPublication) {
-                    from components.release
-                    groupId =  PROJ_GROUP
-                    artifactId = PROJ_ARTIFACTID
-                    version = PROJ_VERSION
-                }
-            }
-            //设置存储库信息
-            repositories {
-                maven {
-                    url = LOCAL_REPO_URL //私有的Maven库地址
-                    allowInsecureProtocol = true//允许非https链接
-                    credentials {
-                        username = MAVEN_PRIVATE_USERNAME//Maven分配的用户名
-                        password = MAVEN_PRIVATE_PASSWORD//用户名对应的密码
-                    }
-                }
-            }
-        }
     }
 }
 
