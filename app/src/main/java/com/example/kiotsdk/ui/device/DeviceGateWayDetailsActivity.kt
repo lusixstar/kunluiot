@@ -14,7 +14,6 @@ import com.kunluiot.sdk.bean.device.ConfigZigBeeBean
 import com.kunluiot.sdk.bean.device.DeviceNewBean
 import com.kunluiot.sdk.bean.device.DeviceProductsBean
 import com.kunluiot.sdk.callback.device.IDeviceListCallback
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.util.JsonUtils

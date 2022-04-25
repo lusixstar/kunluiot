@@ -17,7 +17,6 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.ui.web.DeviceWebControlActivity
 import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata
 import org.jetbrains.anko.startActivity
 import java.nio.ByteBuffer
 import java.util.*

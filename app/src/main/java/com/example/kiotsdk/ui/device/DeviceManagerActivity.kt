@@ -18,7 +18,6 @@ import com.kunluiot.sdk.bean.family.FolderBean
 import com.kunluiot.sdk.thirdlib.ws.websocket.SocketListener
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse
 import com.kunluiot.sdk.util.JsonUtils
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.selector
 import org.jetbrains.anko.startActivity
