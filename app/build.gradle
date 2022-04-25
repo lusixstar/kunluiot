@@ -81,7 +81,7 @@ dependencies {
 
 //    implementation 'com.kunlu.iot:iotsdk:1.0.0'
 //    implementation project(':SDK')
-    implementation 'com.github.lusixstar:kunluiot:1.0.6'
+    implementation 'com.github.lusixstar:kunluiot:v1.0.7'
 
 
 }
