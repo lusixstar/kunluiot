@@ -50,7 +50,7 @@ dependencies {
 
 
     //WebSocket
-    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
+    api 'org.java-websocket:Java-WebSocket:1.5.2'
 
     //qrcode
     implementation 'com.google.zxing:core:3.3.3'
