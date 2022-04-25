@@ -1,8 +1,10 @@
 package com.kunluiot.sdk.thirdlib.ws.websocket.request;
 
 
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata;
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.PingFrame;
+
+
+import org.java_websocket.framing.Framedata;
+import org.java_websocket.framing.PingFrame;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;

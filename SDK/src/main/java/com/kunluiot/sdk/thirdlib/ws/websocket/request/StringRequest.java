@@ -3,7 +3,8 @@ package com.kunluiot.sdk.thirdlib.ws.websocket.request;
 
 import android.text.TextUtils;
 
-import com.kunluiot.sdk.thirdlib.java_websocket.client.WebSocketClient;
+import org.java_websocket.client.WebSocketClient;
+
 
 /**
  * String 类型的请求

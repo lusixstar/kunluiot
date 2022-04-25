@@ -10,13 +10,14 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.response.Response;
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ResponseFactory;
 import com.kunluiot.sdk.thirdlib.ws.websocket.util.LogUtil;
 
-import com.kunluiot.sdk.thirdlib.java_websocket.WebSocket;
-import com.kunluiot.sdk.thirdlib.java_websocket.client.WebSocketClient;
-import com.kunluiot.sdk.thirdlib.java_websocket.drafts.Draft;
-import com.kunluiot.sdk.thirdlib.java_websocket.drafts.Draft_6455;
-import com.kunluiot.sdk.thirdlib.java_websocket.exceptions.WebsocketNotConnectedException;
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata;
-import com.kunluiot.sdk.thirdlib.java_websocket.handshake.ServerHandshake;
+import org.java_websocket.WebSocket;
+import org.java_websocket.client.WebSocketClient;
+
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
+import org.java_websocket.framing.Framedata;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.nio.ByteBuffer;

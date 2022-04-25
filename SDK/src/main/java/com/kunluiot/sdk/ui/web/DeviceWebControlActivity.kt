@@ -27,7 +27,7 @@ import com.kunluiot.sdk.util.CacheUtils
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.MD5Util
 import com.kunluiot.sdk.util.Tools
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata
+import org.java_websocket.framing.Framedata
 import org.json.JSONObject
 import java.io.File
 import java.nio.ByteBuffer
@@ -65,8 +65,12 @@ class DeviceWebControlActivity : AppCompatActivity() {
         }
 
         override fun <T : Any?> onMessage(bytes: ByteBuffer?, data: T) {}
-        override fun onPing(framedata: Framedata?) {}
-        override fun onPong(framedata: Framedata?) {}
+        override fun onPong(framedata: Framedata?) {
+        }
+
+        override fun onPing(framedata: Framedata?) {
+
+        }
     }
 
     private fun getSocketMsg(message: String, toJson: String) {

@@ -9,7 +9,8 @@ import com.kunluiot.sdk.thirdlib.ws.websocket.WebSocketSetting;
 import com.kunluiot.sdk.thirdlib.ws.websocket.response.ErrorResponse;
 import com.kunluiot.sdk.util.JsonUtils;
 
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata;
+
+import org.java_websocket.framing.Framedata;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;

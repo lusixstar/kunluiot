@@ -5,7 +5,8 @@ package com.kunluiot.sdk.thirdlib.ws.websocket.response;
 import com.kunluiot.sdk.thirdlib.ws.websocket.dispatcher.IResponseDispatcher;
 import com.kunluiot.sdk.thirdlib.ws.websocket.dispatcher.ResponseDelivery;
 
-import com.kunluiot.sdk.thirdlib.java_websocket.framing.Framedata;
+import org.java_websocket.framing.Framedata;
+
 
 /**
  * 接收到 Pong
