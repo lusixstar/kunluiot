@@ -4,8 +4,6 @@ plugins {
 
     id 'kotlin-parcelize'
     id 'kotlinx-serialization'
-
-    id 'maven-publish'
 }
 
 android {
@@ -34,19 +32,6 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    afterEvaluate {
-        publishing {
-            publications {
-                release(MavenPublication) {
-                    from components.release
-                    groupId = 'com.github.kunlu'
-                    artifactId = 'iot'
-                    version = '1.0.8'
-                }
-            }
-        }
     }
 }
 
