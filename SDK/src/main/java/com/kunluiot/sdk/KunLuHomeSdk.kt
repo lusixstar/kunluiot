@@ -75,6 +75,12 @@ class KunLuHomeSdk {
         return JsonUtils.fromJson(sessionJson, SessionBean::class.java)
     }
 
+    fun setHttpHeaderToken(token: String) {
+        val bean = SessionBean()
+        bean.accessToken = token
+        SPUtil.apply(app, UserApi.KHA_API_LOGIN, bean)
+    }
+
     fun getWebSocketManager(): WebSocketManager? {
         return WebsocketUtil.getWebSocketManager()
     }
