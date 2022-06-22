@@ -1,6 +1,7 @@
 package com.kunluiot.sdk.request
 
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.common.BaseRespBeanTwo
 import com.kunluiot.sdk.bean.device.*
 import com.kunluiot.sdk.callback.IResultCallback
 import com.kunluiot.sdk.callback.IResultStringCallback
@@ -12,7 +13,6 @@ import com.kunluiot.sdk.thirdlib.kalle.Kalle
 import com.kunluiot.sdk.thirdlib.kalle.simple.SimpleResponse
 import com.kunluiot.sdk.util.JsonUtils
 import com.kunluiot.sdk.util.KotlinSerializationUtils
-import java.util.*
 
 object DeviceRequestUtil {
 
@@ -179,6 +179,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceListProductBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -198,6 +202,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -227,6 +235,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceUpdateBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -253,6 +265,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceUpdateBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -318,6 +334,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  callback.onError(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
@@ -337,6 +357,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -353,6 +377,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  callback.onError(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
@@ -432,12 +460,20 @@ object DeviceRequestUtil {
      * 获取新配上的设备列表
      */
     fun getNewDeviceList(ssid: String, pinCode: String, callback: IDeviceListCallback) {
-        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST).addHeader("authorization", "Bearer " + KunLuHomeSdk.instance.getSessionBean()?.accessToken).param("ssid", ssid).param("pinCode", pinCode).perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
+        val token = KunLuHomeSdk.instance.getSessionBean()?.accessToken
+        Kalle.get(ReqApi.KHA_WEB_BASE_URL + DeviceApi.KHA_API_GET_NEW_DEVICE_LIST)
+            .addHeader("authorization", "Bearer " + token)
+            .param("ssid", ssid).param("pinCode", pinCode)
+            .perform(object : KunLuNetCallback<String>(KunLuHomeSdk.instance.getApp()) {
             override fun onResponse(response: SimpleResponse<String, String>) {
                 val failed = response.failed()
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  callback.onError(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceNewBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
@@ -455,6 +491,10 @@ object DeviceRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  callback.onError(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceProductDescribeBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
