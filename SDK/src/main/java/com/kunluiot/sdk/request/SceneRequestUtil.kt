@@ -1,6 +1,7 @@
 package com.kunluiot.sdk.request
 
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.common.BaseRespBeanTwo
 import com.kunluiot.sdk.bean.device.DeviceDeleteBean
 import com.kunluiot.sdk.bean.scene.*
 import com.kunluiot.sdk.callback.IResultCallback
@@ -31,6 +32,10 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<SceneOneKeyBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -49,6 +54,10 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<SceneOneKeyBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -211,6 +220,10 @@ object SceneRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<SceneLinkBeanNew>>(response.succeed()).let { success.success(it) }
                 }
             }

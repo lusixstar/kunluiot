@@ -1,6 +1,7 @@
 package com.kunluiot.sdk.request
 
 import com.kunluiot.sdk.KunLuHomeSdk
+import com.kunluiot.sdk.bean.common.BaseRespBeanTwo
 import com.kunluiot.sdk.bean.device.DeviceFrameBean
 import com.kunluiot.sdk.bean.family.FamilyBean
 import com.kunluiot.sdk.bean.family.FolderBean
@@ -29,6 +30,10 @@ object FamilyRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<FamilyBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -49,6 +54,10 @@ object FamilyRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<FolderBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -173,6 +182,10 @@ object FamilyRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     fail.fail(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  fail.fail(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<FolderBean>>(response.succeed()).let { success.success(it) }
                 }
             }
@@ -350,6 +363,10 @@ object FamilyRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  callback.onError(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<String>>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
@@ -366,6 +383,10 @@ object FamilyRequestUtil {
                 if (!failed.isNullOrEmpty()) {
                     callback.onError(response.code().toString(), failed)
                 } else {
+                    if (!response.succeed().startsWith("[") || !response.succeed().endsWith("]")) {
+                        KotlinSerializationUtils.getJsonData<BaseRespBeanTwo>(response.succeed()).let {  callback.onError(it.status.toString(), it.message) }
+                        return
+                    }
                     KotlinSerializationUtils.getJsonData<List<DeviceFrameBean>>(response.succeed()).let { callback.onSuccess(it) }
                 }
             }
