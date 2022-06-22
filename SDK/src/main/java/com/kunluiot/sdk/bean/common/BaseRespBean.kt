@@ -2,6 +2,13 @@ package com.kunluiot.sdk.bean.common
 
 import kotlinx.serialization.Serializable
 
+
+@Serializable
+data class BaseRespBeanTwo(
+    var status: Int = 0,
+    var message: String = ""
+)
+
 @Serializable
 data class BaseRespBean<T>(
     var status: Int = 0,
